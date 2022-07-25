@@ -7,12 +7,12 @@ exports.config = {
     userId: "",
     ip: "",
     vue: {
-        Vue: "",
-        router: ""
+        Vue: null,
+        router: null
     },
     react: {
-        React: "",
-        router: ""
+        React: null,
+        router: null
     }
 };
 const setConfig = (options) => {

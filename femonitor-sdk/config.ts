@@ -21,12 +21,12 @@ export const config: IConfig = {
   userId: "",
   ip: "",
   vue: {
-    Vue: "",
-    router: ""
+    Vue: null,
+    router: null
   },
   react: {
-    React: "",
-    router: ""
+    React: null,
+    router: null
   }
 };
 export const setConfig = (options: IConfig) => {

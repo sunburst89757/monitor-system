@@ -1,3 +1,9 @@
+import { config } from "../../config";
+import { report } from "../utils/report";
+
 export function handleError() {
-  console.log("监视错误");
+  window.onerror = () => {
+    console.log(arguments, "错误监控的结果");
+    report(arguments as any);
+  };
 }
