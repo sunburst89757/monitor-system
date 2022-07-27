@@ -1,4 +1,4 @@
-# blog-admin
+# femonitor-admin
 
 这是一个利用 react18 + typescript 实现的 前端监控系统
 
@@ -25,10 +25,6 @@
 
 ### 安装使用
 
-- 获取项目代码
-  ```
-  git clone https://github.com/sunburst89757/blog-admin
-  ```
 - 安装依赖
   ```
   npm install
