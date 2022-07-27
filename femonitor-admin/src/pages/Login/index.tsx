@@ -6,23 +6,17 @@ import { updateUserInfo } from "../../store/module/user";
 import { useAppDispatch } from "../../store/types";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useEffect } from "react";
-import { useRequest } from "ahooks";
-import { login } from "../../api/user";
 export function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { run: handleLogin } = useRequest((params: userType) => login(params), {
-    manual: true,
-    onSuccess: (res) => {
-      if (res.success) {
-        dispatch(updateUserInfo(res.data));
-        navigate("/dashboard");
-      }
+
+  const handleLogin = useCallback(
+    (val: userType) => {
+      dispatch(updateUserInfo());
+      navigate("/dashboard");
     },
-    onError: (error) => {
-      console.log(error, "错误信息");
-    }
-  });
+    [navigate, dispatch]
+  );
   // 验证通过后登录
   const onFinish = useCallback(
     (val: userType) => {
@@ -89,9 +83,6 @@ export function Login() {
             </Form.Item>
           </Form>
         </div>
-      </div>
-      <div className={style.copyright}>
-        Copyright @ 2022 汉谷云智（武汉）科技有限公司
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import { RequestConfig } from "./types";
-const BASE_URL = "https://trade.redumy.top/trade";
-// const BASE_URL = "https://bgt.d9lab.net/trade";
+const BASE_URL = "";
 export const config: RequestConfig = {
   baseURL: BASE_URL,
   // headers: {

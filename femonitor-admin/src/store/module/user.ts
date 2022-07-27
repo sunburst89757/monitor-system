@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
-import { Res } from "../../api/user";
+// import { Res } from "../../api/user";
 import { stateType } from "../types";
 import { cache } from "../../utils/localStorage";
 const initialState: stateType = {
@@ -18,14 +18,14 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    updateUserInfo: (state, action: PayloadAction<Res>) => {
-      const { token, userId, nickName } = action.payload;
-      state.token = token;
-      state.userInfo.userId = userId;
+    updateUserInfo: (state) => {
+      // const { token, userId, nickName } = action.payload;
+      state.token = "XXXXXX";
+      state.userInfo.userId = 1;
       // 用户角色本来应该从action.payload里传递，新项目需要接口更改
       state.userInfo.role = "super-admin";
-      state.userInfo.username = nickName;
-      cache.setItem("token", token);
+      state.userInfo.username = "admin";
+      cache.setItem("token", "XXXXXX");
     },
     changeisShowReloginModal: (state) => {
       state.isShowReloginModal = !state.isShowReloginModal;
@@ -44,7 +44,7 @@ const userSlice = createSlice({
       state.token = token;
     },
     setLoading: (state, action: PayloadAction<{ loading: boolean }>) => {
-      state.loading = action.payload.loading;
+      state.loading = false;
     }
   }
 });

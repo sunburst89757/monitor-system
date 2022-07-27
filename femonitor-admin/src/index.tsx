@@ -8,26 +8,26 @@ import { Provider } from "react-redux";
 import reportWebVitals from "./reportWebVitals";
 import { PersistGate } from "redux-persist/integration/react";
 import "./index.scss";
-import monitor from "monitor-demo";
+// import monitor from "monitor-demo";
 import App from "./App";
-monitor.init({
-  url: "http://localhost:8080/reportData"
-});
+// monitor.init({
+//   url: "http://localhost:8080/reportData"
+// });
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <ConfigProvider locale={zhCN}>
-        <Provider store={store}>
-          <PersistGate persistor={persistor}>
-            <App />
-          </PersistGate>
-        </Provider>
-      </ConfigProvider>
-    </BrowserRouter>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <BrowserRouter>
+    <ConfigProvider locale={zhCN}>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <App />
+        </PersistGate>
+      </Provider>
+    </ConfigProvider>
+  </BrowserRouter>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
