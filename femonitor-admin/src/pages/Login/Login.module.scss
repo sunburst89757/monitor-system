@@ -1,0 +1,66 @@
+.loginContainer {
+  width: 100%;
+  height: 100%;
+  background-image: url("../../assets/img/background.png");
+}
+
+.title {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  width: 900px;
+  height: 50px;
+  transform: translate(-50%); /* 50%为自身尺寸的一半 */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("../../assets/img/font1.png");
+}
+
+.middleBlock {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%); /* 50%为自身尺寸的一半 */
+  display: flex;
+  width: 900px;
+  height: 440px;
+}
+
+.leftBlock {
+  width: 400px;
+  height: 440px;
+  background-color: #287ed5;
+  background-image: url("../../assets/img/middle.png");
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.rightBlock {
+  position: relative;
+  width: 500px;
+  background-color: #fff;
+}
+
+.formTitle {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%); /* 50%为自身尺寸的一半 */
+  font: 700 20px "microsoft YaHei";
+  color: #333;
+}
+.form {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  width: 80%;
+  transform: translate(-50%); /* 50%为自身尺寸的一半 */
+}
+.copyright {
+  position: absolute;
+  font: 700 14px "microsoft YaHei";
+  color: #fff;
+  left: 50%;
+  bottom: 10%;
+  transform: translate(-50%); /* 50%为自身尺寸的一半 */
+}

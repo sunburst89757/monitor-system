@@ -1,0 +1,37 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 25px;
+  .leftBlock {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    .icon {
+      font-weight: 700;
+      font-size: 20px;
+      margin-right: 30px;
+      color: #fff;
+    }
+    // 样式给initial 将antd添加的样式给掩盖
+    h2 {
+      color: #fff;
+      margin: initial;
+      padding: initial;
+    }
+  }
+  .rightBlock {
+    display: flex;
+    align-items: center;
+    .informBox {
+      width: 164px;
+    }
+    .userInfo {
+      margin-left: 30px;
+      color: #fff;
+    }
+  }
+  .font {
+    color: #fff;
+  }
+}
