@@ -36,5 +36,8 @@
     "commitizen": {
       "path": "femonitor-sdk/node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "ip": "^1.1.8"
   }
 }
