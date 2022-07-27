@@ -8,9 +8,13 @@ type IReportData = {
   errorData?: any;
   line?: number;
   column?: number;
-  msg?: string;
+  msg?: any;
   error?: any;
   info?: any;
+  resoucrceUrl?: string;
+  html?: any;
+  resourceType?: any;
+  paths?: any;
 };
 // 浏览器是否支持sendBeacon 上报数据
 export const isSupportSendBeacon = () => !!window.navigator?.sendBeacon;
