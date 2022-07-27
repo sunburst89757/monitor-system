@@ -2,6 +2,8 @@ import { Layout, Button, Dropdown, Space, Menu } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../api/user";
+import { useResetState } from "../../hooks/useResettState";
+import { cache } from "../../utils/localStorage";
 import style from "./Header.module.scss";
 import { useAppSelector } from "../../store/types";
 import { useCallback, useRef } from "react";
@@ -17,13 +19,16 @@ export function MyHeader({ isCollapse, onClick }: propType) {
   const { run: handleLogout } = useRequest(logout, {
     manual: true,
     onSuccess: () => {
+      cache.clear();
       navigate("/login");
+      // 重置redux状态
+      reset();
     },
     onError: (err) => {
       console.log(err);
     }
   });
-
+  const reset = useResetState();
   const onClickDrop = useCallback(
     (menuInfo: any) => {
       const { key } = menuInfo;
@@ -73,12 +78,7 @@ export function MyHeader({ isCollapse, onClick }: propType) {
             通知详情
           </Button>
         </div>
-        <Dropdown
-          overlay={menu.current}
-          trigger={["click"]}
-          arrow
-          className={style.font}
-        >
+        <Dropdown overlay={menu.current} trigger={["click"]} arrow>
           <a onClick={(e) => e.preventDefault()}>
             <Space className={style.userInfo}>{username}</Space>
           </a>

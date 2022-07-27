@@ -4,30 +4,15 @@ import { AppDispatch, RootState } from ".";
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-export interface IUserInfo {
-  /* 用户信息 */
+export interface userInfo {
   userId: number;
+  role: string;
   username: string;
-  nickname: string;
-  email: string;
-  phone: string;
-  avater: string;
-  roleName: string;
 }
-
 export interface stateType {
-  userInfo: IUserInfo;
+  userInfo: userInfo;
   token: string;
   isShowReloginModal: boolean;
   datedNum: number;
   loading: boolean;
-}
-export interface IEndRoute {
-  id: number;
-  name: string;
-  parentId: number;
-  icon: string;
-  path: string;
-  perms: any;
-  children?: IEndRoute[];
 }

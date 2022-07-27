@@ -2,11 +2,11 @@ import { config as instanceConfig } from "./config";
 import { MyRequest } from "./request/request";
 import { RequestConfig } from "./types";
 // 完整的接口返回成功的话一般返回以下四个参数
-export interface IMyResponse<T = any> {
+interface IMyResponse<T> {
   code: number;
   message: string;
-  data: T;
   success: boolean;
+  data: T;
 }
 // 取出其中的data
 // type IRealResponse<T> = Pick<IMyResponse<T>, "data">;

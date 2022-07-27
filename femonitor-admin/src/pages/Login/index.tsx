@@ -2,20 +2,20 @@ import { Button, Checkbox, Form, Input } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import style from "./Login.module.scss";
 import { userType } from "./types";
+import { updateUserInfo } from "../../store/module/user";
+import { useAppDispatch } from "../../store/types";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useEffect } from "react";
 import { useRequest } from "ahooks";
 import { login } from "../../api/user";
-import { cache } from "../../utils/localStorage";
-import { useResetState } from "../../hooks/useResettState";
-
 export function Login() {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { run: handleLogin } = useRequest((params: userType) => login(params), {
     manual: true,
-    onSuccess: async (res) => {
+    onSuccess: (res) => {
       if (res.success) {
-        cache.setItem("token", res.data.token);
+        dispatch(updateUserInfo(res.data));
         navigate("/dashboard");
       }
     },
@@ -31,14 +31,8 @@ export function Login() {
     [handleLogin]
   );
   const [form] = Form.useForm<userType>();
-  const reset = useResetState();
   useEffect(() => {
     document.title = "登录";
-  });
-  useEffect(() => {
-    // 每次到登录页面都清除所有状态 包括登出 登录过期重定向
-    cache.clear();
-    reset();
   });
   return (
     <div className={style.loginContainer}>
@@ -87,6 +81,7 @@ export function Login() {
             >
               <Checkbox>记住密码</Checkbox>
             </Form.Item>
+
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">
                 登录

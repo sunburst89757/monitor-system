@@ -1,17 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
-import { IUserInfo, stateType } from "../types";
+import { Res } from "../../api/user";
+import { stateType } from "../types";
 import { cache } from "../../utils/localStorage";
-
 const initialState: stateType = {
   userInfo: {
     userId: 0,
     username: "",
-    nickname: "",
-    email: "",
-    phone: "",
-    avater: "",
-    roleName: ""
+    role: ""
   },
   token: "",
   isShowReloginModal: false,
@@ -22,18 +18,14 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    updateUserInfo: (state, action: PayloadAction<IUserInfo>) => {
-      const { userId, nickname, username, email, phone, avater, roleName } =
-        action.payload;
-      state.token = cache.getItem("token");
+    updateUserInfo: (state, action: PayloadAction<Res>) => {
+      const { token, userId, nickName } = action.payload;
+      state.token = token;
       state.userInfo.userId = userId;
       // 用户角色本来应该从action.payload里传递，新项目需要接口更改
-      state.userInfo.roleName = roleName;
-      state.userInfo.username = username;
-      state.userInfo.avater = avater;
-      state.userInfo.email = email;
-      state.userInfo.nickname = nickname;
-      state.userInfo.phone = phone;
+      state.userInfo.role = "super-admin";
+      state.userInfo.username = nickName;
+      cache.setItem("token", token);
     },
     changeisShowReloginModal: (state) => {
       state.isShowReloginModal = !state.isShowReloginModal;
@@ -44,7 +36,13 @@ const userSlice = createSlice({
     resetDatedNum: (state) => {
       state.datedNum = 0;
     },
-    resetInitialState: () => initialState,
+    resetInitialState: (state) => {
+      const { userInfo, datedNum, isShowReloginModal, token } = initialState;
+      state.userInfo = userInfo;
+      state.datedNum = datedNum;
+      state.isShowReloginModal = isShowReloginModal;
+      state.token = token;
+    },
     setLoading: (state, action: PayloadAction<{ loading: boolean }>) => {
       state.loading = action.payload.loading;
     }

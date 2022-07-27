@@ -1,10 +1,6 @@
 # femonitor-admin
 
-这是一个利用 react18 + typescript 实现的 前端监控系统
-
-## 权限管理
-
-本系统实现页面级别权限，具体实现原理见[本文](https://sunburst89757.github.io/my-blogs/blog/react-admin-design)
+前端监控系统
 
 ## 特性
 
@@ -33,9 +29,9 @@
   ```
   npm run start
   ```
-- 登录使用
+  - 登录使用
   ```
-  admin: admin
+  test: 123456
   ```
 - 打包上线
   ```

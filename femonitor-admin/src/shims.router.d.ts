@@ -2,9 +2,8 @@
 import { RouteObject } from "react-router-dom";
 interface MetaObj {
   hidden?: boolean;
+  role?: string[];
   title: string;
-  icon?: string;
-  perms?: any;
 }
 declare module "react-router-dom" {
   export interface RouteObject {

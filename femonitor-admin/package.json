@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ant-design/icons": "^4.7.0",
     "@reduxjs/toolkit": "^1.8.1",
     "@steveeeie/react-page-transition": "^1.3.0",
     "@testing-library/jest-dom": "^5.16.4",
@@ -16,12 +15,9 @@
     "ahooks": "^3.3.10",
     "antd": "^4.20.0",
     "axios": "^0.27.1",
-    "crypto-js": "^4.1.1",
-    "i": "^0.3.7",
     "lodash": "^4.17.21",
-    "nanoid": "^4.0.0",
+    "monitor-demo": "^0.2.3",
     "node-sass": "npm:dart-sass@^1.25.0",
-    "normalize.css": "^8.0.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-redux": "^8.0.1",
@@ -61,7 +57,6 @@
     ]
   },
   "devDependencies": {
-    "@types/crypto-js": "^4.1.1",
     "@types/lodash": "^4.14.182",
     "@types/react-transition-group": "^4.4.4",
     "@types/redux-recycle": "^1.2.3",

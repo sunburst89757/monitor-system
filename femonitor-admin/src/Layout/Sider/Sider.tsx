@@ -1,7 +1,9 @@
 import { Layout, Menu, MenuProps } from "antd";
+import _ from "lodash";
 import { AppstoreOutlined } from "@ant-design/icons";
 import { RouteObject, useLocation, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../store/types";
+import { siderRoutes } from "../../router/config";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MenuInfo } from "rc-menu/lib/interface";
 type MenuItem = Required<MenuProps>["items"][number];
@@ -56,6 +58,30 @@ const routeCallBack = (routes: RouteObject[]): MenuProps["items"] => {
 const generateMenuItem = (routes: RouteObject[]) => {
   return routeCallBack(routes);
 };
+// 根据角色生成可以访问的路由
+function generateAccessRoutes(role: string, routes: RouteObject[]): void {
+  if (role === "super-admin") {
+    return;
+  } else {
+    const delIndexs: number[] = [];
+    routes.forEach((route) => {
+      if (!route?.meta?.role || route.meta?.role.includes(role)) {
+        if (route.children && route.children.length > 0) {
+          generateAccessRoutes(role, route.children);
+        } else {
+          return;
+        }
+      } else {
+        const index = routes.findIndex((item) => item === route);
+        delIndexs.push(index);
+      }
+    });
+    delIndexs.forEach((val, index) => {
+      // 只有第一个删除的元素位置是正确的，后面由于数组长度减少，因此对应的序号也要减一才可以
+      index === 0 ? routes.splice(val, 1) : routes.splice(val - 1, 1);
+    });
+  }
+}
 // 生成一级菜单的key用于展开父级菜单
 function generateRootSubmenuKeys(routes: RouteObject[]): string[] {
   const res: string[] = [];
@@ -69,8 +95,10 @@ export function MySider({ isCollapse }: { isCollapse: boolean }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [openKeys, setOpenKeys] = useState<any[]>([]);
+  const role = useAppSelector((state) => state.user.userInfo.role);
   const menuActive = useAppSelector((state) => state.tabs.menuActive);
-  const routes = useAppSelector((state) => state.permission.routes);
+  // 深克隆一下避免影响siderRoutes
+  const routes: RouteObject[] = useMemo(() => _.cloneDeep(siderRoutes), []);
   const rootSubmenuKeys = useMemo(
     () => generateRootSubmenuKeys(routes),
     [routes]
@@ -106,7 +134,11 @@ export function MySider({ isCollapse }: { isCollapse: boolean }) {
     },
     [navigate]
   );
-  const menuItems = useMemo(() => generateMenuItem(routes), [routes]);
+  // 根据角色和侧边路由生成可以访问的路由
+  useEffect(() => {
+    generateAccessRoutes(role, routes);
+  }, [role, routes]);
+  // 路由跳转引起的菜单展开选中效果显示
   useEffect(() => {
     setOpenKeys(["/" + location.pathname.split("/")[1]!]);
   }, [location.pathname]);
@@ -121,7 +153,7 @@ export function MySider({ isCollapse }: { isCollapse: boolean }) {
         openKeys={openKeys}
         onOpenChange={onOpenChange}
         // 根据用户可以访问的路由生成显示的菜单结构
-        items={menuItems}
+        items={generateMenuItem(routes)}
         theme="dark"
       />
     </Sider>

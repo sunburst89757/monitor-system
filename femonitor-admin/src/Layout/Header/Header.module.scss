@@ -1,23 +1,22 @@
+h2,
+h4 {
+  margin: 0;
+  color: #fff;
+}
 .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-left: 25px;
+
+  color: #fff;
   .leftBlock {
     display: flex;
     align-items: center;
-    box-sizing: border-box;
     .icon {
       font-weight: 700;
       font-size: 20px;
       margin-right: 30px;
-      color: #fff;
-    }
-    // 样式给initial 将antd添加的样式给掩盖
-    h2 {
-      color: #fff;
-      margin: initial;
-      padding: initial;
     }
   }
   .rightBlock {
@@ -30,8 +29,5 @@
       margin-left: 30px;
       color: #fff;
     }
-  }
-  .font {
-    color: #fff;
   }
 }
