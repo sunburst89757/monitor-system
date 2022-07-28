@@ -1,7 +1,9 @@
-var ip = require("ip");
 const config = {
+  // 上报地址
   url: "",
+  // 项目id 支持H5 Web 小程序
   appID: "",
+  // 登录用户的id
   userID: "",
   vue: {
     Vue: null,

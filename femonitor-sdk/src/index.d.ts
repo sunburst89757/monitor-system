@@ -4,8 +4,6 @@ export type IConfig = {
   deviceId?: string;
   //   用户id
   userId?: string;
-  //   没有登录来确定用户就使用ip
-  ip?: string;
   vue?: {
     Vue: any;
     router: any;

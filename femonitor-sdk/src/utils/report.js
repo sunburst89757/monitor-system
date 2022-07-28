@@ -2,7 +2,6 @@ import { originalOpen, originalSend } from "./xhr";
 import { addCache, getCache, clearCache } from "./cache";
 import generateUniqueID from "../utils/generateUniqueID";
 import config from "../config";
-import { getIp } from "./getIp";
 export function isSupportSendBeacon() {
   return !!window.navigator?.sendBeacon;
 }
@@ -21,7 +20,6 @@ export function report(data, isImmediate = false) {
     id: sessionID,
     appID: config.appID,
     userID: config.userID,
-    ip: getIp(),
     data
   });
 
