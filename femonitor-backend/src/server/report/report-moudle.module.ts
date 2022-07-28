@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { errorSchema } from 'src/schema/error.schema';
+import { ConsoleError, ConsoleErrorSchema } from 'src/schema/consoleError.schema';
+import { ErrorSchema } from 'src/schema/error.schema';
+import { ResoureError, ResoureErrorSchema } from 'src/schema/resourceError.shema';
 import { ErrorService } from '../error/error.service';
 import { ReportController } from './report.controller';
 
@@ -8,9 +10,13 @@ import { ReportController } from './report.controller';
     imports:[
         MongooseModule.forFeature([
             {
-                name:'Errors',
-                schema: errorSchema,
-                collection:'error'
+                name:Error.name,
+                schema: ErrorSchema,
+                collection:'error',
+                discriminators:[
+                    {name: ConsoleError.name, schema: ConsoleErrorSchema},
+                    {name: ResoureError.name, schema: ResoureErrorSchema},
+                ],
             }
         ])
     ],

@@ -9,4 +9,11 @@ export class ReportController {
     async index(){
         return await this.errorService.getErrorsinfo();
     }
+
+    @Get('testCreate')
+    async testCreate(){
+        let console = await this.errorService.createConsoleError();
+        let resoure =  await this.errorService.createResoureError();
+        return [console, resoure];
+    }
 }
