@@ -8,34 +8,11 @@ export class ErrorService {
     constructor(
         @InjectModel(Error.name) private readonly ErrorMoudle
     ){}
-
-    async createConsoleError(){
-        
-        const createdError = await this.ErrorMoudle.create({
-            _id:1,
-            type: 'Error',
-            subtype: 'ConsoleError',
-            startTime: Date.now(),
-            pageURL: 'http://test/test',
-            errDate: 'test'
-        })
-        return createdError;
-        
-    }
-
-    async createResoureError(){
-        
-        const createdError = await this.ErrorMoudle.create({
-            _id:2,
-            type: 'Error',
-            subtype: 'ResoureError',
-            startTime: Date.now(),
-            pageURL: 'http://test/test',
-            url: 'http://test1/test1.jpg',
-            html: 'testhtml',
-            resoureType: 'abc',
-        })
-        return createdError;
-        
+    async add(reports){
+        for(let report of reports){
+            if(report.errData) report.errData = JSON.stringify(report.errData);
+            console.log(report);
+            await this.ErrorMoudle.create(report);
+        }
     }
 }

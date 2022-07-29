@@ -5,8 +5,14 @@ export class ReportService {
     @Inject(ErrorService)
     private readonly ErrorService: ErrorService
 
-    async test(){
-        const createdError = this.ErrorService.createResoureError();
-        return createdError;
+    async handle(data){
+        if(!data.data.length){
+            data.data = [data.data];
+        }
+        let reports = Array.from(data.data).map((report) => {
+            Object.assign(report, {id:data['id'], appID:data['appID'], userID:data['userID']});
+            return report;
+        })
+        this.ErrorService.add(reports.filter(report => report['type'] == 'error'));
     }
 }

@@ -6,7 +6,7 @@ export class ConsoleError {
   subtype: String;
 
   @Prop({ type: String, required: true })
-  errDate: String
+  errData: String
 }
 
 export const ConsoleErrorSchema = SchemaFactory.createForClass(ConsoleError);

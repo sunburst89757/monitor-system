@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, HttpCode, Headers, RawBodyRequest } from '@nestjs/common';
 import { ReportService } from './report.service';
+import { Request } from 'express';
 
 @Controller('report')
 export class ReportController {
@@ -10,9 +11,16 @@ export class ReportController {
         
     }
 
+    @Post()
+    @HttpCode(200)
+    async reportDate(@Body() body){ 
+        let data = JSON.parse(body);
+        this.reportService.handle(data);
+        return '';
+    }
+
     @Get('testCreate')
     async testCreate(){
-        let test = await this.reportService.test();
-        return [test];
+        return '';
     }
 }

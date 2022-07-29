@@ -5,7 +5,7 @@ export class PromiseError {
   subtype: String;
 
   @Prop({ type: String, required: true })
-  resaon: String
+  reason: String
 }
 
 export const PromiseErrorSchema = SchemaFactory.createForClass(PromiseError);

@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 
 @Schema()
-export class ResoureError {
+export class ResourceError {
   subtype: String;
 
   @Prop({ type: String, required: true })
@@ -12,7 +12,7 @@ export class ResoureError {
   html: String
 
   @Prop({ type: String, required: true })
-  resoureType: String
+  resourceType: String
 }
 
-export const ResoureErrorSchema = SchemaFactory.createForClass(ResoureError);
+export const ResourceErrorSchema = SchemaFactory.createForClass(ResourceError);
