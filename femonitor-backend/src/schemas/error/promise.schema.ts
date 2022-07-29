@@ -1,12 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-
 @Schema()
-export class ConsoleError {
+export class PromiseError {
   subtype: String;
 
   @Prop({ type: String, required: true })
-  errDate: String
+  resaon: String
 }
 
-export const ConsoleErrorSchema = SchemaFactory.createForClass(ConsoleError);
+export const PromiseErrorSchema = SchemaFactory.createForClass(PromiseError);

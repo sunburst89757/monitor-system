@@ -1,18 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-
 @Schema()
-export class ResoureError {
+export class JsError {
   subtype: String;
 
   @Prop({ type: String, required: true })
-  url: String
+  msg: String
 
   @Prop({ type: String, required: true })
-  html: String
+  line: String
 
   @Prop({ type: String, required: true })
-  resoureType: String
+  column: String
+
+  @Prop({ type: String, required: true })
+  error: String
 }
 
-export const ResoureErrorSchema = SchemaFactory.createForClass(ResoureError);
+export const JsErrorSchema = SchemaFactory.createForClass(JsError);
