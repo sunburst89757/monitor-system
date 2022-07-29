@@ -1,19 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Error } from 'src/schema/error.schema';
+import { Error } from 'src/schemas/error/error.schema';
 @Injectable()
 export class ErrorService {
+
     constructor(
-        @InjectModel(Error.name) private readonly ReportMoudle
+        @InjectModel(Error.name) private readonly ErrorMoudle
     ){}
 
-    async getErrorsinfo(){
-
-    }
-
     async createConsoleError(){
-        const createdError = await this.ReportMoudle.create({
+        
+        const createdError = await this.ErrorMoudle.create({
             _id:1,
             type: 'Error',
             subtype: 'ConsoleError',
@@ -22,10 +20,12 @@ export class ErrorService {
             errDate: 'test'
         })
         return createdError;
+        
     }
 
     async createResoureError(){
-        const createdError = await this.ReportMoudle.create({
+        
+        const createdError = await this.ErrorMoudle.create({
             _id:2,
             type: 'Error',
             subtype: 'ResoureError',
@@ -33,7 +33,9 @@ export class ErrorService {
             pageURL: 'http://test/test',
             url: 'http://test1/test1.jpg',
             html: 'testhtml',
+            resoureType: 'abc',
         })
         return createdError;
+        
     }
 }

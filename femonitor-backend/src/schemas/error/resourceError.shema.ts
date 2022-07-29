@@ -11,6 +11,9 @@ export class ResoureError {
 
   @Prop({ type: String, required: true })
   html: String
+
+  @Prop({ type: String, required: true })
+  resoureType: String
 }
 
 export const ResoureErrorSchema = SchemaFactory.createForClass(ResoureError);

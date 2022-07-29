@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConsoleError, ConsoleErrorSchema } from 'src/schema/consoleError.schema';
-import { ErrorSchema } from 'src/schema/error.schema';
-import { ResoureError, ResoureErrorSchema } from 'src/schema/resourceError.shema';
-import { ErrorService } from '../error/error.service';
-import { ReportController } from './report.controller';
+import { ReportController } from 'src/report/report.controller';
+import { ConsoleError, ConsoleErrorSchema } from 'src/schemas/error/consoleError.schema';
+import { ErrorSchema, Error } from 'src/schemas/error/error.schema';
+import { ResoureError, ResoureErrorSchema } from 'src/schemas/error/resourceError.shema';
+import { ErrorService } from './error.service';
 
 @Module({
     imports:[
@@ -21,6 +21,6 @@ import { ReportController } from './report.controller';
         ])
     ],
     providers:[ErrorService],
-    controllers: [ReportController]
+    exports: [ErrorService],
 })
-export class ReportMoudle {}
+export class ErrorModule {}
