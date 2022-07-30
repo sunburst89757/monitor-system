@@ -2,6 +2,7 @@ import { originalOpen, originalSend } from "./xhr";
 import { addCache, getCache, clearCache } from "./cache";
 import generateUniqueID from "../utils/generateUniqueID";
 import config from "../config";
+import { handleXhr } from "./handleXhr";
 export function isSupportSendBeacon() {
   return !!window.navigator?.sendBeacon;
 }
@@ -50,7 +51,7 @@ export function lazyReportCache(data, timeout = 3000) {
   timer = setTimeout(() => {
     const data = getCache();
     if (data.length) {
-      report(data);
+      report(handleXhr(data));
       clearCache();
     }
   }, timeout);
