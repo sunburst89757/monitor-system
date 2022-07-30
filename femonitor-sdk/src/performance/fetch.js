@@ -15,7 +15,7 @@ function overwriteFetch() {
     };
 
     return originalFetch(url, config)
-      .then((res) => {
+      .then(async (res) => {
         const data = res.clone();
         const responseData = await data.json();
         reportData.endTime = Date.now();
