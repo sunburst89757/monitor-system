@@ -129,7 +129,7 @@ export function MySider({ isCollapse }: { isCollapse: boolean }) {
       } else {
         // 外链跳转不可以使用navigate
         window.location.href =
-          "https://github.com/sunburst89757/react-ts-admin";
+          "https://github.com/sunburst89757/monitor-system";
       }
     },
     [navigate]

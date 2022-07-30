@@ -39,55 +39,77 @@ export const siderRoutes: RouteObject[] = [
     ]
   },
   {
-    path: "/salesManage",
+    path: "/error",
     element: <MyLayout></MyLayout>,
     meta: {
-      title: "销售管理"
+      title: "错误监控"
     },
     children: [
       {
-        path: "customerManage",
-        element: <LazyLoad path="SalesManage/CustomerManage"></LazyLoad>,
+        path: "js-err",
+        element: <LazyLoad path="Error/JsErr"></LazyLoad>,
         meta: {
-          title: "顾客管理",
-          role: ["admin"]
+          title: "js错误"
         }
       },
       {
-        path: "productManage",
-        element: <LazyLoad path="SalesManage/ProductManage"></LazyLoad>,
+        path: "request-err",
+        element: <LazyLoad path="Error/RequestErr"></LazyLoad>,
         meta: {
-          title: "产品管理"
+          title: "请求错误"
         }
       },
       {
-        path: "test",
-        element: <LazyLoad path="SalesManage/Test"></LazyLoad>,
+        path: "resource-err",
+        element: <LazyLoad path="Error/ResourceErr"></LazyLoad>,
         meta: {
-          title: "demo"
+          title: "资源加载错误"
         }
       }
     ]
   },
   {
-    path: "/purchaseManage",
+    path: "/performance",
     element: <MyLayout></MyLayout>,
     meta: {
-      title: "采购管理"
+      title: "性能监控"
     },
     children: [
       {
-        path: "areaManage",
-        element: <LazyLoad path="PurchaseManage/AreaManage"></LazyLoad>,
+        path: "network",
+        element: <LazyLoad path="Performance/Network"></LazyLoad>,
         meta: {
-          title: "区域管理"
+          title: "网络性能"
         }
       },
       {
-        path: "supplierManage",
-        element: <LazyLoad path="PurchaseManage/SupplierManage"></LazyLoad>,
+        path: "page",
+        element: <LazyLoad path="Performance/Page"></LazyLoad>,
         meta: {
-          title: "供应商管理"
+          title: "页面性能"
+        }
+      }
+    ]
+  },
+  {
+    path: "/behavior",
+    element: <MyLayout></MyLayout>,
+    meta: {
+      title: "行为监测"
+    },
+    children: [
+      {
+        path: "visit",
+        element: <LazyLoad path="Behavior/Visit"></LazyLoad>,
+        meta: {
+          title: "访问数据"
+        }
+      },
+      {
+        path: "page",
+        element: <LazyLoad path="Behavior/Page"></LazyLoad>,
+        meta: {
+          title: "页面行为"
         }
       }
     ]
