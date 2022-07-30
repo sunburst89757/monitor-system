@@ -2,7 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class JsError {
-  subtype: String;
 
   @Prop({ type: String, required: true })
   msg: String
@@ -15,6 +14,7 @@ export class JsError {
 
   @Prop({ type: String, required: true })
   error: String
+  
 }
 
 export const JsErrorSchema = SchemaFactory.createForClass(JsError);
