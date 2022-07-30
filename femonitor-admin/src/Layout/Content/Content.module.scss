@@ -1,6 +1,6 @@
 .container {
   margin: 24px 16px;
-  padding: 0 24;
-  min-height: 280;
   background-color: #fff;
+  // 溢出的做滑动处理
+  overflow-y: auto;
 }

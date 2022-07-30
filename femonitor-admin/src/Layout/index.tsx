@@ -12,7 +12,7 @@ export default function MyLayout() {
     <>
       <Layout style={{ height: "100vh" }}>
         <MyHeader isCollapse={isCollapse} onClick={toggle}></MyHeader>
-        <Layout>
+        <Layout style={{ height: "100%" }}>
           <MySider isCollapse={isCollapse}></MySider>
           <MyContent></MyContent>
         </Layout>

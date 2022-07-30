@@ -15,6 +15,7 @@
     "ahooks": "^3.3.10",
     "antd": "^4.20.0",
     "axios": "^0.27.1",
+    "echarts": "^5.3.3",
     "lodash": "^4.17.21",
     "monitor-demo": "^0.2.3",
     "node-sass": "npm:dart-sass@^1.25.0",

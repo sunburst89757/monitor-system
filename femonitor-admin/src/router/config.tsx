@@ -64,7 +64,7 @@ export const siderRoutes: RouteObject[] = [
         path: "test",
         element: <LazyLoad path="SalesManage/Test"></LazyLoad>,
         meta: {
-          title: "测试"
+          title: "demo"
         }
       }
     ]
