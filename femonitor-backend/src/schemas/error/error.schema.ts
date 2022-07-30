@@ -1,10 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ConsoleError } from './consoleError.schema';
-import { JsError } from './js.schema';
-import { PromiseError } from './promise.schema';
-import { ResourceError } from './resourceError.shema';
-import { VueError } from './vue.schema';
-
 
 @Schema({ discriminatorKey: 'subType' })
 export class Error {
@@ -23,7 +17,7 @@ export class Error {
   @Prop({
     type: String,
     required: true,
-    enum: [ConsoleError.name, ResourceError.name, JsError.name, PromiseError.name, VueError.name],
+    enum: ['console-error', 'resource', 'js', 'promise', 'vue'],
   })
   subType: string;
 
