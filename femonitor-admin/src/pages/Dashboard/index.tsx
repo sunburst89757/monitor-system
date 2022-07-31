@@ -1,33 +1,39 @@
-// @ts-nocheck
-import { useRequest } from "ahooks";
-import { Button } from "antd";
-import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { getAreaList } from "../../api/user";
-
+import { Select } from "antd";
+import style from "./dashboard.module.scss";
+const { Option } = Select;
 export default function Dashboard() {
-  const navigate = useNavigate();
-  const handleNavigate = useCallback(() => {
-    navigate("/salesManage/productManage");
-    console.log("点击/salesManage/productManage");
-  }, [navigate]);
-  const { run: handle } = useRequest(() => getAreaList(), {
-    manual: true,
-    onSuccess: (res) => {
-      console.log("成功数据", res);
-    },
-    onError: (err) => {
-      console.log(err);
-    }
-  });
-  const handleMonitor = useCallback(() => {
-    console.log(a as any);
-  }, []);
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
   return (
     <div>
-      <Button onClick={handleNavigate}>测试路由权限</Button>
-      <Button onClick={handle}>测试接口</Button>
-      <Button onClick={handleMonitor}>测试监视效果</Button>
+      <div className={style.header}>
+        <Select
+          defaultValue="lucy"
+          style={{ width: 120 }}
+          onChange={handleChange}
+        >
+          <Option value="jack">Jack</Option>
+          <Option value="lucy">Lucy</Option>
+          <Option value="disabled" disabled>
+            Disabled
+          </Option>
+          <Option value="Yiminghe">yiminghe</Option>
+        </Select>
+
+        <Select
+          defaultValue="lucy"
+          style={{ width: 120 }}
+          onChange={handleChange}
+        >
+          <Option value="jack">Jack</Option>
+          <Option value="lucy">Lucy</Option>
+          <Option value="disabled" disabled>
+            Disabled
+          </Option>
+          <Option value="Yiminghe">yiminghe</Option>
+        </Select>
+      </div>
     </div>
   );
 }

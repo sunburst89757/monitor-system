@@ -106,7 +106,7 @@ export const siderRoutes: RouteObject[] = [
         }
       },
       {
-        path: "page",
+        path: "pageBehavior",
         element: <LazyLoad path="Behavior/Page"></LazyLoad>,
         meta: {
           title: "页面行为"

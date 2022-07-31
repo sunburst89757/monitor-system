@@ -74,7 +74,7 @@ export function MyHeader({ isCollapse, onClick }: propType) {
             className={style.icon}
           ></MenuFoldOutlined>
         )}
-        <h2>XXX管理平台</h2>
+        <h2>前端监控系统管理平台</h2>
       </div>
       <div className={style.rightBlock}>
         <div className={style.informBox}>

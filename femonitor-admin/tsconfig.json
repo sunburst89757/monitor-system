@@ -20,5 +20,5 @@
       "*": ["types/*"]
     }
   },
-  "include": ["src", "styles.d.ts"]
+  "include": ["src"]
 }
