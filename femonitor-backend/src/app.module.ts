@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { ReportModule } from './report/report.module';
-import { ErrorModule } from './error/error.module';
+import { ErrorModule } from './module/error/error.module';
+import { ReportModule } from './module/report/report.module';
 
 
 const DBRootModule = MongooseModule.forRoot('mongodb://localhost/monitor')

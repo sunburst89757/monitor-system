@@ -1,18 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Common } from '../common.schema';
 
 @Schema({ discriminatorKey: 'subType' })
-export class Error {
-  @Prop({ type: String, required: true })
-  id: String;
-
-  @Prop({ type: String, required: true })
-  appID: String;
-
-  @Prop({ type: String, required: true })
-  userID: String;
-
-  @Prop({ type: String, required: true })
-  type: String;
+export class Error extends Common{
 
   @Prop({
     type: String,
@@ -21,11 +11,6 @@ export class Error {
   })
   subType: string;
 
-  @Prop({ type: Date, required: true })
-  startTime: Date;
-
-  @Prop({ type: String, required: true })
-  pageURL: String;
 }
 
 export const ErrorSchema = SchemaFactory.createForClass(Error);

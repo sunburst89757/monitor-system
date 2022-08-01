@@ -1,24 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Common } from '../common.schema';
 
 @Schema({ discriminatorKey: 'subType',timestamps: true})
-export class Performance {
-
-  @Prop({ type: String, required: true })
-  type: string;
-
+export class Performance extends Common{
+  
   @Prop({
     type: String,
     required: true,
     enum:['domcontentloaded','fetch','first-contentful-paint','fps','largest-contentful-paint','paint','layout-shift','load','xhr'],
   })
-  subtype: string;
+  subType: string;
 
-  @Prop({ type: Date, required: true })
-  startTime: Date;
-
-  @Prop({ type: String, required: true })
-  pageURL: string;
 }
 
 export const PerformanceSchema = SchemaFactory.createForClass(Performance);
-

@@ -1,23 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Common } from '../common.schema';
 
 @Schema({ discriminatorKey: 'subType',timestamps: true})
-export class Behavior{
-  
-    @Prop({ type: String, required: true })
-    type: string;
+export class Behavior extends Common{
   
     @Prop({
       type: String,
       required: true,
       enum:['click','haschange','page-access-duration','page-access-height','pv','react-router-range','vue-router-change'],
     })
-    subtype: string;
-  
-    @Prop({ type: Date, required: true })
-    startTime: Date;
-  
-    @Prop({ type: String, required: true })
-    pageURL: string;
+    subType: string;
+
 }
 
 
