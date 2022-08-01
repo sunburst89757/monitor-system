@@ -12,7 +12,12 @@ export class PerformanceService {
     async add(reports){
         for(let report of reports){
             console.log(report);
-            await this.performanceModel.create(report);
+            try{
+                await this.performanceModel.create(report);
+            } catch(e) {
+                console.log('faild to insert report.');
+                console.log(e);
+            }
         }
     }
 }

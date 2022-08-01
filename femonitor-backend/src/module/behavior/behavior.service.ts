@@ -12,7 +12,13 @@ export class BehaviorService {
     async add(reports){
         for(let report of reports){
             console.log(report);
-            await this.behaviorMoudle.create(report);
+            try{
+                await this.behaviorMoudle.create(report);
+            } catch(e) {
+                console.log('faild to insert report.');
+                console.log(e);
+            }
+            
         }
     }
 }

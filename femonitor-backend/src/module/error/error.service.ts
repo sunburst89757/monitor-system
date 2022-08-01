@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { Error } from 'src/schemas/error/error.schema';
 @Injectable()
 export class ErrorService {
@@ -12,7 +11,13 @@ export class ErrorService {
         for(let report of reports){
             if(report.errData) report.errData = JSON.stringify(report.errData);
             console.log(report);
-            await this.ErrorMoudle.create(report);
+            try{
+                await this.ErrorMoudle.create(report);
+            } catch(e) {
+                console.log('faild to insert report.');
+                console.log(e);
+            }
+            
         }
     }
 }
