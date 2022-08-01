@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class PV {
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   referrer: string;
 }
 

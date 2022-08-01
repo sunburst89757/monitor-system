@@ -4,11 +4,14 @@ export class Common{
     
     @Prop({ type: String, required: true })
     id: String;
+
+    @Prop({ type: String, required: true })
+    ip: String;
   
     @Prop({ type: String, required: true })
     appID: String;
   
-    @Prop({ type: String, required: true })
+    @Prop({ type: String })
     userID: String;
 
     @Prop({ type: String, required: true })

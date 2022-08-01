@@ -8,4 +8,11 @@ export class BehaviorService {
     constructor(
         @InjectModel(Behavior.name) private readonly behaviorMoudle:Model<Behavior>
     ){}
+
+    async add(reports){
+        for(let report of reports){
+            console.log(report);
+            await this.behaviorMoudle.create(report);
+        }
+    }
 }

@@ -9,5 +9,10 @@ export class PerformanceService {
         @InjectModel(Performance.name) private readonly performanceModel:Model<Performance>
     ){}
 
-
+    async add(reports){
+        for(let report of reports){
+            console.log(report);
+            await this.performanceModel.create(report);
+        }
+    }
 }
