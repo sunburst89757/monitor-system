@@ -1,10 +1,4 @@
-import {
-  ClockCircleOutlined,
-  CloseSquareOutlined,
-  InfoOutlined,
-  UndoOutlined,
-  WarningOutlined
-} from "@ant-design/icons";
+import { ClockCircleOutlined, UndoOutlined } from "@ant-design/icons";
 import { Col, Row, Select } from "antd";
 import { useCallback, useState } from "react";
 import { timeSelect1, timeSelect2 } from "./config";
@@ -53,30 +47,16 @@ export default function Dashboard() {
           ))}
         </Select>
       </div>
-      <div className={style.title}>健康状态</div>
-      <Row gutter={20}>
-        <Col span={6}>
-          <Select
-            status="error"
-            suffixIcon={<CloseSquareOutlined />}
-            style={{ width: "100%" }}
-          ></Select>
-        </Col>
-        <Col span={6}>
-          <Select
-            status="warning"
-            suffixIcon={<WarningOutlined />}
-            style={{ width: "100%" }}
-          ></Select>
-        </Col>
-        <Col span={6}>
-          <Select
-            // status="success"
-            suffixIcon={<InfoOutlined />}
-            style={{ width: "100%" }}
-          ></Select>
-        </Col>
-      </Row>
+      <div className={style.content}>
+        <div className={style.block}>
+          <div className={style.blockHeader}>健康状态</div>
+          <div className={style.blockContent}>
+            <div className={style.healthyAll}></div>
+            <div className={style.divided}></div>
+            <div className={style.healthyDetail}></div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

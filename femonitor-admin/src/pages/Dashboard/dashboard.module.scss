@@ -1,6 +1,7 @@
 .header {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 20px;
 }
 .title {
   color: #2f354d;
@@ -8,4 +9,48 @@
   font-weight: bold;
   line-height: 1.75;
   margin: 10px 0;
+}
+.content {
+  display: flex;
+  justify-content: center;
+  .block {
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    height: 20vh;
+    background-color: #fff;
+    margin-bottom: 20px;
+    .blockHeader {
+      display: flex;
+      align-items: center;
+      padding-left: 20px;
+      flex: 1;
+      font-size: 15px;
+      color: #2f354d;
+      font-weight: bold;
+      border-bottom: 3px solid #f8f8f9;
+    }
+    .blockContent {
+      display: flex;
+      flex: 3;
+      align-items: center;
+    }
+  }
+}
+.healthyAll {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.healthyDetail {
+  flex: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.divided {
+  width: 2px;
+  height: 12vh;
+  background-color: #f8f8f9;
 }
