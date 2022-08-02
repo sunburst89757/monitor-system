@@ -3,17 +3,17 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class Xhr {
-  @Prop({ type: String, required: true })
-  status: string;
+  @Prop({ type: Number, required: true })
+  status: number;
 
-  @Prop({ type: String, required: true })
-  duration: string;
+  @Prop({ type: Number, required: true })
+  duration: number;
 
-  @Prop({ type: String, required: true })
-  startTime: string;
+  @Prop({ type: Date, required: true })
+  startTime: Date;
 
-  @Prop({ type: String, required: true })
-  endTime: string;
+  @Prop({ type: Date, required: true })
+  endTime: Date;
 
   @Prop({ type: String, required: true })
   url: string;
@@ -21,8 +21,8 @@ export class Xhr {
   @Prop({ type: String, required: true })
   method: string;
 
-  @Prop({ type: String, required: true })
-  success: string;
+  @Prop({ type: Boolean, required: true })
+  success: boolean;
 
   @Prop({ type: String, required: true })
   sendData: string;
