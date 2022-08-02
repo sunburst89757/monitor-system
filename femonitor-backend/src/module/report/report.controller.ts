@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Req, HttpCode, Headers, RawBodyRequest } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { RealIP } from 'nestjs-real-ip';
 import { ReportService } from './report.service';
-import { Request } from 'express';
 
 @Controller('report')
 export class ReportController {
@@ -13,8 +13,9 @@ export class ReportController {
 
     @Post()
     @HttpCode(200)
-    async reportDate(@Body() body){ 
+    async reportDate(@Body() body, @RealIP() ip: string){ 
         let data = JSON.parse(body);
+        data['ip'] = ip;
         this.reportService.handle(data);
         return '';
     }
