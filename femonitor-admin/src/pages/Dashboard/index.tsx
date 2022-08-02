@@ -1,39 +1,83 @@
-import { Select } from "antd";
+import {
+  ClockCircleOutlined,
+  CloseSquareOutlined,
+  InfoOutlined,
+  UndoOutlined,
+  WarningOutlined
+} from "@ant-design/icons";
+import { Col, Row, Select } from "antd";
+import { useCallback, useState } from "react";
+import { timeSelect1, timeSelect2 } from "./config";
 import style from "./dashboard.module.scss";
+import { IOptionType } from "./types";
 const { Option } = Select;
 export default function Dashboard() {
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
+  const [timeSelect, settimeSelect] = useState("1");
+  const [queryTimeSelect, setqueryTimeSelect] = useState("30");
+  const timeSelectChange = (value: string) => {
+    console.log(`selected ${parseInt(value)}`);
+    settimeSelect(value);
   };
+  const querySelectChange = useCallback((value: string) => {
+    console.log(`selected ${parseInt(value)}`);
+    setqueryTimeSelect(value);
+  }, []);
   return (
     <div>
       <div className={style.header}>
         <Select
-          defaultValue="lucy"
+          defaultValue="1"
           style={{ width: 120 }}
-          onChange={handleChange}
+          onChange={timeSelectChange}
+          value={timeSelect}
+          suffixIcon={<ClockCircleOutlined />}
         >
-          <Option value="jack">Jack</Option>
-          <Option value="lucy">Lucy</Option>
-          <Option value="disabled" disabled>
-            Disabled
-          </Option>
-          <Option value="Yiminghe">yiminghe</Option>
+          {timeSelect1.map((item) => (
+            <Option value={item.value} key={item.label}>
+              {item.label}
+            </Option>
+          ))}
         </Select>
 
         <Select
-          defaultValue="lucy"
+          defaultValue="30"
           style={{ width: 120 }}
-          onChange={handleChange}
+          onChange={querySelectChange}
+          value={queryTimeSelect}
+          suffixIcon={<UndoOutlined />}
         >
-          <Option value="jack">Jack</Option>
-          <Option value="lucy">Lucy</Option>
-          <Option value="disabled" disabled>
-            Disabled
-          </Option>
-          <Option value="Yiminghe">yiminghe</Option>
+          {timeSelect2.map((item) => (
+            <Option value={item.value} key={item.label}>
+              {item.label}
+            </Option>
+          ))}
         </Select>
       </div>
+      <div className={style.title}>健康状态</div>
+      <Row gutter={20}>
+        <Col span={6}>
+          <Select
+            status="error"
+            suffixIcon={<CloseSquareOutlined />}
+            style={{ width: "100%" }}
+          ></Select>
+        </Col>
+        <Col span={6}>
+          <Select
+            status="warning"
+            suffixIcon={<WarningOutlined />}
+            style={{ width: "100%" }}
+          ></Select>
+        </Col>
+        <Col span={6}>
+          <Select
+            // status="success"
+            suffixIcon={<InfoOutlined />}
+            style={{ width: "100%" }}
+          ></Select>
+        </Col>
+      </Row>
     </div>
   );
 }
+//  https://developer.51cto.com/article/706002.html
