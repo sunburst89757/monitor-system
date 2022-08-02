@@ -15,8 +15,11 @@ export default function performance() {
   observeEntries();
   // FCP 和 FP监视
   observePaint();
+  // 加载
   observeLCP();
+  // 视觉稳定性
   observeCLS();
+  // 交互
   observeFID();
   xhr();
   fetch();
