@@ -12,12 +12,13 @@
 }
 .content {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   .block {
     display: flex;
     flex-direction: column;
     width: 80vw;
-    height: 20vh;
+    height: 25vh;
     background-color: #fff;
     margin-bottom: 20px;
     .blockHeader {
@@ -42,11 +43,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  .circle {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .circleFont {
+      margin-bottom: 8px;
+      font-size: 40px;
+      font-weight: bold;
+    }
+    .circleTitle {
+      font-size: 15px;
+    }
+  }
 }
 .healthyDetail {
   flex: 2;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 .divided {

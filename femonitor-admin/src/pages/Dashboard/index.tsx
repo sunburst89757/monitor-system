@@ -1,9 +1,11 @@
 import { ClockCircleOutlined, UndoOutlined } from "@ant-design/icons";
-import { Col, Row, Select } from "antd";
-import { useCallback, useState } from "react";
+import { Progress, Select, Tooltip } from "antd";
+import { useCallback, useMemo, useState } from "react";
+import { Circle } from "./components/Circle/Circle";
+import { DataDisplay } from "./components/DataDisplay/DataDisplay";
 import { timeSelect1, timeSelect2 } from "./config";
 import style from "./dashboard.module.scss";
-import { IOptionType } from "./types";
+import { ICircleType, IDataDisplay } from "./types";
 const { Option } = Select;
 export default function Dashboard() {
   const [timeSelect, settimeSelect] = useState("1");
@@ -16,6 +18,77 @@ export default function Dashboard() {
     console.log(`selected ${parseInt(value)}`);
     setqueryTimeSelect(value);
   }, []);
+  const [healthyPercent, healthysetpercent] = useState(50);
+  const circleColor = useMemo(() => {
+    let color: string = "";
+    if (healthyPercent > 90) {
+      color = "#52c41a";
+    } else if (healthyPercent > 70) {
+      color = "#1890ff";
+    } else {
+      color = "#ff4d4f";
+    }
+    return color;
+  }, [healthyPercent]);
+  const healthyContent = useMemo(() => {
+    if (healthyPercent > 90) {
+      return "健康";
+    } else if (healthyPercent > 70) {
+      return "良好";
+    } else {
+      return "很差";
+    }
+  }, [healthyPercent]);
+  const [circle, setcircle] = useState<ICircleType[]>([
+    {
+      content: "JS错误",
+      percent: 88
+    },
+    {
+      content: "自定义异常",
+      percent: 50
+    },
+    {
+      content: "静态资源异常",
+      percent: 20
+    },
+    {
+      content: "接口异常",
+      percent: 95
+    }
+  ]);
+  const [dataFlows, setdataFlows] = useState<IDataDisplay[]>([
+    {
+      title: "浏览量(PV)",
+      content: 2109832,
+      rate: 16.57
+    },
+    {
+      title: "访客数(UV)",
+      content: 657891,
+      rate: 4.78
+    },
+    {
+      title: "新访客",
+      content: 129871,
+      rate: 18.2
+    },
+    {
+      title: "IP数",
+      content: 657591,
+      rate: 0.04
+    },
+    {
+      title: "频次(人均)",
+      content: 3.21,
+      rate: 11.46
+    },
+    {
+      title: "跳出率",
+      content: "59.05%",
+      rate: -24.18
+    }
+  ]);
   return (
     <div>
       <div className={style.header}>
@@ -51,9 +124,52 @@ export default function Dashboard() {
         <div className={style.block}>
           <div className={style.blockHeader}>健康状态</div>
           <div className={style.blockContent}>
-            <div className={style.healthyAll}></div>
+            <div className={style.healthyAll}>
+              <Tooltip
+                title={healthyContent}
+                visible={true}
+                placement="rightTop"
+                color={circleColor}
+              >
+                <Progress
+                  type="circle"
+                  percent={healthyPercent}
+                  strokeColor={circleColor}
+                  format={(percent) => (
+                    <div className={style.circle}>
+                      <div
+                        className={style.circleFont}
+                        style={{ color: circleColor }}
+                      >
+                        {percent}
+                      </div>
+                      <div className={style.circleTitle}>健康状态</div>
+                    </div>
+                  )}
+                ></Progress>
+              </Tooltip>
+            </div>
             <div className={style.divided}></div>
-            <div className={style.healthyDetail}></div>
+            <div className={style.healthyDetail}>
+              {circle.map((item) => (
+                <Circle
+                  percent={item.percent}
+                  content={item.content}
+                  key={item.content}
+                ></Circle>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className={style.block}>
+          <div className={style.blockHeader}>流量数据</div>
+          <div
+            className={style.blockContent}
+            style={{ justifyContent: "space-around" }}
+          >
+            {dataFlows.map((item) => (
+              <DataDisplay {...item} key={item.content}></DataDisplay>
+            ))}
           </div>
         </div>
       </div>
