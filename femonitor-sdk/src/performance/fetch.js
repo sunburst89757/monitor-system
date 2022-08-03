@@ -1,5 +1,6 @@
 import { urlToJson } from "../utils/handleXhr";
 import { lazyReportCache } from "../utils/report";
+import { getPageURL } from "../utils/utils";
 
 const originalFetch = window.fetch;
 
@@ -11,7 +12,8 @@ function overwriteFetch() {
       url,
       method: (config?.method || "GET").toUpperCase(),
       subType: "fetch",
-      type: "performance"
+      type: "performance",
+      pageURL: getPageURL()
     };
 
     return originalFetch(url, config)

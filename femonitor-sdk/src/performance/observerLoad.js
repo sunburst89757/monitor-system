@@ -1,34 +1,35 @@
-import { lazyReportCache } from '../utils/report'
-import { onBFCacheRestore, getPageURL } from '../utils/utils'
+import { lazyReportCache } from "../utils/report";
+import { onBFCacheRestore, getPageURL } from "../utils/utils";
 
 export default function observerLoad() {
-    ['load', 'DOMContentLoaded'].forEach(type => onEvent(type))
+  ["load", "DOMContentLoaded"].forEach((type) => onEvent(type));
 
-    onBFCacheRestore(event => {
-        requestAnimationFrame(() => {
-            ['load', 'DOMContentLoaded'].forEach(type => {
-                lazyReportCache({
-                    startTime: performance.now() - event.timeStamp,
-                    subType: type.toLocaleLowerCase(),
-                    type: 'performance',
-                    pageURL: getPageURL(),
-                    bfc: true,
-                })
-            })
-        })
-    })
+  onBFCacheRestore((event) => {
+    requestAnimationFrame(() => {
+      ["load", "DOMContentLoaded"].forEach((type) => {
+        lazyReportCache({
+          startTime: performance.now() - event.timeStamp,
+          subType: type.toLocaleLowerCase(),
+          type: "performance",
+          pageURL: getPageURL(),
+          bfc: true
+        });
+      });
+    });
+  });
 }
 
 function onEvent(type) {
-    function callback() {
-        lazyReportCache({
-            type: 'performance',
-            subType: type.toLocaleLowerCase(),
-            startTime: performance.now(),
-        })
+  function callback() {
+    lazyReportCache({
+      type: "performance",
+      subType: type.toLocaleLowerCase(),
+      startTime: performance.now(),
+      pageURL: getPageURL()
+    });
 
-        window.removeEventListener(type, callback, true)
-    }
+    window.removeEventListener(type, callback, true);
+  }
 
-    window.addEventListener(type, callback, true)
+  window.addEventListener(type, callback, true);
 }
