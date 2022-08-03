@@ -17,7 +17,7 @@ export class Common{
     @Prop({ type: String, required: true })
     type: string;
   
-    @Prop({ type: Date, required: true })
+    @Prop({ type: Number, required: true })
     startTime: Number;
   
     @Prop({ type: String, required: true })

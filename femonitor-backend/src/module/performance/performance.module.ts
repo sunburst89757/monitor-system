@@ -13,6 +13,8 @@ import { LayoutShiftSchema } from 'src/schemas/performance/layoutShift.schema';
 import { LoadSchema} from 'src/schemas/performance/load.shema';
 import { XhrSchema } from 'src/schemas/performance/xhr.schema';
 import { Performance } from 'src/schemas/performance/performance.schema';
+import { NavigationSchema } from 'src/schemas/performance/navigation.schema';
+import { FirstScreenPaintSchema } from 'src/schemas/performance/firstScreenPaint.schema';
 
 @Module({
     imports:[
@@ -31,6 +33,9 @@ import { Performance } from 'src/schemas/performance/performance.schema';
                     {name: 'layout-shift', schema: LayoutShiftSchema},
                     {name: 'load', schema: LoadSchema},
                     {name: 'xhr', schema: XhrSchema},
+                    {name: 'navigation' ,schema:NavigationSchema},
+                    {name:'first-screen-paint',schema:FirstScreenPaintSchema},
+                    {name:'first-paint',schema:FirstPaintSchema}
                 ],
             }])
     ],
