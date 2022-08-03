@@ -3,11 +3,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class FirstScreenPaint {
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   entryType: string;
-  
-  @Prop({ type: String, required: true })
-  pageURL: string;
 }
 
 export const FirstScreenPaintSchema = SchemaFactory.createForClass(FirstScreenPaint);
