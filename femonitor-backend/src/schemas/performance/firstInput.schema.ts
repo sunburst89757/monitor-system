@@ -4,16 +4,16 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema()
 export class FirstInput {
   @Prop({ type: String, required: true })
-  name: string;
+  name: String;
 
   @Prop({ type: String, required: true })
-  target: string;
+  target: String;
 
   @Prop({ type: String, required: true })
-  event: string;
+  event: String;
 
   @Prop({ type: Number, required: true })
-  duration: string;
+  duration: Number;
 }
 
 export const FirstInputSchema = SchemaFactory.createForClass(FirstInput);
