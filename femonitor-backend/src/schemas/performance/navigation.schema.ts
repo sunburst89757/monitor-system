@@ -15,7 +15,7 @@ export class Navigation {
   @Prop({ type: String, required: true })
   name: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   protocol: string;
 
   @Prop({ type: String, required: true })

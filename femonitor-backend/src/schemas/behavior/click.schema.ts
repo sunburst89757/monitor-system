@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
 
 
 @Schema()
@@ -24,14 +23,14 @@ export class Click {
   @Prop({ type: String, required: true })
   target: string;
 
-  @Prop({ type: String, required: true })
-  paths: string;
+  @Prop({ type: Array, required: true })
+  paths: Array<String>;
 
   @Prop({ type: String, required: true })
-  outerHtml: string;
+  outerHTML: string;
 
   @Prop({ type: String, required: true })
-  innerHtml: string;
+  innerHTML: string;
 
   @Prop({ type: String, required: true })
   width: string;
@@ -39,8 +38,8 @@ export class Click {
   @Prop({ type: String, required: true })
   height: string;
 
-  @Prop({ type: String, required: true })
-  viewport: string;
+  @Prop({ type: Object, required: true })
+  viewport: Object;
 }
 
 export const ClickSchema = SchemaFactory.createForClass(Click);
