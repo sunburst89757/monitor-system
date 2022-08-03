@@ -11,3 +11,8 @@ export interface IDataDisplay {
   content: number | string;
   rate: number;
 }
+export interface IPerformanceDisplay {
+  title: string;
+  promptMessage: string;
+  content: string;
+}

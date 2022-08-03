@@ -3,9 +3,10 @@ import { Progress, Select, Tooltip } from "antd";
 import { useCallback, useMemo, useState } from "react";
 import { Circle } from "./components/Circle/Circle";
 import { DataDisplay } from "./components/DataDisplay/DataDisplay";
+import { PerformanceDisplay } from "./components/PerformanceDisplay/PerformanceDisplay";
 import { timeSelect1, timeSelect2 } from "./config";
 import style from "./dashboard.module.scss";
-import { ICircleType, IDataDisplay } from "./types";
+import { ICircleType, IDataDisplay, IPerformanceDisplay } from "./types";
 const { Option } = Select;
 export default function Dashboard() {
   const [timeSelect, settimeSelect] = useState("1");
@@ -89,6 +90,40 @@ export default function Dashboard() {
       rate: -24.18
     }
   ]);
+  const [performanceData, setperformanceData] = useState<IPerformanceDisplay[]>(
+    [
+      {
+        title: "TTFB平均时间",
+        promptMessage: "发起请求到第一个字节到达的时间，涉及DNS,TCP等",
+        content: "158.91ms"
+      },
+      {
+        title: "Dom解析时间",
+        promptMessage: "Dom解析完成的时间，反映出DOM的复杂度",
+        content: "2.58s"
+      },
+      {
+        title: "页面平均加载时间",
+        promptMessage: "页面加载完成的总时间",
+        content: "2.74s"
+      },
+      {
+        title: "接口请求总量",
+        promptMessage: "发起请求的总数量",
+        content: "263"
+      },
+      {
+        title: "接口请求平均耗时",
+        promptMessage: "取24小时内的平均值",
+        content: "214.15ms"
+      },
+      {
+        title: "接口请求成功率",
+        promptMessage: "请求成功数/总请求数",
+        content: "100%"
+      }
+    ]
+  );
   return (
     <div>
       <div className={style.header}>
@@ -125,29 +160,30 @@ export default function Dashboard() {
           <div className={style.blockHeader}>健康状态</div>
           <div className={style.blockContent}>
             <div className={style.healthyAll}>
-              <Tooltip
-                title={healthyContent}
-                visible={true}
-                placement="rightTop"
-                color={circleColor}
-              >
-                <Progress
-                  type="circle"
-                  percent={healthyPercent}
-                  strokeColor={circleColor}
-                  format={(percent) => (
-                    <div className={style.circle}>
-                      <div
-                        className={style.circleFont}
-                        style={{ color: circleColor }}
-                      >
-                        {percent}
-                      </div>
-                      <div className={style.circleTitle}>健康状态</div>
+              <div className={style.toolTip}>
+                {/* <Tooltip
+                  title={healthyContent}
+                  visible={true}
+                  placement="rightTop"
+                  color={circleColor}
+                ></Tooltip> */}
+              </div>
+              <Progress
+                type="circle"
+                percent={healthyPercent}
+                strokeColor={circleColor}
+                format={(percent) => (
+                  <div className={style.circle}>
+                    <div
+                      className={style.circleFont}
+                      style={{ color: circleColor }}
+                    >
+                      {percent}
                     </div>
-                  )}
-                ></Progress>
-              </Tooltip>
+                    <div className={style.circleTitle}>健康状态</div>
+                  </div>
+                )}
+              ></Progress>
             </div>
             <div className={style.divided}></div>
             <div className={style.healthyDetail}>
@@ -169,6 +205,20 @@ export default function Dashboard() {
           >
             {dataFlows.map((item) => (
               <DataDisplay {...item} key={item.content}></DataDisplay>
+            ))}
+          </div>
+        </div>
+        <div className={style.block}>
+          <div className={style.blockHeader}>性能数据</div>
+          <div
+            className={style.blockContent}
+            style={{ justifyContent: "space-around" }}
+          >
+            {performanceData.map((item) => (
+              <PerformanceDisplay
+                {...item}
+                key={item.title}
+              ></PerformanceDisplay>
             ))}
           </div>
         </div>
