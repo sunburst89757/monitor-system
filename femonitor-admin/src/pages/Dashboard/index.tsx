@@ -1,10 +1,18 @@
 import { ClockCircleOutlined, UndoOutlined } from "@ant-design/icons";
-import { Progress, Select, Tooltip } from "antd";
+import { Progress, Select } from "antd";
 import { useCallback, useMemo, useState } from "react";
+import { AreaMap } from "./components/AreaMap/AreaMap";
 import { Circle } from "./components/Circle/Circle";
 import { DataDisplay } from "./components/DataDisplay/DataDisplay";
 import { PerformanceDisplay } from "./components/PerformanceDisplay/PerformanceDisplay";
-import { timeSelect1, timeSelect2 } from "./config";
+import { PvMap } from "./components/PvMap/PvMap";
+import {
+  areaMapOption1,
+  areaMapOption2,
+  pvConfig,
+  timeSelect1,
+  timeSelect2
+} from "./config";
 import style from "./dashboard.module.scss";
 import { ICircleType, IDataDisplay, IPerformanceDisplay } from "./types";
 const { Option } = Select;
@@ -158,7 +166,7 @@ export default function Dashboard() {
       <div className={style.content}>
         <div className={style.block}>
           <div className={style.blockHeader}>健康状态</div>
-          <div className={style.blockContent}>
+          <div className={style.blockCenter}>
             <div className={style.healthyAll}>
               <div className={style.toolTip}>
                 {/* <Tooltip
@@ -197,21 +205,31 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        <div className={style.block}>
+        <div className={style.block} style={{ height: "60vh" }}>
           <div className={style.blockHeader}>流量数据</div>
           <div
-            className={style.blockContent}
+            className={style.blockCenter}
             style={{ justifyContent: "space-around" }}
           >
             {dataFlows.map((item) => (
               <DataDisplay {...item} key={item.content}></DataDisplay>
             ))}
           </div>
+          <div className={style.blockBottom}>
+            <div className={style.blockBottomItem} id="mapBox">
+              <PvMap option={pvConfig}></PvMap>
+            </div>
+            <div className={style.divided}></div>
+            <div className={style.blockBottomItem} id="areaBox">
+              <AreaMap option={areaMapOption1} id="pv"></AreaMap>
+              <AreaMap option={areaMapOption2} id="uv"></AreaMap>
+            </div>
+          </div>
         </div>
         <div className={style.block}>
           <div className={style.blockHeader}>性能数据</div>
           <div
-            className={style.blockContent}
+            className={style.blockCenter}
             style={{ justifyContent: "space-around" }}
           >
             {performanceData.map((item) => (

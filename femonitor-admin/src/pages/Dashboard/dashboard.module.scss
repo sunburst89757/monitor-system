@@ -31,10 +31,24 @@
       font-weight: bold;
       border-bottom: 3px solid #f8f8f9;
     }
-    .blockContent {
+    .blockCenter {
       display: flex;
       flex: 3;
       align-items: center;
+    }
+    .blockBottom {
+      display: flex;
+      flex: 5;
+      align-items: center;
+      border-top: 3px solid #f8f8f9;
+      .blockBottomItem {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 }
@@ -66,7 +80,7 @@
 }
 .divided {
   width: 2px;
-  height: 12vh;
+  height: 15vh;
   background-color: #f8f8f9;
 }
 .toolTip {
