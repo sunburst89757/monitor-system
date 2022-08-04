@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/schemas/user/user.schema';
 import * as dayjs from 'dayjs';
-import { queryUser } from 'src/dto/queryUserDto';
 
 @Injectable()
 export class UserService {
