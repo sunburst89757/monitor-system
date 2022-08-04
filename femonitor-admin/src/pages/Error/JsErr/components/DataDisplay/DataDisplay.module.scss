@@ -1,0 +1,16 @@
+.box {
+  margin-top: 10px;
+  width: 100px;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.value {
+  font-size: 40px;
+  font-weight: 700;
+}
+.label {
+  color: darkgray;
+}
