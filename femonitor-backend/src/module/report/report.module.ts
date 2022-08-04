@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 import { ErrorModule } from 'src/module/error/error.module';
 import { BehaviorModule } from '../behavior/behavior.module';
 import { PerformanceModule } from '../performance/performance.module';
+import { UserModule } from '../user/user.module';
 import { ReportController } from './report.controller';
 import { ReportService } from './report.service';
 @Module({
-    imports:[ErrorModule, BehaviorModule, PerformanceModule],
+    imports:[ErrorModule, BehaviorModule, PerformanceModule,UserModule],
     controllers: [ReportController],
     providers: [ReportService],
   })

@@ -7,6 +7,7 @@ export class ErrorService {
     constructor(
         @InjectModel(Error.name) private readonly ErrorMoudle
     ){}
+
     async add(reports){
         for(let report of reports){
             if(report.errData) report.errData = JSON.stringify(report.errData);
@@ -17,7 +18,6 @@ export class ErrorService {
                 console.log('faild to insert report.');
                 console.log(e);
             }
-            
         }
     }
 }
