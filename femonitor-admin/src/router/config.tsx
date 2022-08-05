@@ -33,7 +33,7 @@ export const siderRoutes: RouteObject[] = [
         path: "dashboard",
         element: <LazyLoad path="Dashboard"></LazyLoad>,
         meta: {
-          title: "首页"
+          title: "概览"
         }
       }
     ]

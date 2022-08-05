@@ -13,7 +13,7 @@ const initialState: tabsState = {
   tabs: [
     {
       key: "/dashboard",
-      title: "首页"
+      title: "概览"
     }
   ],
   activeTab: "/dashboard",
@@ -44,7 +44,7 @@ const tabSlice = createSlice({
         if (state.tabs.length === 0) {
           state.tabs.push({
             key: "/dashboard",
-            title: "首页"
+            title: "概览"
           });
           state.activeTab = "/dashboard";
           state.menuActive = ["dashboard"];

@@ -210,3 +210,109 @@ export const areaMapOption2 = {
     }
   ]
 };
+export const pageLoadOption = {
+  tooltip: {
+    trigger: "axis"
+  },
+  legend: {
+    data: ["首次渲染", "首屏时间", "首次可交互", "DOM Ready", "页面完全加载"]
+  },
+  grid: {
+    left: "3%",
+    right: "4%",
+    bottom: "3%",
+    containLabel: true
+  },
+  xAxis: {
+    type: "category",
+    boundaryGap: false,
+    data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+  },
+  yAxis: {
+    type: "value"
+  },
+  series: [
+    {
+      name: "首次渲染",
+      type: "line",
+      stack: "Total",
+      data: [120, 132, 101, 134, 90, 230, 210],
+      smooth: true
+    },
+    {
+      name: "首屏时间",
+      type: "line",
+      stack: "Total",
+      data: [220, 182, 191, 234, 290, 330, 310],
+      smooth: true
+    },
+    {
+      name: "首次可交互",
+      type: "line",
+      stack: "Total",
+      data: [150, 232, 201, 154, 190, 330, 410],
+      smooth: true
+    },
+    {
+      name: "DOM Ready",
+      type: "line",
+      stack: "Total",
+      data: [320, 332, 301, 334, 390, 330, 320],
+      smooth: true
+    },
+    {
+      name: "页面完全加载",
+      type: "line",
+      stack: "Total",
+      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      smooth: true
+    }
+  ]
+};
+export const apiMapOption = {
+  tooltip: {
+    trigger: "axis",
+    axisPointer: { type: "cross" }
+  },
+  legend: {},
+  xAxis: {
+    type: "category",
+    data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+  },
+  yAxis: [
+    {
+      type: "value",
+      name: "平均成功耗时",
+      axisLabel: {
+        formatter: "{value} ms"
+      }
+    },
+    {
+      type: "value",
+      name: " 调用成功数",
+      axisLabel: {
+        formatter: "{value} 次"
+      }
+    }
+  ],
+  series: [
+    {
+      name: "平均成功耗时",
+      data: [120, 200, 150, 80, 70, 110, 130],
+      type: "bar",
+      // showBackground: true,
+      yAxisIndex: 0,
+      backgroundStyle: {
+        color: "rgba(180, 180, 180, 0.2)"
+      }
+    },
+    {
+      name: "调用成功数",
+      yAxisIndex: 1,
+      type: "line",
+      stack: "Total",
+      data: [120, 132, 101, 134, 90, 230, 210],
+      smooth: true
+    }
+  ]
+};

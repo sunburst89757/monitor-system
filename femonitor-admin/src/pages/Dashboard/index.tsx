@@ -1,14 +1,15 @@
 import { ClockCircleOutlined, UndoOutlined } from "@ant-design/icons";
 import { Progress, Select } from "antd";
 import { useCallback, useMemo, useState } from "react";
-import { AreaMap } from "./components/AreaMap/AreaMap";
 import { Circle } from "./components/Circle/Circle";
 import { DataDisplay } from "./components/DataDisplay/DataDisplay";
+import { Map } from "./components/Map/Map";
 import { PerformanceDisplay } from "./components/PerformanceDisplay/PerformanceDisplay";
-import { PvMap } from "./components/PvMap/PvMap";
 import {
+  apiMapOption,
   areaMapOption1,
   areaMapOption2,
+  pageLoadOption,
   pvConfig,
   timeSelect1,
   timeSelect2
@@ -205,7 +206,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        <div className={style.block} style={{ height: "60vh" }}>
+        <div className={style.block} style={{ height: "80vh" }}>
           <div className={style.blockHeader}>流量数据</div>
           <div
             className={style.blockCenter}
@@ -215,18 +216,30 @@ export default function Dashboard() {
               <DataDisplay {...item} key={item.content}></DataDisplay>
             ))}
           </div>
-          <div className={style.blockBottom}>
+          <div className={style.blockBottom} style={{ flex: "3" }}>
             <div className={style.blockBottomItem} id="mapBox">
-              <PvMap option={pvConfig}></PvMap>
+              <Map
+                id="pvMap"
+                option={pvConfig}
+                wAh={{ width: "600px", height: "200px" }}
+              ></Map>
             </div>
             <div className={style.divided}></div>
             <div className={style.blockBottomItem} id="areaBox">
-              <AreaMap option={areaMapOption1} id="pv"></AreaMap>
-              <AreaMap option={areaMapOption2} id="uv"></AreaMap>
+              <Map
+                id="pv"
+                option={areaMapOption1}
+                wAh={{ width: "300px", height: "200px" }}
+              ></Map>
+              <Map
+                id="uv"
+                option={areaMapOption2}
+                wAh={{ width: "300px", height: "200px" }}
+              ></Map>
             </div>
           </div>
         </div>
-        <div className={style.block}>
+        <div className={style.block} style={{ height: "65vh" }}>
           <div className={style.blockHeader}>性能数据</div>
           <div
             className={style.blockCenter}
@@ -238,6 +251,25 @@ export default function Dashboard() {
                 key={item.title}
               ></PerformanceDisplay>
             ))}
+          </div>
+          <div className={style.blockBottom}>
+            <div className={style.blockBottomItem}>
+              <div className={style.mapTitle}>页面加载时间</div>
+              <Map
+                option={pageLoadOption}
+                id="loadBox"
+                wAh={{ width: "600px", height: "239px" }}
+              ></Map>
+            </div>
+            <div className={style.divided}></div>
+            <div className={style.blockBottomItem}>
+              <div className={style.mapTitle}>API成功耗时</div>
+              <Map
+                id="APIBox"
+                option={apiMapOption}
+                wAh={{ width: "600px", height: "270px" }}
+              ></Map>
+            </div>
           </div>
         </div>
       </div>
