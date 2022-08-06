@@ -21,4 +21,26 @@ export class BehaviorService {
             
         }
     }
+
+    async getPv(start: Date){
+        return this.behaviorMoudle.count({
+            subType: 'pv',
+            createdAt: {$gte: start}
+        });
+    }
+
+    async getUserNum(start: Date){
+        let res = await this.behaviorMoudle.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'pv'},
+                    {createdAt: {$gte: start}},
+                ]
+            }},
+            {$project:{"userID":true}},
+            {$group:{_id:"$userID"}},
+            {$group:{_id:null,count:{$sum:1}}}
+        ])
+        return res[0].count;
+    }
 }

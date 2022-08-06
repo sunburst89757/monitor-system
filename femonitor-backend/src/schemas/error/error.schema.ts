@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Common } from '../common.schema';
 
-@Schema({ discriminatorKey: 'subType' })
+@Schema({ discriminatorKey: 'subType', timestamps: true })
 export class Error extends Common{
 
   @Prop({

@@ -16,6 +16,7 @@ export class ReportController {
     async reportDate(@Body() body, @RealIP() ip: string){ 
         let data = JSON.parse(body);
         data['ip'] = ip;
+        if(data.userID == '') data.userID = ip;
         this.reportService.handle(data);
         return '';
     }
