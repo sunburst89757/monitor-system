@@ -6,6 +6,7 @@ import { JsErrorSchema } from 'src/schemas/error/jsError.schema';
 import { PromiseErrorSchema } from 'src/schemas/error/promiseError.schema';
 import { ResourceErrorSchema } from 'src/schemas/error/resourceError.shema';
 import { VueErrorSchema } from 'src/schemas/error/vueError.schema';
+import { BehaviorModule } from '../behavior/behavior.module';
 import { ErrorService } from './error.service';
 
 @Module({
@@ -23,7 +24,8 @@ import { ErrorService } from './error.service';
                     {name: 'vue', schema: VueErrorSchema},
                 ],
             }
-        ])
+        ]),
+        BehaviorModule,
     ],
     providers:[ErrorService],
     exports: [ErrorService],
