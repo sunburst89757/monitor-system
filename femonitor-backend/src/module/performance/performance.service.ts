@@ -6,22 +6,18 @@ import { Performance } from 'src/schemas/performance/performance.schema';
 @Injectable()
 export class PerformanceService {
     constructor(
-        @InjectModel(Performance.name) private readonly performanceModel:Model<Performance>
-    ){}
+        @InjectModel(Performance.name) private readonly performanceModel: Model<Performance>
+    ) { }
 
-    async add(reports){
-        for(let report of reports){
+    async add(reports) {
+        for (let report of reports) {
             console.log(report);
-            try{
+            try {
                 await this.performanceModel.create(report);
-            } catch(e) {
+            } catch (e) {
                 console.log('faild to insert report.');
                 console.log(e);
             }
         }
-    }
-
-    async find(){
-        
     }
 }

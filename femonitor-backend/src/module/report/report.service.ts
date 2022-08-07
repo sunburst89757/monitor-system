@@ -1,9 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ErrorService } from 'src/module/error/error.service';
 import { User } from 'src/schemas/user/user.schema';
+import { TodayFlowData } from 'src/vo/todayFllowData';
 import { BehaviorService } from '../behavior/behavior.service';
 import { PerformanceService } from '../performance/performance.service';
 import { UserService } from '../user/user.service';
+import * as dayjs from 'dayjs';
+
+
 @Injectable()
 export class ReportService {
     @Inject(ErrorService)
@@ -14,18 +18,29 @@ export class ReportService {
     private readonly performanceService: PerformanceService
     @Inject(UserService)
     private readonly userService: UserService
-    async handle(data){
-        if(!data.data.length){
+    async handle(data) {
+        if (!data.data.length) {
             data.data = [data.data];
         }
         let reports = Array.from(data.data).map((report) => {
-            Object.assign(report, {id:data['id'], appID:data['appID'], userID:data['userID'], ip:data['ip']});
+            Object.assign(report, { id: data['id'], appID: data['appID'], userID: data['userID'], ip: data['ip'] });
             return report;
         })
-        let userInfo:User={id:data['id'],ip:data['ip'],userID:data['userID']};
+        let userInfo: User = { id: data['id'], ip: data['ip'], userID: data['userID'] };
         this.errorService.add(reports.filter(report => report['type'] == 'error'));
         this.behaviorService.add(reports.filter(report => report['type'] == 'behavior'))
         this.performanceService.add(reports.filter(report => report['type'] == 'performance'))
         this.userService.add(userInfo);
+    }
+
+    async getTodayFlowData(createdAt){
+        if (!createdAt) {
+            createdAt = Date.now();
+        }
+        let d2 = new Date(dayjs(new Date(parseInt(createdAt, 10))).add(1, 'days').format('YYYY-MM-DD'));
+        let d3 = new Date(dayjs(new Date(parseInt(createdAt, 10))).add(-1, 'days').format('YYYY-MM-DD'));
+        const res: TodayFlowData = await this.behaviorService.getTodayFlowData(d3, d2);
+        res.todayIpData = await this.userService.getTodayFlowData(d3, d2);
+        return res;
     }
 }

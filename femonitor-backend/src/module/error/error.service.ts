@@ -12,39 +12,38 @@ export class ErrorService {
     private readonly behaviorService: BehaviorService
 
     constructor(
-        @InjectModel(Error.name) private readonly ErrorMoudle:Model<Error>
-    ){}
+        @InjectModel(Error.name) private readonly ErrorMoudle: Model<Error>
+    ) { }
 
-    async add(reports){
-        for(let report of reports){
-            if(report.errData) report.errData = JSON.stringify(report.errData);
+    async add(reports) {
+        for (let report of reports) {
+            if (report.errData) report.errData = JSON.stringify(report.errData);
             console.log(report);
-            try{
+            try {
                 await this.ErrorMoudle.create(report);
-            } catch(e) {
+            } catch (e) {
                 console.log('faild to insert report.');
                 console.log(e);
             }
         }
     }
 
-    async searchWithPage(qureyError:QueryError,pager:Page){
-        let total:number =await this.ErrorMoudle.countDocuments(qureyError);
-        console.log(qureyError);
+    async searchWithPage(qureyError: QueryError, pager: Page) {
+        let total: number = await this.ErrorMoudle.countDocuments(qureyError);
         return await this.ErrorMoudle.find(qureyError)
-        .skip(pager.currentPage?(pager.currentPage-1)*pager.pageSize:0)
-        .limit(pager.pageSize)
-        .then(res=>{
-             let response={
-                data:res,
-                total:total,
-                currentPage:pager.currentPage
-             }
-             return response;
-        })
-        .catch(err=>{
-            throw err;
-        })
+            .skip(pager.currentPage ? (pager.currentPage - 1) * pager.pageSize : 0)
+            .limit(pager.pageSize)
+            .then(res => {
+                let response = {
+                    data: res,
+                    total: total,
+                    currentPage: pager.currentPage
+                }
+                return response;
+            })
+            .catch(err => {
+                throw err;
+            })
     }
 
     async errOverview(start: Date){
