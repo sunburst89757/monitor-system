@@ -1,0 +1,32 @@
+.header {
+  display: flex;
+  flex-direction: row-reverse;
+  width: 80vw;
+  margin-bottom: 20px;
+}
+.body {
+  display: flex;
+  width: 80vw;
+  height: 70vh;
+  .map {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    flex: 5;
+    background-color: #fff;
+    margin-right: 20px;
+    .mapTitle {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 15px;
+      color: #2f354d;
+      font-weight: bold;
+    }
+  }
+  .table {
+    flex: 2;
+    background-color: #fff;
+  }
+}

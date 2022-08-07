@@ -95,7 +95,7 @@ export const siderRoutes: RouteObject[] = [
     path: "/behavior",
     element: <MyLayout></MyLayout>,
     meta: {
-      title: "行为监测"
+      title: "流量监测"
     },
     children: [
       {
@@ -107,9 +107,9 @@ export const siderRoutes: RouteObject[] = [
       },
       {
         path: "pageBehavior",
-        element: <LazyLoad path="Behavior/Page"></LazyLoad>,
+        element: <LazyLoad path="Behavior/Area"></LazyLoad>,
         meta: {
-          title: "页面行为"
+          title: "地域分布"
         }
       }
     ]
