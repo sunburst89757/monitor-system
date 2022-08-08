@@ -1,18 +1,15 @@
 import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RealIP } from 'nestjs-real-ip';
 import { TodayFlowData } from 'src/vo/todayFllowData';
 import { ReportService } from './report.service';
 
-@Controller('report')
+@ApiTags('项目主接口')
+@Controller('index')
 export class ReportController {
     constructor(private readonly reportService: ReportService) { }
 
-    @Get()
-    async index() {
-
-    }
-
-    @Post()
+    @Post('report')
     @HttpCode(200)
     async reportDate(@Body() body, @RealIP() ip: string) {
         let data = JSON.parse(body);
@@ -21,11 +18,6 @@ export class ReportController {
         this.reportService.handle(data);
         return '';
         
-    }
-
-    @Get('testCreate')
-    async testCreate() {
-        return '';
     }
 
     @Get('getTodayFlowData')
