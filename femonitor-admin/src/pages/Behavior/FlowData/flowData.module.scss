@@ -17,3 +17,17 @@
     flex: 5;
   }
 }
+.secondBlock {
+  display: flex;
+  width: 80vw;
+  margin-top: 20px;
+  height: 40vh;
+  .item:nth-child(2) {
+    margin: 0 20px;
+  }
+  .item {
+    flex: 1;
+    height: 40vh;
+    background-color: #fff;
+  }
+}
