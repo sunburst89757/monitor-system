@@ -1,9 +1,11 @@
-export interface errListType {
-  errortype: string;
-}
 export interface dataDisplayType {
   label: string;
-  value: string;
+  id: string;
+  option: any;
+  wAh: {
+    width: string;
+    height: string;
+  };
 }
 export interface quietViewErrType {
   label: string;
@@ -17,4 +19,7 @@ export interface QuietViewErrListType {
   lastTIme: string;
   effects: number;
   times: number;
+}
+export interface errListType {
+  errortype: string;
 }
