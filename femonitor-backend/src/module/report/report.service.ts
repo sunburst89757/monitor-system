@@ -6,6 +6,8 @@ import { BehaviorService } from '../behavior/behavior.service';
 import { PerformanceService } from '../performance/performance.service';
 import { UserService } from '../user/user.service';
 import * as dayjs from 'dayjs';
+import { lastValueFrom, map } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
 
 
 @Injectable()
@@ -18,6 +20,9 @@ export class ReportService {
     private readonly performanceService: PerformanceService
     @Inject(UserService)
     private readonly userService: UserService
+
+    constructor(private readonly httpService: HttpService) { }
+
     async handle(data) {
         if (!data.data.length) {
             data.data = [data.data];
@@ -26,14 +31,15 @@ export class ReportService {
             Object.assign(report, { id: data['id'], appID: data['appID'], userID: data['userID'], ip: data['ip'] });
             return report;
         })
-        let userInfo: User = { id: data['id'], ip: data['ip'], userID: data['userID'] };
         this.errorService.add(reports.filter(report => report['type'] == 'error'));
         this.behaviorService.add(reports.filter(report => report['type'] == 'behavior'))
         this.performanceService.add(reports.filter(report => report['type'] == 'performance'))
+        let location = await this.getLocationCity(data['ip']);
+        let userInfo: User = { id: data['id'], ip: data['ip'], userID: data['userID'], city: location };
         this.userService.add(userInfo);
     }
 
-    async getTodayFlowData(createdAt){
+    async getTodayFlowData(createdAt) {
         if (!createdAt) {
             createdAt = Date.now();
         }
@@ -42,5 +48,21 @@ export class ReportService {
         const res: TodayFlowData = await this.behaviorService.getTodayFlowData(d3, d2);
         res.todayIpData = await this.userService.getTodayFlowData(d3, d2);
         return res;
+    }
+
+    async getLocationCity(ip: string) {
+        const location = await lastValueFrom(this.httpService.get(
+            `https://api.map.baidu.com/location/ip?ak=rOXvwq4czOnGE1afnEFqrlhYKN1tYL3q&ip=${ip}&coor=bd09ll`
+        ).pipe(
+            map((response) => {
+                return response.data;
+            })
+        ));
+        console.log(location);
+        if (location.status === 0) {
+            return location.content.address_detail.province;
+        } else {
+            return '';
+        }
     }
 }

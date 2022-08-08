@@ -13,7 +13,6 @@ export class BehaviorService {
 
     async add(reports) {
         for (let report of reports) {
-            console.log(report);
             try {
                 await this.behaviorMoudle.create(report);
             } catch (e) {
@@ -24,24 +23,26 @@ export class BehaviorService {
         }
     }
 
-    async getPv(start: Date){
+    async getPv(start: Date) {
         return this.behaviorMoudle.count({
             subType: 'pv',
-            createdAt: {$gte: start}
+            createdAt: { $gte: start }
         });
     }
 
-    async getUserNum(start: Date){
+    async getUserNum(start: Date) {
         let res = await this.behaviorMoudle.aggregate([
-            {$match:{
-                $and:[
-                    {subType: 'pv'},
-                    {createdAt: {$gte: start}},
-                ]
-            }},
-            {$project:{"userID":true}},
-            {$group:{_id:"$userID"}},
-            {$group:{_id:null,count:{$sum:1}}}
+            {
+                $match: {
+                    $and: [
+                        { subType: 'pv' },
+                        { createdAt: { $gte: start } },
+                    ]
+                }
+            },
+            { $project: { "userID": true } },
+            { $group: { _id: "$userID" } },
+            { $group: { _id: null, count: { $sum: 1 } } }
         ])
         return res[0].count;
     }
@@ -74,11 +75,11 @@ export class BehaviorService {
         ];
         const flowDatas = await this.behaviorMoudle.aggregate(aggregate_limit);
         const res = new TodayFlowData();
-        const todayPvData= new Array<FlowData>();
-        const todayUvData=new Array<FlowData>();
-        for (let flowData  of flowDatas) {
-            todayPvData.push({dayName:flowData.dayName,dayCount:flowData.dayCount});
-            todayUvData.push({dayName:flowData.dayName,dayCount:flowData.ids.length});
+        const todayPvData = new Array<FlowData>();
+        const todayUvData = new Array<FlowData>();
+        for (let flowData of flowDatas) {
+            todayPvData.push({ dayName: flowData.dayName, dayCount: flowData.dayCount });
+            todayUvData.push({ dayName: flowData.dayName, dayCount: flowData.ids.length });
         }
         res.todayPvData = todayPvData;
         res.todayUvData = todayUvData;

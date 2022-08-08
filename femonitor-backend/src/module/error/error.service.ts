@@ -18,7 +18,6 @@ export class ErrorService {
     async add(reports) {
         for (let report of reports) {
             if (report.errData) report.errData = JSON.stringify(report.errData);
-            console.log(report);
             try {
                 await this.ErrorMoudle.create(report);
             } catch (e) {

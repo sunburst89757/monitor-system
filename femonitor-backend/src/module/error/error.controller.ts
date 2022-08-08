@@ -1,8 +1,10 @@
 import { Controller, Get, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Page } from 'src/dto/PageDto';
 import { QueryError } from 'src/dto/queryErrorDto';
 import { ErrorService } from './error.service';
 
+@ApiTags('错误监控')
 @Controller('error')
 export class ErrorController {
     constructor(private readonly errorService: ErrorService) { }

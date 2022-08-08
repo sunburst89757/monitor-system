@@ -12,6 +12,7 @@ export class UserService {
     ) { }
 
     async add(user: User) {
+        console.log(user);
         const filter = { ip: user.ip, id: user.id };
         this.UserMoudle.findOne(filter, (err, _user) => {
             if (err) {
@@ -34,7 +35,6 @@ export class UserService {
         let filter = {
             createdAt: { $gte: d1, $lt: d2 }
         };
-        console.log(Date.now());
         return await this.UserMoudle.find(filter);
     }
 
