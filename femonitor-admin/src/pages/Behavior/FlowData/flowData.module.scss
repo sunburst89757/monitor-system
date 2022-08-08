@@ -1,0 +1,19 @@
+.block {
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  height: 60vh;
+  background-color: #fff;
+  .header {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    font-size: 15px;
+    color: #2f354d;
+    font-weight: bold;
+  }
+  .content {
+    flex: 5;
+  }
+}

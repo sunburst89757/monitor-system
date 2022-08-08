@@ -99,10 +99,10 @@ export const siderRoutes: RouteObject[] = [
     },
     children: [
       {
-        path: "visit",
-        element: <LazyLoad path="Behavior/Visit"></LazyLoad>,
+        path: "flowData",
+        element: <LazyLoad path="Behavior/FlowData"></LazyLoad>,
         meta: {
-          title: "访问数据"
+          title: "流量数据"
         }
       },
       {

@@ -1,5 +1,5 @@
 import * as echarts from "echarts";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import style from "./map.module.scss";
 
 export const Map = ({
@@ -18,5 +18,8 @@ export const Map = ({
     const myChart = echarts.init(document.getElementById(id)!);
     myChart.setOption(option);
   });
+  useEffect(() => {
+    window.onresize = function () {};
+  }, []);
   return <div id={id} className={style.areaMap} style={wAh}></div>;
 };
