@@ -4,22 +4,35 @@ import style from "./map.module.scss";
 
 export const Map = ({
   option,
-  id,
   wAh
 }: {
   option: any;
-  id: string;
   wAh: {
     width: string;
     height: string;
   };
 }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  let mapInstance: any = null;
+  const renderMap = () => {
+    const renderedMapInstance = echarts.getInstanceByDom(ref.current!);
+    if (renderedMapInstance) {
+      mapInstance = renderedMapInstance;
+    } else {
+      mapInstance = echarts.init(ref.current!);
+    }
+    mapInstance?.setOption(option);
+  };
   useEffect(() => {
-    const myChart = echarts.init(document.getElementById(id)!);
-    myChart.setOption(option);
-  });
-  useEffect(() => {
-    window.onresize = function () {};
+    renderMap();
   }, []);
-  return <div id={id} className={style.areaMap} style={wAh}></div>;
+  useEffect(() => {
+    window.onresize = function () {
+      mapInstance.resize();
+    };
+    return () => {
+      mapInstance && mapInstance.dispose();
+    };
+  }, []);
+  return <div className={style.areaMap} style={wAh} ref={ref!}></div>;
 };
