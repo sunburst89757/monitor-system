@@ -147,7 +147,7 @@ export default function Area() {
               <QuestionCircleOutlined />
             </Tooltip>
           </div>
-          <WorldMap id="chinaMap"></WorldMap>
+          <WorldMap></WorldMap>
         </div>
         <div className={style.table}>
           <Table

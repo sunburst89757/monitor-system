@@ -1,0 +1,24 @@
+.mainHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 20px 0 20px;
+  font-size: 15px;
+  color: #2f354d;
+  font-weight: bold;
+  .rightBlock {
+    color: #f85149;
+    font-weight: 700;
+    font-size: 20px;
+  }
+}
+.subHeader {
+  padding: 0 20px;
+  font-size: #a3a5b0;
+  display: flex;
+  justify-content: space-between;
+}
+.map {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

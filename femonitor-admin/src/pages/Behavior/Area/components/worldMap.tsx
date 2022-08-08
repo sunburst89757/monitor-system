@@ -1,13 +1,31 @@
 import * as echarts from "echarts";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import china from "./china.json";
 import { mapOptions } from "./config";
-export const WorldMap = ({ id }: { id: string }) => {
+export const WorldMap = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  let mapInstance: any = null;
+  const renderMap = () => {
+    const renderedMapInstance = echarts.getInstanceByDom(ref.current!);
+    if (renderedMapInstance) {
+      mapInstance = renderedMapInstance;
+    } else {
+      mapInstance = echarts.init(ref.current!);
+    }
+    mapInstance.setOption(mapOptions);
+  };
   useEffect(() => {
-    const myChart = echarts.init(document.getElementById(id)!);
     echarts.registerMap("china", china as any);
-    myChart.setOption(mapOptions);
-  });
+    renderMap();
+  }, []);
+  useEffect(() => {
+    window.onresize = function () {
+      mapInstance.resize();
+    };
+    return () => {
+      mapInstance && mapInstance.dispose();
+    };
+  }, []);
 
-  return <div id={id} style={{ width: "55vw", height: "65vh" }}></div>;
+  return <div style={{ width: "55vw", height: "65vh" }} ref={ref!}></div>;
 };
