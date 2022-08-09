@@ -111,6 +111,14 @@ export const siderRoutes: RouteObject[] = [
         meta: {
           title: "地域分布"
         }
+      },
+      {
+        path: "userBehavior",
+        element: <LazyLoad path="Behavior/UserBehavior"></LazyLoad>,
+        meta: {
+          title: "用户行为细查",
+          hidden: true
+        }
       }
     ]
   },

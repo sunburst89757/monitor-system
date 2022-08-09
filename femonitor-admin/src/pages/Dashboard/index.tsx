@@ -1,6 +1,7 @@
 import { ClockCircleOutlined, UndoOutlined } from "@ant-design/icons";
-import { Progress, Select } from "antd";
+import { Button, Progress, Select } from "antd";
 import { useCallback, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Circle } from "./components/Circle/Circle";
 import { DataDisplay } from "./components/DataDisplay/DataDisplay";
 import { Map } from "./components/Map/Map";
@@ -18,6 +19,7 @@ import style from "./dashboard.module.scss";
 import { ICircleType, IDataDisplay, IPerformanceDisplay } from "./types";
 const { Option } = Select;
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [timeSelect, settimeSelect] = useState("1");
   const [queryTimeSelect, setqueryTimeSelect] = useState("30");
   const timeSelectChange = (value: string) => {
@@ -133,6 +135,9 @@ export default function Dashboard() {
       }
     ]
   );
+  const handleNavigate = useCallback(() => {
+    navigate("/behavior/userBehavior");
+  }, [navigate]);
   return (
     <div>
       <div className={style.header}>
@@ -166,7 +171,14 @@ export default function Dashboard() {
       </div>
       <div className={style.content}>
         <div className={style.block}>
-          <div className={style.blockHeader}>健康状态</div>
+          <div className={style.blockHeader}>
+            健康状态
+            <div className={style.btn}>
+              <Button type="primary" onClick={handleNavigate}>
+                用户行为细查
+              </Button>
+            </div>
+          </div>
           <div className={style.blockCenter}>
             <div className={style.healthyAll}>
               <div className={style.toolTip}>
