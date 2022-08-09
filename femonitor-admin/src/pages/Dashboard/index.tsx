@@ -139,7 +139,7 @@ export default function Dashboard() {
     navigate("/behavior/userBehavior");
   }, [navigate]);
   return (
-    <div>
+    <div className={style.contain}>
       <div className={style.header}>
         <Select
           defaultValue="1"

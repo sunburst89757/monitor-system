@@ -43,7 +43,7 @@ export default function JsErr() {
   };
 
   return (
-    <div style={{ width: "80vw" }}>
+    <div>
       <Menu
         onClick={onClick}
         selectedKeys={[current]}
