@@ -131,7 +131,7 @@ export default function Area() {
     return current > moment().endOf("day");
   };
   return (
-    <div>
+    <div className={style.contain}>
       <div className={style.header}>
         <DatePicker
           onChange={onChange}

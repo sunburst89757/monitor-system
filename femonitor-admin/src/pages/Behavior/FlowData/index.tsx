@@ -13,7 +13,7 @@ export default function FlowData() {
   }, []);
 
   return (
-    <div>
+    <div className={style.contain}>
       <div className={style.block}>
         <div className={style.header}>
           <span style={{ marginRight: "20px" }}>用户量统计</span>
