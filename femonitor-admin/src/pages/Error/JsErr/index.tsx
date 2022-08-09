@@ -8,6 +8,7 @@ import type { MenuProps } from "antd";
 import { Menu, Button, Drawer } from "antd";
 import Overview from "./Overview/overview";
 import ErrList from "./ErrList/ErrList";
+import { ErrorDetail } from "../components/errorDetail/errorDetail";
 import style from "./index.module.scss";
 import React, { useState } from "react";
 import { Context } from "./context";
@@ -38,7 +39,7 @@ const items: MenuProps["items"] = [
 
 export default function JsErr() {
   const [current, setCurrent] = useState("overview");
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   const showDrawer = (row: Object) => {
     setVisible(true);
@@ -73,15 +74,13 @@ export default function JsErr() {
         Open
       </Button>
       <Drawer
-        title="Basic Drawer"
+        title="错误详情"
         placement="right"
         onClose={onClose}
         visible={visible}
-        width="70vw"
+        width="80vw"
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <ErrorDetail></ErrorDetail>
       </Drawer>
     </div>
   );
