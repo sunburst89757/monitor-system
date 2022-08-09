@@ -5,11 +5,12 @@
 
 */
 import type { MenuProps } from "antd";
-import { Menu } from "antd";
-import React, { useState } from "react";
+import { Menu, Button, Drawer } from "antd";
 import Overview from "./Overview/overview";
 import ErrList from "./ErrList/ErrList";
-
+import style from "./index.module.scss";
+import React, { useState } from "react";
+import { Context } from "./context";
 const items: MenuProps["items"] = [
   {
     label: "概览",
@@ -37,24 +38,51 @@ const items: MenuProps["items"] = [
 
 export default function JsErr() {
   const [current, setCurrent] = useState("overview");
+  const [visible, setVisible] = useState(false);
+
+  const showDrawer = (row: Object) => {
+    setVisible(true);
+    console.log("rowData", row);
+  };
+
+  const onClose = () => {
+    setVisible(false);
+  };
 
   const onClick: MenuProps["onClick"] = (e) => {
     setCurrent(e.key);
   };
 
   return (
-    <div>
+    <div className={style.box}>
       <Menu
         onClick={onClick}
         selectedKeys={[current]}
         mode="horizontal"
         items={items}
       />
-      {current === "overview" ? (
-        <Overview />
-      ) : (
-        <ErrList errortype={current}></ErrList>
-      )}
+      <Context.Provider value={{ dispacth: showDrawer }}>
+        {current === "overview" ? (
+          <Overview />
+        ) : (
+          <ErrList errortype={current}></ErrList>
+        )}
+      </Context.Provider>
+
+      <Button type="primary" onClick={showDrawer}>
+        Open
+      </Button>
+      <Drawer
+        title="Basic Drawer"
+        placement="right"
+        onClose={onClose}
+        visible={visible}
+        width="70vw"
+      >
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Drawer>
     </div>
   );
 }

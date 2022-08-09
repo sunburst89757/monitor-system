@@ -1,17 +1,25 @@
-import { quietViewErrType, QuietViewErrListType } from "../../types";
+import { quietViewErrType, QuietViewErrListType } from "../types";
 import style from "./quietViewErr.module.scss";
 import { Space, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import React from "react";
+import React, { useState, useContext } from "react";
+import { Context } from "../../JsErr/context";
 import { useSetState } from "ahooks";
+
 export default function QuietViewErr({ label, value }: quietViewErrType) {
-  const nowTime = Date.now();
+  const nowTime = new Date().toLocaleDateString();
+  const fun1 = useContext(Context)?.dispacth;
+  console.log("fun1", fun1);
   const columns: ColumnsType<QuietViewErrListType> = [
     {
       title: "ErrorName",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>
+      render: (text, row) => (
+        <span className={style.linkText} onClick={() => fun1?.(row)}>
+          {text}
+        </span>
+      )
     },
     {
       title: "内容",
@@ -46,7 +54,7 @@ export default function QuietViewErr({ label, value }: quietViewErrType) {
     {
       id: "#1234",
       name: "CustomizeError",
-      describe: "网络开小差啦",
+      describe: "Network request failed",
       times: 1777,
       effects: 800,
       lastTIme: "2022-03-03 00:45:01"
@@ -54,7 +62,7 @@ export default function QuietViewErr({ label, value }: quietViewErrType) {
     {
       id: "#112311",
       name: "CustomizeError",
-      describe: "网络开小差啦",
+      describe: "{'fetchStatus':'timeout'}",
       times: 1777,
       effects: 800,
       lastTIme: "2022-03-03 00:45:01"
@@ -62,7 +70,7 @@ export default function QuietViewErr({ label, value }: quietViewErrType) {
     {
       id: "#12312312",
       name: "CustomizeError",
-      describe: "网络开小差啦",
+      describe: "查询结果失败",
       times: 1777,
       effects: 800,
       lastTIme: "2022-03-03 00:45:01"
@@ -86,6 +94,7 @@ export default function QuietViewErr({ label, value }: quietViewErrType) {
         <Table
           columns={columns}
           dataSource={errList}
+          pagination={false}
           rowKey={(record) => record.id}
         />
       </div>
