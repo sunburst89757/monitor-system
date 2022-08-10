@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 
 export default function BehaviorDetail() {
   const location = useLocation();
-  useEffect(() => {
-    console.log(location);
-  }, []);
+  const locationRef = useRef(location);
+  console.log(locationRef.current.state);
+
   return <div>hhhh</div>;
 }

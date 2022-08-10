@@ -79,17 +79,17 @@ export default function UserBehaviorOverView() {
     }
   ]);
   const navigate = useNavigate();
-  const handleSearchUser = useCallback(
-    (id: number) => {
-      navigate("/behavior/behaviorDetail", {
+  const handleSearchUser = useCallback((id: number) => {
+    navigate(
+      { pathname: "/behavior/behaviorDetail", search: "111" },
+      {
         state: {
           id: "7777"
         }
-      });
-      // console.log(id);
-    },
-    [navigate]
-  );
+      }
+    );
+    // console.log(id);
+  }, []);
   const onFinish = (values: any) => {
     console.log("Success:", values);
   };

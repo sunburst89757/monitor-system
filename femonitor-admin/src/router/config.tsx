@@ -6,7 +6,7 @@ import MyLayout from "../Layout";
 import { Login } from "../pages/Login";
 import { useAppSelector } from "../store/types";
 import { cache } from "../utils/localStorage";
-
+import BehaviorDetail from "../pages/Behavior/BehaviorDetail";
 type interceptOBj = {
   children: ReactNode;
   role?: string[];
@@ -122,7 +122,7 @@ export const siderRoutes: RouteObject[] = [
       },
       {
         path: "behaviorDetail",
-        element: <LazyLoad path="Behavior/BehaviorDetail"></LazyLoad>,
+        element: <BehaviorDetail></BehaviorDetail>,
         meta: {
           title: "会话详情",
           hidden: true
@@ -192,9 +192,10 @@ const generateRouter = (routes: RouteObject[]) => {
   });
 };
 // 路由拦截器组件
-const RouterBeforeEach = memo(({ children, role, title }: interceptOBj) => {
-  const location = useLocation();
-  console.log(location, "lujingh");
+const RouterBeforeEach = ({ children, role, title }: interceptOBj) => {
+  // const location = useLocation();
+  // console.log("beforeEach", location);
+  console.log(1);
 
   const userInfo = useAppSelector((state) => state.user.userInfo);
   // 验证是否登录（刷新）
@@ -234,6 +235,6 @@ const RouterBeforeEach = memo(({ children, role, title }: interceptOBj) => {
       )}
     </div>
   );
-});
+};
 
 export const myRouter = generateRouter(myRoutes);
