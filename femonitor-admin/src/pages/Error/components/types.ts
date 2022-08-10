@@ -10,6 +10,8 @@ export interface dataDisplayType {
 export interface quietViewErrType {
   label: string;
   value: string;
+  showPage: boolean;
+  pageSize: number;
 }
 
 export interface QuietViewErrListType {

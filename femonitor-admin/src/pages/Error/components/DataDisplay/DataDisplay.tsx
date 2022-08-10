@@ -2,6 +2,10 @@ import style from "./DataDisplay.module.scss";
 import { dataDisplayType } from "../types";
 import { Map } from "../Map/Map";
 import { useState, useEffect } from "react";
+interface DataMap {
+  [key: string]: number;
+}
+
 export default function DataDisplay({
   label,
   id,
@@ -9,10 +13,17 @@ export default function DataDisplay({
   wAh
 }: dataDisplayType) {
   const [errorTotal, setErrorTotal] = useState(0);
-
+  const dataMap: DataMap = {
+    "resource-error-precent-pie": 1,
+    "js-error-precent-pie": 1,
+    "resource-error-pie": 2,
+    "js-error-pie": 2,
+    "resource-error-user-pie": 3,
+    "js-error-user-pie": 3
+  };
   useEffect(() => {
     let total = 0;
-    if (id === "js-error-precent-pie") {
+    if (dataMap[id] === 1) {
       total = option.pvTotal;
       for (let item of option.series[0].data) {
         total -= item.value;
@@ -22,11 +33,11 @@ export default function DataDisplay({
         name: "correct"
       });
       total = option.errorPercent;
-    } else if (id === "js-error-pie") {
+    } else if (dataMap[id] === 2) {
       for (let item of option.series[0].data) {
         total += item.value;
       }
-    } else if (id === "js-error-user-pie") {
+    } else if (dataMap[id] === 3) {
       total = option.userNum;
     }
     setErrorTotal(total);

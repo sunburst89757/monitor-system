@@ -90,7 +90,7 @@ export function ErrorDetail() {
             <div className={style.value}>error is not defined</div>
             <Collapse
               bordered={false}
-              defaultActiveKey={[errorData[0].id]}
+              defaultActiveKey={[errorData[0].id, "堆栈明细"]}
               expandIcon={({ isActive }) => (
                 <CaretRightOutlined rotate={isActive ? 90 : 0} />
               )}
@@ -133,6 +133,13 @@ export function ErrorDetail() {
                 <div className={style.errordirection}>
                   <span>【状态码】：</span>
                   <span className={style.panelrow}>200 - OK</span>
+                </div>
+              </Panel>
+              <Panel header="堆栈明细" key="堆栈明细" className={style.Panel}>
+                <div className={style.errordirection}>
+                  {
+                    "UncaughtInPromiseError: ReferenceError: error is not defined at _callee$ (webpack-internal:///./src/modules/jsError/components/OverviewPanel/index.js:287:105) at tryCatch (webpack-internal:///./node_modules/@babel/runtime/node_modules/regenerator-runtime/runtime.js:45:40) at Generator.invoke [as _invoke] (webpack-internal:///./node_modules/@babel/runtime/node_modules/regenerator-runtime/runtime.js:271:22) at Generator.prototype.<computed> [as next] (webpack-internal:///./node_modules/@babel/runtime/node_modules/regenerator-runtime/runtime.js:97:21) at asyncGeneratorStep (webpack-internal:///./node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:24) at _next (webpack-internal:///./node_modules/@babel/runtime/helpers/asyncToGenerator.js:25:9) at eval (webpack-internal:///./node_modules/@babel/runtime/helpers/asyncToGenerator.js:32:7) at new Promise (<anonymous>) at eval (webpack-internal:///./node_modules/@babel/runtime/helpers/asyncToGenerator.js:21:12) at eval (webpack-internal:///./src/modules/jsError/components/OverviewPanel/index.js:317:25)"
+                  }
                 </div>
               </Panel>
             </Collapse>
