@@ -13,7 +13,7 @@ export class UserService {
 
     async add(user: User) {
         console.log(user);
-        const filter = { ip: user.ip, id: user.id };
+        let filter = { ip: user.ip, id: user.id };
         this.UserMoudle.findOne(filter, (err, _user) => {
             if (err) {
                 console.log(err);
@@ -38,7 +38,7 @@ export class UserService {
         return await this.UserMoudle.find(filter);
     }
 
-    async getTodayFlowData(startTime,endTime){
+    async getIPData(startTime,endTime){
         let filterIP = {
             createdAt: { $gte: startTime, $lt: endTime },
         };
@@ -66,8 +66,8 @@ export class UserService {
                 }
             },
         ];
-        const flowDatas = await this.UserMoudle.aggregate(aggregate_limit);
-        const todayIpData=new Array<FlowData>();
+        let flowDatas = await this.UserMoudle.aggregate(aggregate_limit);
+        let todayIpData=new Array<FlowData>();
         for(let flowData of flowDatas){
             todayIpData.push({dayName:flowData.dayName,dayCount:flowData.dayCount});
         }
