@@ -1,3 +1,119 @@
-.box {
-  width: 80vw;
+.container {
+  background-color: #f8f8f9;
+  height: 100%;
+  .Header {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 0;
+    height: 180px;
+    background-color: #fff;
+    .timeContext {
+      .today {
+        display: inline-block;
+        margin-right: 5px;
+        padding: 1px 5px;
+        color: #ff7728;
+        border-radius: 10%;
+        background-color: #ffeee5;
+      }
+      .timedetail {
+      }
+    }
+  }
+
+  .Content {
+    padding: 10px 0;
+    margin-right: 10px;
+    background-color: #fff;
+    .title {
+      font-size: 16px;
+      color: black;
+      font-weight: 700;
+    }
+    .value {
+      padding: 10px 0;
+    }
+    > div {
+      margin-bottom: 10px;
+    }
+  }
+  .Sider {
+    background-color: inherit;
+    .borderBox {
+      padding: 20px 10px;
+      color: #fff;
+      font-size: 15px;
+      background-color: #2196f3;
+      border-radius: 5px;
+      .userTitle {
+        font-weight: 700;
+        margin-bottom: 20px;
+        margin-left: 5px;
+      }
+      .flexBox {
+        display: flex;
+        margin-bottom: 10px;
+        .firstCow {
+          flex: 1;
+        }
+        .secondCow {
+          width: 170px;
+        }
+        .secondCow2 {
+          width: 250px;
+        }
+      }
+      .icon {
+        display: inline-block;
+        margin: 0 5px;
+      }
+      .line {
+        margin: 5px 0;
+        padding: 5px 0;
+        border-bottom: 1px solid #1e8ce4;
+      }
+    }
+  }
+}
+.Collapse {
+  padding-right: 20px;
+  background-color: #fff;
+  .Panel {
+    margin-bottom: 24px;
+    overflow: hidden;
+    background: #f7f7f7;
+    border: 0px;
+    border-radius: 2px;
+    .errordirection {
+      margin-top: 10px;
+      .panelrow {
+        margin-right: 10px;
+      }
+      .origincontext {
+        color: #f25e3e;
+      }
+    }
+  }
+}
+
+.redbox,
+.bluebox {
+  height: 25px;
+  padding-top: 1px;
+  margin-right: 3px;
+  border-radius: 12px;
+  color: #fff;
+
+  .context {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 100px;
+  }
+}
+.redbox {
+  background-color: #e91e63;
+}
+.bluebox {
+  background-color: #2196f3;
 }
