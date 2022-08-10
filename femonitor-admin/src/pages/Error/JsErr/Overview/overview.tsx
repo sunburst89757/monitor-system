@@ -181,9 +181,24 @@ export default function Overview() {
           wAh={{ width: "80vw", height: "500px" }}
         ></Map>
       </div>
-      <QuietViewErr label="JS错误" value="onerror"></QuietViewErr>
-      <QuietViewErr label="自定义异常" value="console.error"></QuietViewErr>
-      <QuietViewErr label="promise错误" value="promiseError"></QuietViewErr>
+      <QuietViewErr
+        label="JS错误"
+        value="onerror"
+        showPage={false}
+        pageSize={5}
+      ></QuietViewErr>
+      <QuietViewErr
+        label="自定义异常"
+        value="console.error"
+        showPage={false}
+        pageSize={5}
+      ></QuietViewErr>
+      <QuietViewErr
+        label="promise错误"
+        value="promiseError"
+        showPage={false}
+        pageSize={5}
+      ></QuietViewErr>
     </>
   );
 }
