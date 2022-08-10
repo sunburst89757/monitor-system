@@ -136,7 +136,7 @@ export default function Dashboard() {
     ]
   );
   const handleNavigate = useCallback(() => {
-    navigate("/behavior/userBehavior");
+    navigate("/behavior/userBehaviorOverview");
   }, [navigate]);
   return (
     <div className={style.contain}>

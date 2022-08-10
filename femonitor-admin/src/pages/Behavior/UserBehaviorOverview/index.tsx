@@ -2,6 +2,7 @@ import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row, Space, Table, Tag } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { useCallback, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { dataList } from "./config";
 export type DataType = {
   id: number;
@@ -13,7 +14,7 @@ export type DataType = {
   location: string;
   occurrenceTime: string;
 };
-export default function UserBehavior() {
+export default function UserBehaviorOverView() {
   const [form] = Form.useForm();
   const [userList, setUserList] = useState<DataType[]>(dataList);
   const columns = useRef<ColumnsType<DataType>>([
@@ -77,9 +78,18 @@ export default function UserBehavior() {
       )
     }
   ]);
-  const handleSearchUser = useCallback((id: number) => {
-    console.log(id);
-  }, []);
+  const navigate = useNavigate();
+  const handleSearchUser = useCallback(
+    (id: number) => {
+      navigate("/behavior/behaviorDetail", {
+        state: {
+          id: "7777"
+        }
+      });
+      // console.log(id);
+    },
+    [navigate]
+  );
   const onFinish = (values: any) => {
     console.log("Success:", values);
   };

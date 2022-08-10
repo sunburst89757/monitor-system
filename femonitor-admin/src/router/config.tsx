@@ -1,5 +1,5 @@
-import { ReactNode, useEffect, useMemo } from "react";
-import { RouteObject } from "react-router-dom";
+import { memo, ReactNode, useEffect, useMemo } from "react";
+import { RouteObject, useLocation } from "react-router-dom";
 import { LazyLoad } from "../components/LazyLoad";
 import { Redirect } from "../components/Redirect";
 import MyLayout from "../Layout";
@@ -113,10 +113,18 @@ export const siderRoutes: RouteObject[] = [
         }
       },
       {
-        path: "userBehavior",
-        element: <LazyLoad path="Behavior/UserBehavior"></LazyLoad>,
+        path: "userBehaviorOverview",
+        element: <LazyLoad path="Behavior/UserBehaviorOverview"></LazyLoad>,
         meta: {
           title: "用户行为细查",
+          hidden: true
+        }
+      },
+      {
+        path: "behaviorDetail",
+        element: <LazyLoad path="Behavior/BehaviorDetail"></LazyLoad>,
+        meta: {
+          title: "会话详情",
           hidden: true
         }
       }
@@ -184,7 +192,10 @@ const generateRouter = (routes: RouteObject[]) => {
   });
 };
 // 路由拦截器组件
-const RouterBeforeEach = ({ children, role, title }: interceptOBj) => {
+const RouterBeforeEach = memo(({ children, role, title }: interceptOBj) => {
+  const location = useLocation();
+  console.log(location, "lujingh");
+
   const userInfo = useAppSelector((state) => state.user.userInfo);
   // 验证是否登录（刷新）
   const authLogin = useMemo(() => {
@@ -223,6 +234,6 @@ const RouterBeforeEach = ({ children, role, title }: interceptOBj) => {
       )}
     </div>
   );
-};
+});
 
 export const myRouter = generateRouter(myRoutes);
