@@ -30,6 +30,13 @@ export class BehaviorService {
         });
     }
 
+    async getPvTotalCount(start,end){
+        return this.behaviorMoudle.count({
+            subType: 'pv',
+            createdAt: { $gte: start,$lt:end }
+        });
+    }
+
     async getUserNum(start: Date) {
         let res = await this.behaviorMoudle.aggregate([
             {
@@ -47,8 +54,7 @@ export class BehaviorService {
         return res[0].count;
     }
 
-
-    async getTodayFlowData(startTime, endTime) {
+    async getPvUvDayData(startTime, endTime) {
         let filterPv = {
             createdAt: { $gte: startTime, $lt: endTime },
             subType: 'pv'
@@ -58,7 +64,7 @@ export class BehaviorService {
             {
                 $group: {
                     dayCount: { $sum: 1 },
-                    ids: { $addToSet: { id: '$id' } },
+                    users: { $addToSet: { ip: '$ip', userId: '$userId' } },
                     _id: {
                         dayName: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
                     }
@@ -69,21 +75,104 @@ export class BehaviorService {
                     _id: 0,
                     dayName: '$_id.dayName',
                     dayCount: '$dayCount',
-                    ids: '$ids'
+                    ids: '$users'
                 }
             },
         ];
-        const flowDatas = await this.behaviorMoudle.aggregate(aggregate_limit);
-        const res = new TodayFlowData();
-        const todayPvData = new Array<FlowData>();
-        const todayUvData = new Array<FlowData>();
+        let flowDatas = await this.behaviorMoudle.aggregate(aggregate_limit);
+        let lastDate = new Date(dayjs(startTime).add(-1, 'days').format('YYYY-MM-DD'));
+        let filter_last_pv = {
+            createdAt: { $gte: lastDate, $lt: startTime },
+            subType: 'pv'
+        };
+        let lastUvDate = await (await this.behaviorMoudle.distinct('ip', filter_last_pv).distinct('userID')).length;
+        let res = new TodayFlowData();
+        let todayPvData = new Array<FlowData>();
+        let todayUvData = new Array<FlowData>();
+        let todayNewData = new Array<FlowData>();
         for (let flowData of flowDatas) {
             todayPvData.push({ dayName: flowData.dayName, dayCount: flowData.dayCount });
             todayUvData.push({ dayName: flowData.dayName, dayCount: flowData.ids.length });
+            todayNewData.push({ dayName: flowData.dayName, dayCount: (flowData.ids.length - lastUvDate) > 0 ? (flowData.ids.length - lastUvDate) : 0 });
+            lastUvDate = flowData.ids.length;
         }
         res.todayPvData = todayPvData;
         res.todayUvData = todayUvData;
+        res.todayNewData = todayNewData;
         return res;
+    }
+
+    async getTodayCusLeavePercentData(startTime, endTime) {
+        let filter = {
+            createdAt: { $gte: startTime, $lt: endTime },
+            subType: 'pv'
+        };
+        let aggregate_limit = [
+            { $match: filter },
+            {
+                $group: {
+                    _id: {
+                        dayName: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                        id: '$id',
+                        ip: '$ip',
+                        userID: '$userID',
+                    },
+                    urlPaths: { $push: '$pageURL' },
+                }
+            },
+            {
+                $group: {
+                    _id: '$_id.dayName',
+                    data: {
+                        $push: {
+                            id:'$_id.id',
+                            ip:'$_id.ip',
+                            userID:'$_id.userID',
+                            urlPaths:'$urlPaths',
+                            dayCount:'$dayCount',
+                        }
+                    },
+                    dayCount: { $sum: 1 },
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    dayName: '$_id',
+                    data:'$data',
+                    dayCount:'$dayCount'
+                }
+            },
+        ];
+        let uvPathDatas = await this.behaviorMoudle.aggregate(aggregate_limit);
+        let todayCusLeavePercentData=new Array<FlowData>();
+        for(let uvPathData of uvPathDatas){
+            let cusLeavePercentCount=uvPathData.data.filter((item)=>{
+                return item.urlPaths.length==1;
+            }).length;
+            todayCusLeavePercentData.push({dayName:uvPathData.dayName,dayCount:cusLeavePercentCount/uvPathData.dayCount});
+        }
+        return todayCusLeavePercentData;
+    }
+
+    async getUvTotalCount(startTime,endTime){
+        let filter = {
+            createdAt: { $gte: startTime, $lt: endTime },
+            subType: 'pv'
+        };
+        let aggregate_limit = [
+            { $match: filter },
+            {
+                $group: {
+                    _id: {
+                        ip: '$ip',
+                        userID: '$userID',
+                    },
+                },
+            }
+        ];
+        let res= await this.behaviorMoudle.aggregate(aggregate_limit);
+        return res.length|0;
     }
 
 }

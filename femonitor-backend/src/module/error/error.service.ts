@@ -114,4 +114,22 @@ export class ErrorService {
         }, []);
         return errors;
     }
+
+    async getErrorInfo(startTime,endTime){
+        let errDatas = await this.ErrorMoudle.aggregate([
+            {$match:{
+                createdAt: { $gte: startTime, $lt: endTime },
+            }},
+            {$group:{
+                _id:'$subType',
+                count: { $sum: 1 },
+            }},
+            {$project:{
+                _id:0,
+                type:'$_id',
+                count:'$count',
+            }}
+        ]);
+        return errDatas;
+    }
 }

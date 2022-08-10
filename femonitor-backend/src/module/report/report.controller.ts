@@ -1,7 +1,6 @@
 import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { RealIP } from 'nestjs-real-ip';
-import { TodayFlowData } from 'src/vo/todayFllowData';
 import { ReportService } from './report.service';
 
 @ApiTags('项目主接口')
@@ -24,4 +23,19 @@ export class ReportController {
     async getTodayFlowData(@Query() query) {
        return await this.reportService.getTodayFlowData(query.createdAt);
     }
+
+    @Get('getErrorInfo')
+    async getErrorInfo(@Query() query){
+        return await this.reportService.getErrorInfo(query.startTime,query.endTime);
+    }
+
+    @Get('getPvUvList')
+    async getPvUvList(@Query() query){
+        const startTime=query.startTime;
+        const endTime = query.endTime;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        // 获取时间内数据
+       return await this.reportService.getPvUvList(startTime,endTime); 
+    }
+
 }
