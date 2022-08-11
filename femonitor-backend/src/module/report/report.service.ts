@@ -1,12 +1,13 @@
+import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable } from '@nestjs/common';
+import * as dayjs from 'dayjs';
+import { lastValueFrom, map } from 'rxjs';
 import { ErrorService } from 'src/module/error/error.service';
 import { User } from 'src/schemas/user/user.schema';
 import { BehaviorService } from '../behavior/behavior.service';
 import { PerformanceService } from '../performance/performance.service';
 import { UserService } from '../user/user.service';
-import * as dayjs from 'dayjs';
-import { lastValueFrom, map, min } from 'rxjs';
-import { HttpService } from '@nestjs/axios';
+import { UtilsService } from '../utils/utils.service';
 var parser = require('cron-parser');
 
 @Injectable()
@@ -19,6 +20,8 @@ export class ReportService {
     private readonly performanceService: PerformanceService
     @Inject(UserService)
     private readonly userService: UserService
+    @Inject(UtilsService)
+    private readonly utils: UtilsService
 
     constructor(private readonly httpService: HttpService) { }
 
@@ -51,35 +54,20 @@ export class ReportService {
     }
 
     async getPvUvList(startTime, endTime) {
-        const result = [];
-        const options = {
-            currentDate: new Date(parseInt(startTime)),
-            endDate: new Date(parseInt(endTime)),
-            iterator: true,
-        };
-        const timeSkip = Math.floor((endTime - startTime) / 20);
-        const timeSkip_time =  this.timeStampToCron(timeSkip);
-        console.log(timeSkip_time);
-        let interval = parser.parseExpression(timeSkip_time, options);
-        let start = new Date(parseInt(startTime));
-        while (true) {// eslint-disable-line
-            try {
-                const obj = interval.next();
-                const date = new Date(obj.value.toString());
-                const items = {
-                    time: date,
-                    pv: 0,
-                    uv: 0,
-                };
-                items.pv = await this.behaviorService.getPvTotalCount(start, date);
-                items.uv = await this.behaviorService.getUvTotalCount(start, date);
-                result.push(items);
-                start = date;
-            } catch (e) {
-                console.log(e)
-                break;
-            }
-        }
+        let times = this.utils.splitTime(Number(startTime), Number(endTime), 20);
+        let result = times.reduce(async (pre, cur) =>{
+            let item = {
+                startTime: cur.startTime,
+                endTime: cur.endTime,
+                pv: 0,
+                uv: 0,
+            };
+            item.pv = await this.behaviorService.getPvTotalCount(cur.startTime, cur.endTime);
+            item.uv = await this.behaviorService.getUvTotalCount(cur.startTime, cur.endTime);
+            let res = await pre;
+            res.push(item);
+            return res;
+        }, []);
         return result;
     }
 

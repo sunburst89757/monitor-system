@@ -31,6 +31,7 @@ export class ReportController {
 
     @Get('getPvUvList')
     async getPvUvList(@Query() query){
+        console.log(query);
         const startTime=query.startTime;
         const endTime = query.endTime;
         if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
