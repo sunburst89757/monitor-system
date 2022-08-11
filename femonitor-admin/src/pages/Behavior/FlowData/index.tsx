@@ -30,7 +30,7 @@ export default function FlowData() {
         </div>
         <div className={style.content}>
           <Map
-            wAh={{ width: "80vw", height: "50vh" }}
+            // wAh={{ width: "80vw", height: "50vh" }}
             option={userTotalOption}
           ></Map>
         </div>

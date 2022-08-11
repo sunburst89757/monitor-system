@@ -2,16 +2,7 @@ import * as echarts from "echarts";
 import { useEffect, useRef } from "react";
 import style from "./map.module.scss";
 
-export const Map = ({
-  option,
-  wAh
-}: {
-  option: any;
-  wAh: {
-    width: string;
-    height: string;
-  };
-}) => {
+export const Map = ({ option }: { option: any }) => {
   const ref = useRef<HTMLDivElement>(null);
   let mapInstance: any = null;
   const renderMap = () => {
@@ -34,5 +25,11 @@ export const Map = ({
       mapInstance && mapInstance.dispose();
     };
   }, []);
-  return <div className={style.areaMap} style={wAh} ref={ref!}></div>;
+  return (
+    <div
+      className={style.areaMap}
+      style={{ width: "100%", height: "100%" }}
+      ref={ref!}
+    ></div>
+  );
 };

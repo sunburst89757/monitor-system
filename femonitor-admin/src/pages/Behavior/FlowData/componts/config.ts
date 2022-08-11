@@ -13,6 +13,13 @@ export const option1 = {
   yAxis: {
     type: "value"
   },
+  grid: {
+    top: "20%",
+    left: "10%",
+    right: "10%",
+    bottom: "4%",
+    containLabel: true
+  },
   series: [
     {
       name: "今天",

@@ -28,7 +28,7 @@ export const DataFlowMap = ({ title, promptMessage, variation }: IProps) => {
     return "#fff";
   }, [variation]);
   return (
-    <div>
+    <div className={style.contain}>
       <div className={style.mainHeader}>
         <div className={style.leftBlock}>
           {title}{" "}
@@ -50,7 +50,7 @@ export const DataFlowMap = ({ title, promptMessage, variation }: IProps) => {
         {variation ? <span>较一周前</span> : ""}
       </div>
       <div className={style.map}>
-        <Map option={option1} wAh={{ width: "23vw", height: "30vh" }}></Map>
+        <Map option={option1}></Map>
       </div>
     </div>
   );

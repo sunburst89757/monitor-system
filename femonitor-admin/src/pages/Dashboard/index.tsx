@@ -232,18 +232,18 @@ export default function Dashboard() {
             <div className={style.blockBottomItem} id="mapBox">
               <Map
                 option={pvConfig}
-                wAh={{ width: "600px", height: "200px" }}
+                // wAh={{ width: "600px", height: "200px" }}
               ></Map>
             </div>
             <div className={style.divided}></div>
             <div className={style.blockBottomItem} id="areaBox">
               <Map
                 option={areaMapOption1}
-                wAh={{ width: "300px", height: "200px" }}
+                // wAh={{ width: "300px", height: "200px" }}
               ></Map>
               <Map
                 option={areaMapOption2}
-                wAh={{ width: "300px", height: "200px" }}
+                // wAh={{ width: "300px", height: "200px" }}
               ></Map>
             </div>
           </div>
@@ -266,7 +266,7 @@ export default function Dashboard() {
               <div className={style.mapTitle}>页面加载时间</div>
               <Map
                 option={pageLoadOption}
-                wAh={{ width: "600px", height: "239px" }}
+                // wAh={{ width: "600px", height: "239px" }}
               ></Map>
             </div>
             <div className={style.divided}></div>
@@ -274,7 +274,7 @@ export default function Dashboard() {
               <div className={style.mapTitle}>API成功耗时</div>
               <Map
                 option={apiMapOption}
-                wAh={{ width: "600px", height: "270px" }}
+                // wAh={{ width: "600px", height: "270px" }}
               ></Map>
             </div>
           </div>
