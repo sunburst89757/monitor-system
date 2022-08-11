@@ -1,0 +1,50 @@
+.detail {
+  display: flex;
+  width: 82vw;
+  height: 30vh;
+  .block {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: #fff;
+    .title {
+      flex: 1;
+      display: flex;
+      padding-left: 20px;
+      align-items: center;
+      color: #2f354d;
+      font-size: 14px;
+      font-weight: bold;
+      // height: 8vh;
+      border-bottom: 3px solid #f8f8f9;
+    }
+    .mapBody {
+      flex: 3;
+      display: flex;
+      align-items: center;
+    }
+    .body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding-left: 20px;
+      height: 22vh;
+      li {
+        display: flex;
+        justify-content: center;
+        .left {
+          display: flex;
+          flex-direction: row-reverse;
+          flex: 1;
+          margin-right: 10px;
+        }
+        .right {
+          flex: 5;
+        }
+      }
+    }
+  }
+  .block:nth-child(2) {
+    margin: 0 20px;
+  }
+}

@@ -5,7 +5,7 @@ import {
 } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import { useMemo } from "react";
-import { Map } from "../../../Dashboard/components/Map/Map";
+import { Map } from "../../../../components/Map/Map";
 import style from "./dataFlowMap.module.scss";
 import { option1 } from "./config";
 type IProps = {

@@ -1,7 +1,7 @@
 // 操作系统 设备 ip 地域分布
 import { Radio, RadioChangeEvent } from "antd";
 import { useCallback, useState } from "react";
-import { Map } from "../../Dashboard/components/Map/Map";
+import { Map } from "../../../components/Map/Map";
 import { DataFlowMap } from "./componts/DataFlowMap";
 import { userTotalOption } from "./config";
 import style from "./flowData.module.scss";

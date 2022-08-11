@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Circle } from "./components/Circle/Circle";
 import { DataDisplay } from "./components/DataDisplay/DataDisplay";
-import { Map } from "./components/Map/Map";
+import { Map } from "../../components/Map/Map";
 import { PerformanceDisplay } from "./components/PerformanceDisplay/PerformanceDisplay";
 import {
   apiMapOption,
