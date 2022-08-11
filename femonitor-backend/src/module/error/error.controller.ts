@@ -18,48 +18,63 @@ export class ErrorController {
 
     @Get('script/overview')
     async overview(@Query() query){
-        let start = this.getStartByDuration(Number(query.duration));
-        return this.errorService.errOverview(start);
+        let startTime = query.startTime;
+        let endTime = query.endTime;
+
+
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.errOverview(startTime, endTime);
     }
 
     @Get('script/jsError')
     async jsError(@Query() query){
-        let start = this.getStartByDuration(Number(query.duration));
-        return this.errorService.getJsErrors(start);
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        let pageSize = query.pageSize ? query.pageSize : 20;
+        let pageNum = query.pageNum ? query.pageNum : 1;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getJsErrors(startTime, endTime, pageSize, pageNum);
     }
 
-    getStartByDuration(d: Number){
-        let sec;
-        switch(d){
-            case 1:
-                // 1 hour
-                sec = 60 * 60;
-                break;
-            case 2:
-                // 12 hours
-                sec = 12 * 60 * 60;
-                break;
-            case 3:
-                // 24 hours
-                sec = 24 * 60 * 60;
-                break;
-            case 4:
-                // 3 days
-                sec = 3 * 24 * 60 * 60;
-                break;
-            case 5:
-                // 1 week
-                sec = 7 * 24 * 60 * 60;
-                break;
-            case 6:
-                // 15 days
-                sec = 15 * 24 * 60 * 60;
-                break;
-            default:
-                // 1 hour
-                sec = 60 * 60
-        }
-        return new Date(new Date().getTime() - sec * 1000);
+    @Get('script/consoleError')
+    async consoleError(@Query() query){
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        let pageSize = query.pageSize ? query.pageSize : 20;
+        let pageNum = query.pageNum ? query.pageNum : 1;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getConsoleErrors(startTime, endTime, pageSize, pageNum);
     }
+
+    @Get('script/promiseError')
+    async promiseError(@Query() query){
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        let pageSize = query.pageSize ? query.pageSize : 20;
+        let pageNum = query.pageNum ? query.pageNum : 1;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getPromiseErrors(startTime, endTime, pageSize, pageNum);
+    }
+    
+    @Get('script/vueError')
+    async vueError(@Query() query){
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        let pageSize = query.pageSize ? query.pageSize : 20;
+        let pageNum = query.pageNum ? query.pageNum : 1;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getVueErrors(startTime, endTime, pageSize, pageNum);
+    }
+
+    @Get('resource/data')
+    async resourceError(@Query() query){
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        let pageSize = query.pageSize ? query.pageSize : 20;
+        let pageNum = query.pageNum ? query.pageNum : 1;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getResourceErrors(startTime, endTime, pageSize, pageNum);
+    }
+
 
 }

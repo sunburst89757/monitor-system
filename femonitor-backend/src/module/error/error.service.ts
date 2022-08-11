@@ -45,10 +45,10 @@ export class ErrorService {
             })
     }
 
-    async errOverview(start: Date){
+    async errOverview(start, end){
         let errNum = await this.ErrorMoudle.count({
             subType:['console-error', 'js', 'promise', 'vue'],
-            createdAt: {$gte: start},
+            createdAt: {$gte: start, $lt:end},
         });
         let errUserNum = await this.ErrorMoudle.aggregate([
             {$match:{
@@ -73,12 +73,14 @@ export class ErrorService {
         };
     }
 
-    async getJsErrors(start: Date){
+    async getJsErrors(start, end, pageSize, pageNum){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
         let res = await this.ErrorMoudle.aggregate([
             {$match:{
                 $and:[
                     {subType: 'js'},
-                    {createdAt: {$gte: start}},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
                 ]
             }},
             {$group:{
@@ -88,13 +90,13 @@ export class ErrorService {
                 line: {$last: '$line'},
                 column: {$last: '$column'},
             }},
-        ]);
+        ]).skip((pageNum - 1) * pageSize).limit(pageSize);
         let errors = await res.reduce(async (pre, errItem) => {
             let userNum = await this.ErrorMoudle.aggregate([
                 {$match:{
                     $and:[
                         {error: errItem._id},
-                        {createdAt: {$gte: start}},
+                        {createdAt: {$gte: startTime, $lt:endTime}},
                     ]
                 }},
                 {$project:{"userID":true}},
@@ -115,6 +117,161 @@ export class ErrorService {
         return errors;
     }
 
+    async getConsoleErrors(start, end, pageSize, pageNum){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let res = await this.ErrorMoudle.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'console-error'},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$errData',
+                num: {$sum:1},
+            }},
+        ]).skip((pageNum - 1) * pageSize).limit(pageSize);
+        let errors = await res.reduce(async (pre, errItem) => {
+            let userNum = await this.ErrorMoudle.aggregate([
+                {$match:{
+                    $and:[
+                        {errData: errItem._id},
+                        {createdAt: {$gte: startTime, $lt:endTime}},
+                    ]
+                }},
+                {$project:{"userID":true}},
+                {$group:{_id:"$userID"}},
+                {$group:{_id:null,count:{$sum:1}}}
+            ]);
+            let res = await pre;
+            res.push({
+                error: errItem._id,
+                times: errItem.num,
+                userNum: userNum[0].count,
+            });
+            return res;
+        }, []);
+        return errors;
+    }
+
+    async getPromiseErrors(start, end, pageSize, pageNum){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let res = await this.ErrorMoudle.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'promise'},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$reason',
+                num: {$sum:1},
+            }},
+        ]).skip((pageNum - 1) * pageSize).limit(pageSize);
+        let errors = await res.reduce(async (pre, errItem) => {
+            let userNum = await this.ErrorMoudle.aggregate([
+                {$match:{
+                    $and:[
+                        {reason: errItem._id},
+                        {createdAt: {$gte: startTime, $lt:endTime}},
+                    ]
+                }},
+                {$project:{"userID":true}},
+                {$group:{_id:"$userID"}},
+                {$group:{_id:null,count:{$sum:1}}}
+            ]);
+            let res = await pre;
+            res.push({
+                reason: errItem._id,
+                times: errItem.num,
+                userNum: userNum[0].count,
+            });
+            return res;
+        }, []);
+        return errors;
+    }
+    async getVueErrors(start, end, pageSize, pageNum){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let res = await this.ErrorMoudle.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'vue'},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$error',
+                num: {$sum:1},
+                info: {$last: '$info'},
+            }},
+        ]).skip((pageNum - 1) * pageSize).limit(pageSize);
+        let errors = await res.reduce(async (pre, errItem) => {
+            let userNum = await this.ErrorMoudle.aggregate([
+                {$match:{
+                    $and:[
+                        {error: errItem._id},
+                        {createdAt: {$gte: startTime, $lt:endTime}},
+                    ]
+                }},
+                {$project:{"userID":true}},
+                {$group:{_id:"$userID"}},
+                {$group:{_id:null,count:{$sum:1}}}
+            ]);
+            let res = await pre;
+            res.push({
+                error: errItem._id,
+                times: errItem.num,
+                info: errItem.info,
+                userNum: userNum[0].count,
+            });
+            return res;
+        }, []);
+        return errors;
+    }
+    async getResourceErrors(start, end, pageSize, pageNum){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let res = await this.ErrorMoudle.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'resource'},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$url',
+                num: {$sum:1},
+                html: {$last: '$html'},
+                resourceType: {$last: '$resourceType'},
+            }},
+        ]).skip((pageNum - 1) * pageSize).limit(pageSize);
+        let errors = await res.reduce(async (pre, errItem) => {
+            let userNum = await this.ErrorMoudle.aggregate([
+                {$match:{
+                    $and:[
+                        {url: errItem._id},
+                        {createdAt: {$gte: startTime, $lt:endTime}},
+                    ]
+                }},
+                {$project:{"userID":true}},
+                {$group:{_id:"$userID"}},
+                {$group:{_id:null,count:{$sum:1}}}
+            ]);
+            let res = await pre;
+            res.push({
+                error: errItem._id,
+                times: errItem.num,
+                html: errItem.html,
+                resourceType: errItem.resourceType,
+                userNum: userNum[0].count,
+            });
+            return res;
+        }, []);
+        return errors;
+    }
     async getErrorInfo(startTime,endTime){
         let errDatas = await this.ErrorMoudle.aggregate([
             {$match:{
