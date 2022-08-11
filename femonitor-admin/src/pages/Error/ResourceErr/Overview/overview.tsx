@@ -6,9 +6,8 @@ import { timeSelect1 } from "../../../Dashboard/config";
 import DataDisplay from "../../components/DataDisplay/DataDisplay";
 import { Map } from "../../components/Map/Map";
 import { errorTimeMap } from "../config";
-import { dataDisplayType, errListType } from "../../components/types";
+import { dataDisplayType } from "../../components/types";
 import { useSetState } from "ahooks";
-import QuietViewErr from "../../components/quietViewErr/quietViewErr";
 const { Option } = Select;
 
 export default function Overview() {
@@ -22,7 +21,7 @@ export default function Overview() {
   const [dataFlow, setDataFlow] = useSetState<dataDisplayType[]>([
     {
       label: "错误数",
-      id: "js-error-pie",
+      id: "resource-error-pie",
       option: {
         tooltip: {
           trigger: "item"
@@ -32,20 +31,20 @@ export default function Overview() {
             type: "pie",
             data: [
               {
-                value: 12,
-                name: "onerror"
+                value: 1,
+                name: "JS"
               },
               {
                 value: 1,
-                name: "console-error"
+                name: "CSS"
               },
               {
-                value: 7,
-                name: "promise-error"
+                value: 4,
+                name: "PNG"
               },
               {
-                value: 7,
-                name: "vue-error"
+                value: 3,
+                name: "JPG"
               }
             ]
           }
@@ -57,8 +56,8 @@ export default function Overview() {
       }
     },
     {
-      label: "JS错误率",
-      id: "js-error-precent-pie",
+      label: "资源加载错误率",
+      id: "resource-error-precent-pie",
       option: {
         errorPercent: "4.11%",
         pvTotal: 100,
@@ -71,19 +70,19 @@ export default function Overview() {
             data: [
               {
                 value: 12,
-                name: "onerror"
+                name: "JS"
               },
               {
                 value: 1,
-                name: "console-error"
+                name: "CSS"
               },
               {
                 value: 7,
-                name: "promise-error"
+                name: "PNG"
               },
               {
                 value: 7,
-                name: "vue-error"
+                name: "JPG"
               }
             ]
           }
@@ -96,7 +95,7 @@ export default function Overview() {
     },
     {
       label: "影响用户数",
-      id: "js-error-user-pie",
+      id: "resource-error-user-pie",
       option: {
         userNum: 11,
         tooltip: {
@@ -121,19 +120,19 @@ export default function Overview() {
             data: [
               {
                 value: 2,
-                name: "onerror"
+                name: "JS"
               },
               {
                 value: 1,
-                name: "console-error"
+                name: "CSS"
               },
               {
                 value: 5,
-                name: "promise-error"
+                name: "PNG"
               },
               {
                 value: 3,
-                name: "vue-error"
+                name: "JPG"
               }
             ]
           }
@@ -181,24 +180,6 @@ export default function Overview() {
           wAh={{ width: "80vw", height: "500px" }}
         ></Map>
       </div>
-      <QuietViewErr
-        label="JS错误"
-        value="onerror"
-        showPage={false}
-        pageSize={5}
-      ></QuietViewErr>
-      <QuietViewErr
-        label="自定义异常"
-        value="console.error"
-        showPage={false}
-        pageSize={5}
-      ></QuietViewErr>
-      <QuietViewErr
-        label="promise错误"
-        value="promiseError"
-        showPage={false}
-        pageSize={5}
-      ></QuietViewErr>
     </>
   );
 }

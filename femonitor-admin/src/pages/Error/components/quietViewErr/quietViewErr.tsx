@@ -6,7 +6,12 @@ import React, { useState, useContext } from "react";
 import { Context } from "../../JsErr/context";
 import { useSetState } from "ahooks";
 
-export default function QuietViewErr({ label, value }: quietViewErrType) {
+export default function QuietViewErr({
+  label,
+  value,
+  showPage,
+  pageSize
+}: quietViewErrType) {
   const nowTime = new Date().toLocaleDateString();
   const fun1 = useContext(Context)?.dispacth;
   console.log("fun1", fun1);
@@ -94,7 +99,7 @@ export default function QuietViewErr({ label, value }: quietViewErrType) {
         <Table
           columns={columns}
           dataSource={errList}
-          pagination={false}
+          pagination={showPage ? undefined : false}
           rowKey={(record) => record.id}
         />
       </div>

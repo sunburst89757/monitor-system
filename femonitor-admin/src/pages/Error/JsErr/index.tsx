@@ -22,16 +22,20 @@ const items: MenuProps["items"] = [
     key: "SubMenu",
     children: [
       {
-        label: "console.error",
-        key: "consoleErr"
+        label: "console-error",
+        key: "console-error"
       },
       {
-        label: "window.error",
-        key: "windowErr"
+        label: "onerror",
+        key: "onerror"
       },
       {
         label: "promise错误",
-        key: "promiseErr"
+        key: "promise-error"
+      },
+      {
+        label: "VUE错误",
+        key: "vue-error"
       }
     ]
   }
@@ -70,9 +74,6 @@ export default function JsErr() {
         )}
       </Context.Provider>
 
-      <Button type="primary" onClick={showDrawer}>
-        Open
-      </Button>
       <Drawer
         title="错误详情"
         placement="right"
