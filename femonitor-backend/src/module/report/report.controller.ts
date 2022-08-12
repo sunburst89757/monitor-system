@@ -20,12 +20,15 @@ export class ReportController {
     }
 
     @Get('getTodayFlowData')
-    async getTodayFlowData(@Query() query) {
-       return await this.reportService.getTodayFlowData(query.createdAt);
+    async getTodayFlowData() {
+       return await this.reportService.getTodayFlowData();
     }
 
     @Get('errorOverView')
     async errorOverView(@Query() query){
+        const startTime=query.startTime;
+        const endTime = query.endTime;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
         return await this.reportService.getErrorInfo(query.startTime,query.endTime);
     }
 
@@ -58,6 +61,8 @@ export class ReportController {
         const endTime = query.endTime;
         if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
         // pv根据ip分组
-        return await this.reportService.getPvLocation(startTime,endTime)
+        return await this.reportService.getPriorPvCity(startTime,endTime);
     }
+
+    
 }

@@ -41,29 +41,30 @@ export class ReportService {
         this.userService.add(userInfo);
     }
 
-    async getTodayFlowData(createdAt) {
-        if (!createdAt) {
-            createdAt = Date.now();
-        }
-        let d1 = new Date(dayjs(new Date(parseInt(createdAt, 10))).add(1, 'days').format('YYYY-MM-DD'));
-        let d2 = new Date(dayjs(new Date(parseInt(createdAt, 10))).add(-1, 'days').format('YYYY-MM-DD'));
-        let res = await this.behaviorService.getPvUvDayData(d2, d1);
-        res.todayIpData = await this.userService.getIPData(d2, d1);
-        res.todayCusLeavePercentData = await this.behaviorService.getTodayCusLeavePercentData(d2, d1);
+    async getTodayFlowData() {
+        let createdAt = Date.now();
+        let endTime = new Date(dayjs(createdAt).add(1, 'days').format('YYYY-MM-DD'));
+        let startTime = new Date(dayjs(createdAt).add(-1, 'days').format('YYYY-MM-DD'));
+        console.log(startTime,endTime);
+        let res = await this.behaviorService.getPvUvDayData(startTime, endTime);
+        res.todayIpData = await this.userService.getIPData(startTime, endTime);
+        res.todayCusLeavePercentData = await this.behaviorService.getTodayCusLeavePercentData(startTime,endTime);
         return res;
     }
 
     async getPvUvList(startTime, endTime) {
         let times = this.utils.splitTime(Number(startTime), Number(endTime), 20);
-        let result = times.reduce(async (pre, cur) =>{
+        let result = times.reduce(async (pre, cur) => {
+            let start=new Date(cur.startTime);
+            let end=new Date(cur.endTime);
             let item = {
-                startTime: cur.startTime,
-                endTime: cur.endTime,
+                startTime: start,
+                endTime: end,
                 pv: 0,
                 uv: 0,
             };
-            item.pv = await this.behaviorService.getPvTotalCount(cur.startTime, cur.endTime);
-            item.uv = await this.behaviorService.getUvTotalCount(cur.startTime, cur.endTime);
+            item.pv = await this.behaviorService.getPvTotalCount(start, end);
+            item.uv = await this.behaviorService.getUvTotalCount(start, end);
             let res = await pre;
             res.push(item);
             return res;
@@ -84,12 +85,28 @@ export class ReportService {
         return res;
     }
 
-    async performanceOverView(startTime,endTime){
-        return await this.performanceService.performanceOverView(startTime,endTime);
+    async performanceOverView(startTime, endTime) {
+        let start = new Date(parseInt(startTime));
+        let end = new Date(parseInt(endTime));
+        return await this.performanceService.performanceOverView(start, end);
     }
 
-    async getPvLocation(startTime,endTime){
-        return await this.behaviorService.getPvLocation(startTime,endTime);
+    async getPriorPvCity(startTime, endTime) {
+        let start = new Date(parseInt(startTime));
+        let end = new Date(parseInt(endTime));
+        let pvIps = await this.behaviorService.getPvLocation(start, end);
+        let uvIps=await this.behaviorService.getUvLocation(start,end);
+        let pvCitys=await this.userService.getCityByIps(pvIps);
+        let uvCitys=await this.userService.getCityByIps(uvIps);
+        return {pvCitys,uvCitys};
+    }
+
+    async getPriorUvCity(startTime,endTime){
+        let start = new Date(parseInt(startTime));
+        let end = new Date(parseInt(endTime));
+        let ips = await this.behaviorService.getUvLocation(start, end);
+        let citys=await this.userService.getCityByIps(ips);
+        return citys;
     }
 
     async getLocationCity(ip: string) {

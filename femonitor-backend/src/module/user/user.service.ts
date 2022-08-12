@@ -73,4 +73,14 @@ export class UserService {
         }
         return todayIpData;
     }
+
+    async getCityByIps(ips){
+        let filter={
+            $or:ips
+        };
+        return await this.UserMoudle.aggregate([
+            {$match:filter},
+            {$project:{_id:0,city:'$city'}}
+        ]);
+    }
 }
