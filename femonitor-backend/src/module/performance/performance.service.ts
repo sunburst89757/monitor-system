@@ -46,18 +46,39 @@ export class PerformanceService {
             { $group: { _id: null, averageTime: { $avg: 'startTime' } } },
             { $project: { _id: 0, averageTime: '$averageTime' } }
         ])
-        let onloadTime=await this.performanceModel.aggregate([
+        let onloadTime = await this.performanceModel.aggregate([
             { $match: { createdAt: { $gte: startTime, $lt: endTime }, subType: 'load' } },
             { $group: { _id: null, averageTime: { $avg: 'startTime' } } },
             { $project: { _id: 0, averageTime: '$averageTime' } }
         ])
         return {
-            xhrCount:xhrCount,
-            xhrAverageDuration:xhrAverageDuration.length>0?xhrAverageDuration[0].averageDuration:0,
-            xhrSuccess:xhrSuccess,
-            domContentLoadedTime:domContentLoadedTime.length>0?domContentLoadedTime[0].averageTime:0,
-            onloadTime:onloadTime.length>0?onloadTime[0].averageTime:0,
-            ttfbTime:ttfbTime.length>0?ttfbTime[0].averageTime:0
+            xhrCount: xhrCount,
+            xhrAverageDuration: xhrAverageDuration.length > 0 ? xhrAverageDuration[0].averageDuration : 0,
+            xhrSuccess: xhrSuccess,
+            domContentLoadedTime: domContentLoadedTime.length > 0 ? domContentLoadedTime[0].averageTime : 0,
+            onloadTime: onloadTime.length > 0 ? onloadTime[0].averageTime : 0,
+            ttfbTime: ttfbTime.length > 0 ? ttfbTime[0].averageTime : 0
         }
+    }
+
+    async getPerformanceList(start, end, pageSize, pageNum, type) {
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let filter = {
+            createdAt: { $gte: startTime, $lt: endTime },
+            subType: type
+        };
+        let total = await this.performanceModel.countDocuments(filter);
+        return await this.performanceModel.find(filter)
+            .skip((pageNum - 1) * pageSize)
+            .limit(pageSize)
+            .then(res => {
+                let response = {
+                    data: res,
+                    total: total,
+                    currentPage: pageNum
+                }
+                return response;
+            })
     }
 }

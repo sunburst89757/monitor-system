@@ -45,18 +45,18 @@ export class ReportService {
         let createdAt = Date.now();
         let endTime = new Date(dayjs(createdAt).add(1, 'days').format('YYYY-MM-DD'));
         let startTime = new Date(dayjs(createdAt).add(-1, 'days').format('YYYY-MM-DD'));
-        console.log(startTime,endTime);
+        console.log(startTime, endTime);
         let res = await this.behaviorService.getPvUvDayData(startTime, endTime);
         res.todayIpData = await this.userService.getIPData(startTime, endTime);
-        res.todayCusLeavePercentData = await this.behaviorService.getTodayCusLeavePercentData(startTime,endTime);
+        res.todayCusLeavePercentData = await this.behaviorService.getTodayCusLeavePercentData(startTime, endTime);
         return res;
     }
 
     async getPvUvList(startTime, endTime) {
         let times = this.utils.splitTime(Number(startTime), Number(endTime), 20);
         let result = times.reduce(async (pre, cur) => {
-            let start=new Date(cur.startTime);
-            let end=new Date(cur.endTime);
+            let start = new Date(cur.startTime);
+            let end = new Date(cur.endTime);
             let item = {
                 startTime: start,
                 endTime: end,
@@ -78,8 +78,12 @@ export class ReportService {
         let todayUvCount = await this.behaviorService.getPvTotalCount(start, end);
         let errDatas = await this.errorService.getErrorInfo(start, end);
         let res = { todayUvCount: todayUvCount }
+        const formatToHump = (value) => {
+            return value.replace(/\-(\w)/g, (_, letter) => letter.toUpperCase())
+        }
         errDatas.forEach(item => {
-            let errKey = item.type + 'Count';
+            let errKey = formatToHump(item.type) + 'Count';
+            console.log(formatToHump(item.type));
             res[errKey] = item.count;
         })
         return res;
@@ -95,17 +99,17 @@ export class ReportService {
         let start = new Date(parseInt(startTime));
         let end = new Date(parseInt(endTime));
         let pvIps = await this.behaviorService.getPvLocation(start, end);
-        let uvIps=await this.behaviorService.getUvLocation(start,end);
-        let pvCitys=await this.userService.getCityByIps(pvIps);
-        let uvCitys=await this.userService.getCityByIps(uvIps);
-        return {pvCitys,uvCitys};
+        let uvIps = await this.behaviorService.getUvLocation(start, end);
+        let pvCitys = await this.userService.getCityByIps(pvIps);
+        let uvCitys = await this.userService.getCityByIps(uvIps);
+        return { pvCitys, uvCitys };
     }
 
-    async getPriorUvCity(startTime,endTime){
+    async getPriorUvCity(startTime, endTime) {
         let start = new Date(parseInt(startTime));
         let end = new Date(parseInt(endTime));
         let ips = await this.behaviorService.getUvLocation(start, end);
-        let citys=await this.userService.getCityByIps(ips);
+        let citys = await this.userService.getCityByIps(ips);
         return citys;
     }
 

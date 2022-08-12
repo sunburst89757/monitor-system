@@ -14,6 +14,7 @@ import { NavigationSchema } from 'src/schemas/performance/navigation.schema';
 import { Performance, PerformanceSchema } from 'src/schemas/performance/performance.schema';
 import { XhrSchema } from 'src/schemas/performance/xhr.schema';
 import { PerformanceService } from './performance.service';
+import { PerformanceController } from './performance.controller';
 
 @Module({
     imports:[
@@ -40,7 +41,8 @@ import { PerformanceService } from './performance.service';
             }])
     ],
     providers:[PerformanceService],
-    exports:[PerformanceService]
+    exports:[PerformanceService],
+    controllers: [PerformanceController]
 
 })
 export class PerformanceModule {}
