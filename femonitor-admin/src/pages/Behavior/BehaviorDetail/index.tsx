@@ -2,15 +2,22 @@ import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import { DatePicker, Input, Space } from "antd";
 import { RangePickerProps } from "antd/lib/date-picker";
 import moment from "moment";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import style from "./behaviorDetail.module.scss";
+import { BehaviorRecord } from "./components/behaviorRecord/BehaviorRecord";
 import { UserDetail } from "./components/userDetail/userDetail";
 const { Search } = Input;
 export default function BehaviorDetail() {
   const location = useLocation();
   const locationRef = useRef(location);
   const [isCollapse, setisCollapse] = useState(false);
+  const computeHeight = useMemo(() => {
+    if (isCollapse) {
+      return "72vh";
+    }
+    return "42vh";
+  }, [isCollapse]);
   const queryForm = useRef({
     time: "1990",
     userId: "1"
@@ -55,6 +62,7 @@ export default function BehaviorDetail() {
         </div>
       </div>
       {isCollapse ? "" : <UserDetail></UserDetail>}
+      <BehaviorRecord isCollapse={isCollapse}></BehaviorRecord>
     </div>
   );
 }
