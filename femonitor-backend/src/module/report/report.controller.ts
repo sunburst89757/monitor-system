@@ -24,8 +24,8 @@ export class ReportController {
        return await this.reportService.getTodayFlowData(query.createdAt);
     }
 
-    @Get('getErrorInfo')
-    async getErrorInfo(@Query() query){
+    @Get('errorOverView')
+    async errorOverView(@Query() query){
         return await this.reportService.getErrorInfo(query.startTime,query.endTime);
     }
 
@@ -39,4 +39,25 @@ export class ReportController {
        return await this.reportService.getPvUvList(startTime,endTime); 
     }
 
+    @Get('performanceOverView')
+    async performanceOverView(@Query() query){
+        const startTime=query.startTime;
+        const endTime = query.endTime;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return await this.reportService.performanceOverView(startTime,endTime);
+    }
+
+    /**
+     * 
+     * @param query startTime endTime
+     * @return 返回pv前5个地区
+     */
+    @Get('getPriorFlowLocation')
+    async getPriorFlowLocation(@Query() query){
+        const startTime=query.startTime;
+        const endTime = query.endTime;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        // pv根据ip分组
+        return await this.reportService.getPvLocation(startTime,endTime)
+    }
 }

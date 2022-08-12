@@ -38,7 +38,7 @@ export class UserService {
         return await this.UserMoudle.find(filter);
     }
 
-    async getIPData(startTime,endTime){
+    async getIPData(startTime, endTime) {
         let filterIP = {
             createdAt: { $gte: startTime, $lt: endTime },
         };
@@ -48,13 +48,13 @@ export class UserService {
                 $group: {
                     _id: {
                         'dayName': { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-                        'ip':'$ip'
+                        'ip': '$ip'
                     },
                 }
             },
             {
                 $group: {
-                    _id:'$_id.dayName',
+                    _id: '$_id.dayName',
                     dayCount: { $sum: 1 },
                 }
             },
@@ -67,9 +67,9 @@ export class UserService {
             },
         ];
         let flowDatas = await this.UserMoudle.aggregate(aggregate_limit);
-        let todayIpData=new Array<FlowData>();
-        for(let flowData of flowDatas){
-            todayIpData.push({dayName:flowData.dayName,dayCount:flowData.dayCount});
+        let todayIpData = new Array<FlowData>();
+        for (let flowData of flowDatas) {
+            todayIpData.push({ dayName: flowData.dayName, dayCount: flowData.dayCount });
         }
         return todayIpData;
     }

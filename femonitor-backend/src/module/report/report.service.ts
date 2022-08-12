@@ -84,6 +84,14 @@ export class ReportService {
         return res;
     }
 
+    async performanceOverView(startTime,endTime){
+        return await this.performanceService.performanceOverView(startTime,endTime);
+    }
+
+    async getPvLocation(startTime,endTime){
+        return await this.behaviorService.getPvLocation(startTime,endTime);
+    }
+
     async getLocationCity(ip: string) {
         let location = await lastValueFrom(this.httpService.get(
             `https://api.map.baidu.com/location/ip?ak=rOXvwq4czOnGE1afnEFqrlhYKN1tYL3q&ip=${ip}&coor=bd09ll`
@@ -96,25 +104,6 @@ export class ReportService {
             return location.content.address_detail.province;
         } else {
             return '';
-        }
-    }
-
-    timeStampToCron(time_skip) {
-        time_skip=time_skip/1000;
-        if (time_skip > 0) {
-            if(time_skip<60){
-                return `*/${time_skip} * * * * *`
-            }
-            let minute = Math.floor(time_skip / (60))
-            if (minute < 60) {
-                return `0 */${minute} * * * *`
-            }
-            let hour = Math.floor(minute / 60);
-            if (hour < 24) {
-                return `0 0 */${hour} * * *`;
-            }
-            let day = Math.floor(hour / 24);
-            return `0 0 0 */${day}  * *`;
         }
     }
 }

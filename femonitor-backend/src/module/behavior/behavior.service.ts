@@ -175,4 +175,26 @@ export class BehaviorService {
         return res.length|0;
     }
 
+    /**
+     * 获取pv前5个地区
+     * @param startTime 
+     * @param endTime 
+     */
+    async getPvLocation(startTime,endTime){
+        let filter = {
+            createdAt: { $gte: startTime, $lt: endTime },
+            subType: 'pv'
+        };
+        let pvLocations=await this.behaviorMoudle.aggregate([
+            {$match:filter},
+            {$group:{
+                _id:'$ip',
+                dayCount: { $sum: 1 },
+            }},
+            {$project:{_id:0, ip:'$_id', dayCount:'$dayCount'}},
+            // {$sort:{dayCount:-1}}
+        ]);
+        return pvLocations;
+    }
+
 }
