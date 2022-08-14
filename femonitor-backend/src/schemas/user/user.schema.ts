@@ -13,5 +13,8 @@ export class User {
 
     @Prop({ type: String })
     city: String;
+
+    @Prop({ type: String })
+    ua: String;
 }
 export const UserSchema = SchemaFactory.createForClass(User);

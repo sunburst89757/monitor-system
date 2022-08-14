@@ -37,7 +37,7 @@ export class ReportService {
         this.behaviorService.add(reports.filter(report => report['type'] == 'behavior'))
         this.performanceService.add(reports.filter(report => report['type'] == 'performance'))
         let location = await this.getLocationCity(data['ip']);
-        let userInfo: User = { id: data['id'], ip: data['ip'], userID: data['userID'], city: location };
+        let userInfo: User = { id: data['id'], ip: data['ip'], userID: data['userID'], city: location, ua: data['ua'] };
         this.userService.add(userInfo);
     }
 

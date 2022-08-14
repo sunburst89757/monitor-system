@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Headers, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { RealIP } from 'nestjs-real-ip';
 import { ReportService } from './report.service';
@@ -10,9 +10,10 @@ export class ReportController {
 
     @Post('report')
     @HttpCode(200)
-    async reportDate(@Body() body, @RealIP() ip: string) {
+    async reportDate(@Body() body, @RealIP() ip: string, @Headers('User-Agent') userAgent: string,) {
         let data = JSON.parse(body);
         data['ip'] = ip;
+        data['ua'] = userAgent;
         if(data.userID == '') data.userID = ip;
         this.reportService.handle(data);
         return '';
