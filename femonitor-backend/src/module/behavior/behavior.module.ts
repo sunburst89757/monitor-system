@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { BehaviorService } from './behavior.service';
 import { Behavior, BehaviorSchema } from 'src/schemas/behavior/behavior.schema';
-import { ClickSchema} from 'src/schemas/behavior/click.schema';
-import { HaschangeSchema} from 'src/schemas/behavior/haschange.schema';
-import { PageAccessDurationSchema} from 'src/schemas/behavior/pageAccessDuration.schema';
-import { PageAccessHeightSchema} from 'src/schemas/behavior/pageAccessHeight.schema';
-import { PVSchema} from 'src/schemas/behavior/pv.schema';
+import { ClickSchema } from 'src/schemas/behavior/click.schema';
+import { HaschangeSchema } from 'src/schemas/behavior/haschange.schema';
+import { PageAccessDurationSchema } from 'src/schemas/behavior/pageAccessDuration.schema';
+import { PageAccessHeightSchema } from 'src/schemas/behavior/pageAccessHeight.schema';
+import { PVSchema } from 'src/schemas/behavior/pv.schema';
 import { ReactRouterChangeSchema } from 'src/schemas/behavior/reactRouterChange.schema';
 import { VueRouterChangeSchema } from 'src/schemas/behavior/vueRouterChange.schema';
+import { UtilsModule } from '../utils/utils.module';
+import { BehaviorService } from './behavior.service';
 
 @Module({
     imports:[
@@ -27,7 +28,8 @@ import { VueRouterChangeSchema } from 'src/schemas/behavior/vueRouterChange.sche
                     {name: 'vue-router-change',schema:VueRouterChangeSchema},
                 ]
             }
-        ])
+        ]),
+        UtilsModule
     ],
     providers:[BehaviorService],
     exports:[BehaviorService]

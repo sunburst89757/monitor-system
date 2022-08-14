@@ -84,6 +84,9 @@ export const BehaviorRecord = ({ isCollapse }: { isCollapse: boolean }) => {
         setLoading(false);
       });
   };
+  const handleDetail = useCallback((item: any) => {
+    console.log(item, "shisha");
+  }, []);
   useEffect(() => {
     loadMoreData();
   }, []);
@@ -121,13 +124,25 @@ export const BehaviorRecord = ({ isCollapse }: { isCollapse: boolean }) => {
               <List
                 dataSource={dataList}
                 renderItem={(item) => (
-                  <List.Item key={item.email}>
+                  <List.Item
+                    key={item.email}
+                    actions={[
+                      <a
+                        key="list-loadmore-more"
+                        onClick={() => {
+                          handleDetail(item);
+                        }}
+                      >
+                        详情
+                      </a>
+                    ]}
+                  >
                     <List.Item.Meta
                       avatar={<IconFont type="icon-cloud"></IconFont>}
                       title={item.name.last}
                       description={item.email}
                     />
-                    <Button type="link">详情</Button>
+                    <div>19:23</div>
                   </List.Item>
                 )}
               />

@@ -1,14 +1,15 @@
 {
   "name": "femonitor-sdk-learning",
-  "version": "2.0.5",
+  "version": "2.0.9",
   "description": "适用于web的前端监控系统",
-  "main": "src/index.js",
+  "main": "dist/bundle.cjs.js",
   "types": "src/index.d.ts",
-  "module": "src/index.js",
+  "module": "dist/monitor.esm.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "cd .. && husky install femonitor-sdk/.husky",
-    "commit": "cz"
+    "commit": "cz",
+    "build": "rollup -c rollup/build.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,9 @@
   },
   "homepage": "https://github.com/sunburst89757/monitor-system/#readme",
   "devDependencies": {
+    "@babel/preset-env": "^7.18.10",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-json": "^4.1.0",
     "commitizen": "^4.2.5",
     "cz-conventional-changelog": "^3.3.0",
     "eslint-config-prettier": "^8.5.0",
@@ -38,6 +42,7 @@
     }
   },
   "dependencies": {
-    "ip": "^1.1.8"
+    "ip": "^1.1.8",
+    "rollup": "^2.77.3"
   }
 }
