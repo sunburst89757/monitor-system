@@ -10,8 +10,9 @@ export function MyContent() {
   // const location = useLocation();
   return (
     <Content className={style.container}>
-      <MyTabs></MyTabs>
       <ReLoginModal></ReLoginModal>
+      <MyTabs></MyTabs>
+
       {/* <PageTransition
         preset="moveToLeftFromRight"
         transitionKey={location.pathname}

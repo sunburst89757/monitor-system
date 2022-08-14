@@ -11,13 +11,8 @@ const { Search } = Input;
 export default function BehaviorDetail() {
   const location = useLocation();
   const locationRef = useRef(location);
+  console.log(locationRef, "是啥");
   const [isCollapse, setisCollapse] = useState(false);
-  const computeHeight = useMemo(() => {
-    if (isCollapse) {
-      return "72vh";
-    }
-    return "42vh";
-  }, [isCollapse]);
   const queryForm = useRef({
     time: "1990",
     userId: "1"
@@ -61,7 +56,13 @@ export default function BehaviorDetail() {
           </Space>
         </div>
       </div>
-      {isCollapse ? "" : <UserDetail></UserDetail>}
+      {isCollapse ? (
+        ""
+      ) : (
+        <UserDetail
+          {...(locationRef.current.state as any).userInfo}
+        ></UserDetail>
+      )}
       <BehaviorRecord isCollapse={isCollapse}></BehaviorRecord>
     </div>
   );

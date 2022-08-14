@@ -1,7 +1,42 @@
+import { IUserInfo1 } from "../../../UserBehaviorOverview";
 import { Map } from "../../../../../components/Map/Map";
 import { timeOption, timeOption1 } from "../../config";
 import style from "./userDetail.module.scss";
-export const UserDetail = () => {
+import { Space } from "antd";
+import { IconFont } from "../../../../../components/IconFont";
+const confirmIcon = (index: string) => {
+  switch (index) {
+    case "00":
+      return (
+        <Space>
+          <IconFont type="icon-windows"></IconFont>
+          <IconFont type="icon-chrome"></IconFont>
+        </Space>
+      );
+    case "01":
+      return (
+        <Space>
+          <IconFont type="icon-windows"></IconFont>
+          <IconFont type="icon-firefox"></IconFont>
+        </Space>
+      );
+    case "10":
+      return (
+        <Space>
+          <IconFont type="icon-mac"></IconFont>
+          <IconFont type="icon-chrome"></IconFont>
+        </Space>
+      );
+    case "11":
+      return (
+        <Space>
+          <IconFont type="icon-mac"></IconFont>
+          <IconFont type="icon-safari"></IconFont>
+        </Space>
+      );
+  }
+};
+export const UserDetail = ({ userId, device, ip, location }: IUserInfo1) => {
   return (
     <div className={style.detail}>
       <div className={style.block}>
@@ -9,23 +44,19 @@ export const UserDetail = () => {
         <ul className={style.body}>
           <li>
             <div className={style.left}>用户id:</div>
-            <div className={style.right}>hhhh</div>
+            <div className={style.right}>{userId}</div>
           </li>
           <li>
-            <div className={style.left}>浏览器:</div>
-            <div className={style.right}>hhhh</div>
-          </li>
-          <li>
-            <div className={style.left}>操作系统:</div>
-            <div className={style.right}>hhhh</div>
+            <div className={style.left}>设备平台:</div>
+            <div className={style.right}>{confirmIcon(device)}</div>
           </li>
           <li>
             <div className={style.left}>ip地址:</div>
-            <div className={style.right}>hhhh</div>
+            <div className={style.right}>{ip}</div>
           </li>
           <li>
             <div className={style.left}>所在地区:</div>
-            <div className={style.right}>hhhh</div>
+            <div className={style.right}>{location}</div>
           </li>
         </ul>
       </div>
