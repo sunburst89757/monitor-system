@@ -5,12 +5,15 @@ import { Page } from 'src/dto/PageDto';
 import { QueryError } from 'src/dto/queryErrorDto';
 import { Error } from 'src/schemas/error/error.schema';
 import { BehaviorService } from '../behavior/behavior.service';
+import { UtilsService } from '../utils/utils.service';
 @Injectable()
 export class ErrorService {
 
     @Inject(BehaviorService)
-    private readonly behaviorService: BehaviorService
+    private readonly behaviorService: BehaviorService;
 
+    @Inject(UtilsService)
+    private readonly utils: UtilsService;
     constructor(
         @InjectModel(Error.name) private readonly ErrorMoudle: Model<Error>
     ) { }
@@ -46,25 +49,31 @@ export class ErrorService {
     }
 
     async errOverview(start, end){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
         let errNum = await this.ErrorMoudle.count({
             subType:['console-error', 'js', 'promise', 'vue'],
-            createdAt: {$gte: start, $lt:end},
+            createdAt: {$gte: startTime, $lt:endTime},
         });
         let errUserNum = await this.ErrorMoudle.aggregate([
             {$match:{
-                $or:[
-                    {subType: 'console-error'},
-                    {subType: 'js'},
-                    {subType: 'promise'},
-                    {subType: 'vue'},
+                $and:[
+                    {$or:[
+                        {subType: 'console-error'},
+                        {subType: 'js'},
+                        {subType: 'promise'},
+                        {subType: 'vue'},
+                    ]},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
                 ]
+
             }},
             {$project:{"userID":true}},
             {$group:{_id:"$userID"}},
             {$group:{_id:null,count:{$sum:1}}}
         ]);
-        let pv = await this.behaviorService.getPv(start);
-        let userNum = await this.behaviorService.getUserNum(start);
+        let pv = await this.behaviorService.getPvTotalCount(startTime, endTime);
+        let userNum = await this.behaviorService.getUserNum(startTime, endTime);
         return {
             errNum: errNum,
             errUserNum: errUserNum[0].count,
@@ -288,5 +297,114 @@ export class ErrorService {
             }}
         ]);
         return errDatas;
+    }
+
+    async getScriptPageError(start, end){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let pages = await this.ErrorMoudle.aggregate([
+            {$match:{
+                $and:[{
+                    $or:[
+                        {subType: 'console-error'},
+                        {subType: 'js'},
+                        {subType: 'promise'},
+                        {subType: 'vue'},
+                        ]
+                    },
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$pageURL',
+                num: {$sum:1},
+            }},
+        ]).limit(5);
+        let res = pages.map((page) => {
+            return {
+                pageURL:page._id,
+                times:page.num,
+            };
+        });
+        return res;
+    }
+
+    async getResourtPageError(start, end){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let pages = await this.ErrorMoudle.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'resource'},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$pageURL',
+                num: {$sum:1},
+            }},
+        ]).limit(5);
+        let res = pages.map((page) => {
+            return {
+                pageURL:page._id,
+                times:page.num,
+            };
+        });
+        return res;
+    }
+
+    async getResourceOverview(start, end){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let errNum = await this.ErrorMoudle.count({
+            subType:'resource',
+            createdAt: {$gte: startTime, $lt:endTime},
+        });
+        console.log(errNum);
+        let errUserNum = await this.ErrorMoudle.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'resource'},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+
+            }},
+            {$project:{"userID":true}},
+            {$group:{_id:"$userID"}},
+            {$group:{_id:null,count:{$sum:1}}}
+        ]);
+        let pv = await this.behaviorService.getPvTotalCount(startTime, endTime);
+        let userNum = await this.behaviorService.getUserNum(startTime, endTime);
+        return {
+            errNum: errNum,
+            errUserNum: errUserNum[0].count,
+            pv: pv,
+            userNum: userNum,
+        };
+    }
+
+    async getErrorCount(start, end){
+        let types = ['js', 'promise', 'console-error', 'vue'];
+        let res = types.reduce(async (pre, type) => {
+            let errNums = await this.getErrorCountByType(start, end, type);
+            let res = await pre;
+            Object.assign(res, {[type]:errNums});
+            return res;
+        }, {});
+        return res;
+    }
+
+    async getErrorCountByType(start, end, type){
+        let times = this.utils.splitTime(Number(start), Number(end), 12);
+        let res = times.reduce(async (pre, cur) =>{
+            let errNum = await this.ErrorMoudle.count({
+                subType:type,
+                createdAt: {$gte: new Date(cur.startTime), $lt:new Date(cur.endTime)},
+            });
+            let res = await pre;
+            res.push(errNum);
+            return res;
+        }, []);
+        return res;
     }
 }

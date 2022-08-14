@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as dayjs from 'dayjs';
 import { Model } from 'mongoose';
 import { Behavior } from 'src/schemas/behavior/behavior.schema';
 import { FlowData, TodayFlowData } from 'src/vo/todayFllowData';
-import * as dayjs from 'dayjs';
+import { UtilsService } from '../utils/utils.service';
 
 @Injectable()
 export class BehaviorService {
+    @Inject(UtilsService)
+    private readonly utils: UtilsService
+
     constructor(
         @InjectModel(Behavior.name) private readonly behaviorMoudle: Model<Behavior>
     ) { }
@@ -23,13 +27,6 @@ export class BehaviorService {
         }
     }
 
-    async getPv(start: Date) {
-        return this.behaviorMoudle.count({
-            subType: 'pv',
-            createdAt: { $gte: start }
-        });
-    }
-
     async getPvTotalCount(start, end) {
         return this.behaviorMoudle.count({
             subType: 'pv',
@@ -37,13 +34,13 @@ export class BehaviorService {
         });
     }
 
-    async getUserNum(start: Date) {
+    async getUserNum(startTime, endTime) {
         let res = await this.behaviorMoudle.aggregate([
             {
                 $match: {
                     $and: [
                         { subType: 'pv' },
-                        { createdAt: { $gte: start } },
+                        {createdAt: {$gte: startTime, $lt:endTime}},
                     ]
                 }
             },
