@@ -41,29 +41,30 @@ export class ReportService {
         this.userService.add(userInfo);
     }
 
-    async getTodayFlowData(createdAt) {
-        if (!createdAt) {
-            createdAt = Date.now();
-        }
-        let d1 = new Date(dayjs(new Date(parseInt(createdAt, 10))).add(1, 'days').format('YYYY-MM-DD'));
-        let d2 = new Date(dayjs(new Date(parseInt(createdAt, 10))).add(-1, 'days').format('YYYY-MM-DD'));
-        let res = await this.behaviorService.getPvUvDayData(d2, d1);
-        res.todayIpData = await this.userService.getIPData(d2, d1);
-        res.todayCusLeavePercentData = await this.behaviorService.getTodayCusLeavePercentData(d2, d1);
+    async getTodayFlowData() {
+        let createdAt = Date.now();
+        let endTime = new Date(dayjs(createdAt).add(1, 'days').format('YYYY-MM-DD'));
+        let startTime = new Date(dayjs(createdAt).add(-1, 'days').format('YYYY-MM-DD'));
+        console.log(startTime, endTime);
+        let res = await this.behaviorService.getPvUvDayData(startTime, endTime);
+        res.todayIpData = await this.userService.getIPData(startTime, endTime);
+        res.todayCusLeavePercentData = await this.behaviorService.getTodayCusLeavePercentData(startTime, endTime);
         return res;
     }
 
     async getPvUvList(startTime, endTime) {
         let times = this.utils.splitTime(Number(startTime), Number(endTime), 20);
-        let result = times.reduce(async (pre, cur) =>{
+        let result = times.reduce(async (pre, cur) => {
+            let start = new Date(cur.startTime);
+            let end = new Date(cur.endTime);
             let item = {
-                startTime: cur.startTime,
-                endTime: cur.endTime,
+                startTime: start,
+                endTime: end,
                 pv: 0,
                 uv: 0,
             };
-            item.pv = await this.behaviorService.getPvTotalCount(cur.startTime, cur.endTime);
-            item.uv = await this.behaviorService.getUvTotalCount(cur.startTime, cur.endTime);
+            item.pv = await this.behaviorService.getPvTotalCount(start, end);
+            item.uv = await this.behaviorService.getUvTotalCount(start, end);
             let res = await pre;
             res.push(item);
             return res;
@@ -77,11 +78,39 @@ export class ReportService {
         let todayUvCount = await this.behaviorService.getPvTotalCount(start, end);
         let errDatas = await this.errorService.getErrorInfo(start, end);
         let res = { todayUvCount: todayUvCount }
+        const formatToHump = (value) => {
+            return value.replace(/\-(\w)/g, (_, letter) => letter.toUpperCase())
+        }
         errDatas.forEach(item => {
-            let errKey = item.type + 'Count';
+            let errKey = formatToHump(item.type) + 'Count';
+            console.log(formatToHump(item.type));
             res[errKey] = item.count;
         })
         return res;
+    }
+
+    async performanceOverView(startTime, endTime) {
+        let start = new Date(parseInt(startTime));
+        let end = new Date(parseInt(endTime));
+        return await this.performanceService.performanceOverView(start, end);
+    }
+
+    async getPriorPvCity(startTime, endTime) {
+        let start = new Date(parseInt(startTime));
+        let end = new Date(parseInt(endTime));
+        let pvIps = await this.behaviorService.getPvLocation(start, end);
+        let uvIps = await this.behaviorService.getUvLocation(start, end);
+        let pvCitys = await this.userService.getCityByIps(pvIps);
+        let uvCitys = await this.userService.getCityByIps(uvIps);
+        return { pvCitys, uvCitys };
+    }
+
+    async getPriorUvCity(startTime, endTime) {
+        let start = new Date(parseInt(startTime));
+        let end = new Date(parseInt(endTime));
+        let ips = await this.behaviorService.getUvLocation(start, end);
+        let citys = await this.userService.getCityByIps(ips);
+        return citys;
     }
 
     async getLocationCity(ip: string) {
@@ -96,25 +125,6 @@ export class ReportService {
             return location.content.address_detail.province;
         } else {
             return '';
-        }
-    }
-
-    timeStampToCron(time_skip) {
-        time_skip=time_skip/1000;
-        if (time_skip > 0) {
-            if(time_skip<60){
-                return `*/${time_skip} * * * * *`
-            }
-            let minute = Math.floor(time_skip / (60))
-            if (minute < 60) {
-                return `0 */${minute} * * * *`
-            }
-            let hour = Math.floor(minute / 60);
-            if (hour < 24) {
-                return `0 0 */${hour} * * *`;
-            }
-            let day = Math.floor(hour / 24);
-            return `0 0 0 */${day}  * *`;
         }
     }
 }

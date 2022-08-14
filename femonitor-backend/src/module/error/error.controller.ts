@@ -20,8 +20,6 @@ export class ErrorController {
     async overview(@Query() query){
         let startTime = query.startTime;
         let endTime = query.endTime;
-
-
         if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
         return this.errorService.errOverview(startTime, endTime);
     }
@@ -66,6 +64,30 @@ export class ErrorController {
         return this.errorService.getVueErrors(startTime, endTime, pageSize, pageNum);
     }
 
+    @Get('script/pageError')
+    async scriptPageError(@Query() query){
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getScriptPageError(startTime, endTime);
+    }
+
+    @Get('script/getErrorCount')
+    async errorCount(@Query() query){
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getErrorCount(startTime, endTime);
+    }
+
+    @Get('resource/overview')
+    async resourceOverview(@Query() query){
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getResourceOverview(startTime, endTime);
+    }
+
     @Get('resource/data')
     async resourceError(@Query() query){
         const startTime = query.startTime;
@@ -75,6 +97,16 @@ export class ErrorController {
         if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
         return this.errorService.getResourceErrors(startTime, endTime, pageSize, pageNum);
     }
+
+    @Get('resource/pageError')
+    async ResourtPageError(@Query() query){
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getResourtPageError(startTime, endTime);
+    }
+
+
 
 
 }

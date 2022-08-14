@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as dayjs from 'dayjs';
 import { Model } from 'mongoose';
 import { Behavior } from 'src/schemas/behavior/behavior.schema';
 import { FlowData, TodayFlowData } from 'src/vo/todayFllowData';
-import * as dayjs from 'dayjs';
+import { UtilsService } from '../utils/utils.service';
 
 @Injectable()
 export class BehaviorService {
+    @Inject(UtilsService)
+    private readonly utils: UtilsService
+
     constructor(
         @InjectModel(Behavior.name) private readonly behaviorMoudle: Model<Behavior>
     ) { }
@@ -23,27 +27,20 @@ export class BehaviorService {
         }
     }
 
-    async getPv(start: Date) {
+    async getPvTotalCount(start, end) {
         return this.behaviorMoudle.count({
             subType: 'pv',
-            createdAt: { $gte: start }
+            createdAt: { $gte: start, $lt: end }
         });
     }
 
-    async getPvTotalCount(start,end){
-        return this.behaviorMoudle.count({
-            subType: 'pv',
-            createdAt: { $gte: start,$lt:end }
-        });
-    }
-
-    async getUserNum(start: Date) {
+    async getUserNum(startTime, endTime) {
         let res = await this.behaviorMoudle.aggregate([
             {
                 $match: {
                     $and: [
                         { subType: 'pv' },
-                        { createdAt: { $gte: start } },
+                        {createdAt: {$gte: startTime, $lt:endTime}},
                     ]
                 }
             },
@@ -125,11 +122,11 @@ export class BehaviorService {
                     _id: '$_id.dayName',
                     data: {
                         $push: {
-                            id:'$_id.id',
-                            ip:'$_id.ip',
-                            userID:'$_id.userID',
-                            urlPaths:'$urlPaths',
-                            dayCount:'$dayCount',
+                            id: '$_id.id',
+                            ip: '$_id.ip',
+                            userID: '$_id.userID',
+                            urlPaths: '$urlPaths',
+                            dayCount: '$dayCount',
                         }
                     },
                     dayCount: { $sum: 1 },
@@ -139,23 +136,23 @@ export class BehaviorService {
                 $project: {
                     _id: 0,
                     dayName: '$_id',
-                    data:'$data',
-                    dayCount:'$dayCount'
+                    data: '$data',
+                    dayCount: '$dayCount'
                 }
             },
         ];
         let uvPathDatas = await this.behaviorMoudle.aggregate(aggregate_limit);
-        let todayCusLeavePercentData=new Array<FlowData>();
-        for(let uvPathData of uvPathDatas){
-            let cusLeavePercentCount=uvPathData.data.filter((item)=>{
-                return item.urlPaths.length==1;
+        let todayCusLeavePercentData = new Array<FlowData>();
+        for (let uvPathData of uvPathDatas) {
+            let cusLeavePercentCount = uvPathData.data.filter((item) => {
+                return item.urlPaths.length == 1;
             }).length;
-            todayCusLeavePercentData.push({dayName:uvPathData.dayName,dayCount:cusLeavePercentCount/uvPathData.dayCount});
+            todayCusLeavePercentData.push({ dayName: uvPathData.dayName, dayCount: cusLeavePercentCount / uvPathData.dayCount });
         }
         return todayCusLeavePercentData;
     }
 
-    async getUvTotalCount(startTime,endTime){
+    async getUvTotalCount(startTime, endTime) {
         let filter = {
             createdAt: { $gte: startTime, $lt: endTime },
             subType: 'pv'
@@ -171,8 +168,58 @@ export class BehaviorService {
                 },
             }
         ];
-        let res= await this.behaviorMoudle.aggregate(aggregate_limit);
-        return res.length|0;
+        let res = await this.behaviorMoudle.aggregate(aggregate_limit);
+        return res.length;
+    }
+
+    /**
+     * 获取pv前5个地区
+     * @param startTime 
+     * @param endTime 
+     */
+    async getPvLocation(startTime, endTime) {
+        let filter = {
+            createdAt: { $gte: startTime, $lt: endTime },
+            subType: 'pv'
+        };
+        let pvLocations = await this.behaviorMoudle.aggregate([
+            { $match: filter },
+            {
+                $group: {
+                    _id: '$ip',
+                    dayCount: { $sum: 1 },
+                }
+            },
+            { $project: { _id: 0, ip: '$_id' } },
+            { $sort: { dayCount: -1 } },
+            { $limit: 5 }
+        ]);
+        return pvLocations;
+    }
+
+    /**
+       * 获取uv前5个地区
+       * @param startTime 
+       * @param endTime 
+       */
+    async getUvLocation(startTime, endTime) {
+        let filter = {
+            createdAt: { $gte: startTime, $lt: endTime },
+            subType: 'pv'
+        };
+        let pvLocations = await this.behaviorMoudle.aggregate([
+            { $match: filter },
+            {
+                $group: {
+                    _id:{ip:'$ip',userID: '$userID',},
+                    dayCount: { $sum: 1 },
+                }
+            },
+            { $project: { _id: 0, ip: '$_id.ip' } },
+            { $sort: { dayCount: -1 } },
+            { $limit: 5 }
+        ]);
+        return pvLocations;
     }
 
 }

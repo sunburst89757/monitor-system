@@ -7,6 +7,7 @@ import { PromiseErrorSchema } from 'src/schemas/error/promiseError.schema';
 import { ResourceErrorSchema } from 'src/schemas/error/resourceError.shema';
 import { VueErrorSchema } from 'src/schemas/error/vueError.schema';
 import { BehaviorModule } from '../behavior/behavior.module';
+import { UtilsModule } from '../utils/utils.module';
 import { ErrorService } from './error.service';
 
 @Module({
@@ -26,6 +27,7 @@ import { ErrorService } from './error.service';
             }
         ]),
         BehaviorModule,
+        UtilsModule,
     ],
     providers:[ErrorService],
     exports: [ErrorService],
