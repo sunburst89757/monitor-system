@@ -12,9 +12,10 @@ import { LayoutShiftSchema } from 'src/schemas/performance/layoutShift.schema';
 import { LoadSchema } from 'src/schemas/performance/load.shema';
 import { NavigationSchema } from 'src/schemas/performance/navigation.schema';
 import { Performance, PerformanceSchema } from 'src/schemas/performance/performance.schema';
+import { ResourceSchema } from 'src/schemas/performance/resource.schema';
 import { XhrSchema } from 'src/schemas/performance/xhr.schema';
-import { PerformanceService } from './performance.service';
 import { PerformanceController } from './performance.controller';
+import { PerformanceService } from './performance.service';
 
 @Module({
     imports:[
@@ -37,6 +38,7 @@ import { PerformanceController } from './performance.controller';
                     {name: 'first-screen-paint', schema: FirstScreenPaintSchema},
                     {name: 'first-paint', schema: FirstPaintSchema},
                     {name: 'first-input', schema: FirstInputSchema},
+                    {name: 'resource', schema: ResourceSchema},
                 ],
             }])
     ],

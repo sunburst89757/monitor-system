@@ -19,7 +19,7 @@ import { ErrorService } from './error.service';
                 collection:'error',
                 discriminators:[
                     {name: 'console-error', schema: ConsoleErrorSchema},
-                    {name: 'resource', schema: ResourceErrorSchema},
+                    {name: 'resource-error', schema: ResourceErrorSchema, value: 'resource'},
                     {name: 'js', schema: JsErrorSchema},
                     {name: 'promise', schema: PromiseErrorSchema},
                     {name: 'vue', schema: VueErrorSchema},

@@ -7,7 +7,7 @@ export class Performance extends Common{
   @Prop({
     type: String,
     required: true,
-    enum:['domcontentloaded','fetch','first-contentful-paint','fps','largest-contentful-paint','first-paint','layout-shift','load','xhr','navigation','first-screen-paint', 'first-input'],
+    enum:['domcontentloaded','fetch','first-contentful-paint','fps','largest-contentful-paint','first-paint','layout-shift','load','xhr','navigation','first-screen-paint', 'first-input', 'resource'],
   })
   subType: string;
 

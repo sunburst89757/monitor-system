@@ -3,8 +3,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class LayoutShift {
-  @Prop({ type: String, required: true })
-  entryType: string;
+  @Prop({ type: Object, required: true })
+  entries: Object;
     
 }
 
