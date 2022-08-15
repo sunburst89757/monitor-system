@@ -9,7 +9,13 @@ export class LargestContentfulPaint {
   @Prop({ type: Number, required: true })
   renderTime: number;
 
-  
+  @Prop({ type: String, required: true })
+  pageURL: String;
+
+  @Prop({ type: String, required: true })
+  target: String;
+
+
 }
 
 export const LargestContentfulPaintSchema = SchemaFactory.createForClass(LargestContentfulPaint);

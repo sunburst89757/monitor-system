@@ -83,20 +83,16 @@ export class BehaviorService {
             subType: 'pv'
         };
         let lastUvDate = await (await this.behaviorMoudle.distinct('ip', filter_last_pv).distinct('userID')).length;
-        let res = new TodayFlowData();
-        let todayPvData = new Array<FlowData>();
-        let todayUvData = new Array<FlowData>();
-        let todayNewData = new Array<FlowData>();
+        let todayPvData=new Array<FlowData>();
+        let todayUvData=new Array<FlowData>();
+        let todayNewData =new Array<FlowData>();
         for (let flowData of flowDatas) {
             todayPvData.push({ dayName: flowData.dayName, dayCount: flowData.dayCount });
             todayUvData.push({ dayName: flowData.dayName, dayCount: flowData.ids.length });
             todayNewData.push({ dayName: flowData.dayName, dayCount: (flowData.ids.length - lastUvDate) > 0 ? (flowData.ids.length - lastUvDate) : 0 });
             lastUvDate = flowData.ids.length;
         }
-        res.todayPvData = todayPvData;
-        res.todayUvData = todayUvData;
-        res.todayNewData = todayNewData;
-        return res;
+        return {todayPvData,todayUvData,todayNewData};
     }
 
     async getTodayCusLeavePercentData(startTime, endTime) {

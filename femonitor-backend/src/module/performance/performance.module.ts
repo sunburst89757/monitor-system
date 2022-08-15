@@ -11,6 +11,7 @@ import { LargestContentfulPaintSchema } from 'src/schemas/performance/largestCon
 import { LayoutShiftSchema } from 'src/schemas/performance/layoutShift.schema';
 import { LoadSchema } from 'src/schemas/performance/load.shema';
 import { NavigationSchema } from 'src/schemas/performance/navigation.schema';
+import { VueRouterSchema } from 'src/schemas/performance/onVueRouter.schema';
 import { Performance, PerformanceSchema } from 'src/schemas/performance/performance.schema';
 import { ResourceSchema } from 'src/schemas/performance/resource.schema';
 import { XhrSchema } from 'src/schemas/performance/xhr.schema';
@@ -18,33 +19,34 @@ import { PerformanceController } from './performance.controller';
 import { PerformanceService } from './performance.service';
 
 @Module({
-    imports:[
+    imports: [
         MongooseModule.forFeature([
             {
-                name:Performance.name,
+                name: Performance.name,
                 schema: PerformanceSchema,
-                collection:'performance',
-                discriminators:[
-                    {name: 'domcontentloaded', schema: DomcontentloadedSchema},
-                    {name: 'fetch', schema: FetchSchema},
-                    {name: 'first-contentful-paint', schema: FirstContentfulPaintSchema},
-                    {name: 'fps', schema: FpsSchema},
-                    {name: 'largest-contentful-paint', schema: LargestContentfulPaintSchema},
-                    {name: 'paint', schema: FirstPaintSchema},
-                    {name: 'layout-shift', schema: LayoutShiftSchema},
-                    {name: 'load', schema: LoadSchema},
-                    {name: 'xhr', schema: XhrSchema},
-                    {name: 'navigation' , schema: NavigationSchema},
-                    {name: 'first-screen-paint', schema: FirstScreenPaintSchema},
-                    {name: 'first-paint', schema: FirstPaintSchema},
-                    {name: 'first-input', schema: FirstInputSchema},
-                    {name: 'resource', schema: ResourceSchema},
+                collection: 'performance',
+                discriminators: [
+                    { name: 'domcontentloaded', schema: DomcontentloadedSchema },
+                    { name: 'fetch', schema: FetchSchema },
+                    { name: 'first-contentful-paint', schema: FirstContentfulPaintSchema },
+                    { name: 'fps', schema: FpsSchema },
+                    { name: 'largest-contentful-paint', schema: LargestContentfulPaintSchema },
+                    { name: 'paint', schema: FirstPaintSchema },
+                    { name: 'layout-shift', schema: LayoutShiftSchema },
+                    { name: 'load', schema: LoadSchema },
+                    { name: 'xhr', schema: XhrSchema },
+                    { name: 'navigation', schema: NavigationSchema },
+                    { name: 'first-screen-paint', schema: FirstScreenPaintSchema },
+                    { name: 'first-paint', schema: FirstPaintSchema },
+                    { name: 'first-input', schema: FirstInputSchema },
+                    { name: 'resource', schema: ResourceSchema },
+                    { name: 'vue-router-change-paint', schema: VueRouterSchema }
                 ],
             }])
     ],
-    providers:[PerformanceService],
-    exports:[PerformanceService],
+    providers: [PerformanceService],
+    exports: [PerformanceService],
     controllers: [PerformanceController]
 
 })
-export class PerformanceModule {}
+export class PerformanceModule { }

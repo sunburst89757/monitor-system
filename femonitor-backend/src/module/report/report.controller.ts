@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Headers, HttpCode, Post, Query } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { RealIP } from 'nestjs-real-ip';
 import { ReportService } from './report.service';
 
@@ -26,6 +26,8 @@ export class ReportController {
     }
 
     @Get('errorOverView')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
     async errorOverView(@Query() query){
         const startTime=query.startTime;
         const endTime = query.endTime;
@@ -34,6 +36,8 @@ export class ReportController {
     }
 
     @Get('getPvUvList')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
     async getPvUvList(@Query() query){
         console.log(query);
         const startTime=query.startTime;
@@ -44,6 +48,8 @@ export class ReportController {
     }
 
     @Get('performanceOverView')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
     async performanceOverView(@Query() query){
         const startTime=query.startTime;
         const endTime = query.endTime;
@@ -57,6 +63,8 @@ export class ReportController {
      * @return 返回pv前5个地区
      */
     @Get('getPriorFlowLocation')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
     async getPriorFlowLocation(@Query() query){
         const startTime=query.startTime;
         const endTime = query.endTime;

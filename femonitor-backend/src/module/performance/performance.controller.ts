@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PerformanceService } from './performance.service';
 
 @ApiTags('性能监控')
@@ -8,6 +8,11 @@ export class PerformanceController {
     constructor(private readonly performanceService:PerformanceService){}
 
     @Get('getPerformanceList')
+    @ApiQuery({name:'type',required:true,description:'获取性能数据类型'})
+    @ApiQuery({name:'pageNum',required:true})
+    @ApiQuery({name:'pageSize',required:true})
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
     async getPerformanceList(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;

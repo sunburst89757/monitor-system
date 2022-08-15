@@ -8,7 +8,7 @@ import { BehaviorService } from '../behavior/behavior.service';
 import { PerformanceService } from '../performance/performance.service';
 import { UserService } from '../user/user.service';
 import { UtilsService } from '../utils/utils.service';
-var parser = require('cron-parser');
+import { TodayFlowData } from 'src/vo/todayFllowData';
 
 @Injectable()
 export class ReportService {
@@ -45,10 +45,25 @@ export class ReportService {
         let createdAt = Date.now();
         let endTime = new Date(dayjs(createdAt).add(1, 'days').format('YYYY-MM-DD'));
         let startTime = new Date(dayjs(createdAt).add(-1, 'days').format('YYYY-MM-DD'));
-        console.log(startTime, endTime);
-        let res = await this.behaviorService.getPvUvDayData(startTime, endTime);
-        res.todayIpData = await this.userService.getIPData(startTime, endTime);
-        res.todayCusLeavePercentData = await this.behaviorService.getTodayCusLeavePercentData(startTime, endTime);
+        let res = new TodayFlowData(dayjs(startTime).format('YYYY-MM-DD'),dayjs(createdAt).format('YYYY-MM-DD').toString());
+        let pvUvDayData= await this.behaviorService.getPvUvDayData(startTime, endTime);
+        let todayIpData = await this.userService.getIPData(startTime, endTime);
+        let todayCusLeavePercentData = await this.behaviorService.getTodayCusLeavePercentData(startTime, endTime);
+        for(let pv of pvUvDayData.todayPvData){
+            res.todayPvData[pv.dayName]=pv.dayCount;
+        }
+        for(let uv of pvUvDayData.todayUvData){
+            res.todayUvData[uv.dayName]=uv.dayCount;
+        }
+        for(let newData of pvUvDayData.todayNewData){
+            res.todayNewData[newData.dayName]=newData.dayCount;
+        }
+        for(let pv of todayIpData){
+            res.todayIpData[pv.dayName]=pv.dayCount;
+        }
+        for(let cusLeave of todayCusLeavePercentData){
+            res.todayCusLeavePercentData[cusLeave.dayName]=cusLeave.dayCount;
+        }
         return res;
     }
 
