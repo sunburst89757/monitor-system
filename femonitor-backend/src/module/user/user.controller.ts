@@ -18,6 +18,7 @@ export class UserController {
     @ApiQuery({name:'startTime',required:true})
     @ApiQuery({name:'pageSize',required:false})
     @ApiQuery({name:'pageNum',required:false})
+    @ApiQuery({name:'userId',required:false})
     async behavior(@Query() query){
         let startTime = query.startTime;
         let endTime = query.endTime;
