@@ -9,8 +9,6 @@ export class LayoutShift {
   @Prop({ type: Number, required: true })
   value: Number;
 
-  @Prop({ type: String, required: true })
-  pageURL: String;
 
 }
 

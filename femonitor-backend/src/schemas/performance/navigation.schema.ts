@@ -39,8 +39,6 @@ export class Navigation {
   @Prop({ type: Number, required: true })
   ttfb: number;
 
-  @Prop({ type: String, required: true })
-  pageURL: String;
 
 }
 

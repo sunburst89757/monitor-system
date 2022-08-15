@@ -10,9 +10,6 @@ export class LargestContentfulPaint {
   renderTime: number;
 
   @Prop({ type: String, required: true })
-  pageURL: String;
-
-  @Prop({ type: String, required: true })
   target: String;
 
 

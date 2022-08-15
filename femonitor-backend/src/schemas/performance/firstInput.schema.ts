@@ -12,9 +12,6 @@ export class FirstInput {
   @Prop({ type: String, required: true })
   event: String;
 
-  @Prop({ type: String, required: true })
-  pageURL: String;
-
   @Prop({ type: Number, required: true })
   duration: Number;
 }

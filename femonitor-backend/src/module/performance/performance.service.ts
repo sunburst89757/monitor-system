@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Performance } from 'src/schemas/performance/performance.schema';
 import { Xhr } from 'src/schemas/performance/xhr.schema';
+import { Fps } from 'src/schemas/performance/fps.schema';
 
 @Injectable()
 export class PerformanceService {
@@ -158,4 +159,47 @@ export class PerformanceService {
         return res;
     }
     
+    async getFPS(start, end, pageSize, pageNum) {
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let filter = {
+            createdAt: { $gte: startTime, $lt: endTime },
+            subType: 'fps'
+        };
+        let total = await this.performanceModel.countDocuments(filter);
+        let fpsList = await this.performanceModel.aggregate([
+            { $match: filter },
+            { $project: { _id: 0, pageURL: '$pageURL', frames: '$frames' } }
+        ]).skip((pageNum - 1) * pageSize).limit(pageSize)
+        let res = fpsList.map((fps) => {
+            let frame = fps.frames;
+            return {
+                pageURL: fps.pageURL,
+                fpsAverage: frame.reduce((acc, val) => acc + val, 0) / frame.length,
+                isBlocking: this.isBlocking(frame),
+            }
+        })
+        return {
+            data: res,
+            total:total,
+            currentPage:pageNum,
+        };
+    }
+
+    isBlocking(fpsList, below = 20, last = 3) {
+        let count = 0
+        for (let i = 0; i < fpsList.length; i++) {
+            if (fpsList[i] && fpsList[i] < below) {
+                count++
+            } else {
+                count = 0
+            }
+
+            if (count >= last) {
+                return true
+            }
+        }
+
+        return false
+    }
 }

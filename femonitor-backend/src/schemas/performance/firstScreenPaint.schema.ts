@@ -5,9 +5,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 export class FirstScreenPaint {
   @Prop({ type: String })
   entryType: string;
-  
-  @Prop({ type: String, required: true })
-  pageURL: String;
 
 }
 

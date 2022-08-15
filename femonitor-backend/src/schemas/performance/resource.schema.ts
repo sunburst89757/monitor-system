@@ -39,8 +39,6 @@ export class Resource {
     @Prop({ type: Boolean })
     isCache: boolean;
 
-    @Prop({ type: String, required: true })
-    pageURL: String;
 }
 
 export const ResourceSchema = SchemaFactory.createForClass(Resource);
