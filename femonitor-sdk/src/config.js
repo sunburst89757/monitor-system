@@ -5,6 +5,7 @@ const config = {
   appID: "",
   // 登录用户的id
   userID: "",
+  systemInfo: window.navigator.userAgent,
   vue: {
     Vue: null,
     router: null

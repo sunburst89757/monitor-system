@@ -26,7 +26,6 @@ function overwriteFetch() {
         reportData.responseData = responseData;
         reportData.status = data.status;
         reportData.success = data.ok;
-
         lazyReportCache(reportData);
 
         return res;

@@ -608,6 +608,7 @@ var config = {
   appID: "",
   // 登录用户的id
   userID: "",
+  systemInfo: window.navigator.userAgent,
   vue: {
     Vue: null,
     router: null
@@ -1433,7 +1434,8 @@ function overwriteOpenAndSend() {
         method: (method || "GET").toUpperCase(),
         success: status >= 200 && status < 300,
         subType: "xhr",
-        type: "performance"
+        type: "performance",
+        pageURL: getPageURL()
       };
       lazyReportCache(reportData);
 

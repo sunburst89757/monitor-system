@@ -1,5 +1,6 @@
 import { originalOpen, originalSend, originalProto } from "../utils/xhr";
 import { lazyReportCache } from "../utils/report";
+import { getPageURL } from "../utils/utils";
 
 function overwriteOpenAndSend() {
   originalProto.open = function newOpen(...args) {
@@ -28,7 +29,8 @@ function overwriteOpenAndSend() {
         method: (method || "GET").toUpperCase(),
         success: status >= 200 && status < 300,
         subType: "xhr",
-        type: "performance"
+        type: "performance",
+        pageURL: getPageURL()
       };
 
       lazyReportCache(reportData);
