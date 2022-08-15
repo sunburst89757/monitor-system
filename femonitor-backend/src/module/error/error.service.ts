@@ -407,4 +407,14 @@ export class ErrorService {
         }, []);
         return res;
     }
+
+    async getUserLog(start, end, userID){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let res = await this.ErrorMoudle.find({
+            createdAt: {$gte: startTime, $lt: endTime},
+            userID:userID,
+        });
+        return res;
+    }
 }

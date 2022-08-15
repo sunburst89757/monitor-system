@@ -3,22 +3,22 @@ import { Prop } from '@nestjs/mongoose';
 export class Common{
     
     @Prop({ type: String, required: true })
-    id: String;
+    id: string;
 
     @Prop({ type: String, required: true })
-    ip: String;
+    ip: string;
   
     @Prop({ type: String, required: true })
-    appID: String;
+    appID: string;
   
     @Prop({ type: String })
-    userID: String;
+    userID: string;
 
     @Prop({ type: String, required: true })
     type: string;
   
     @Prop({ type: Number, required: true })
-    startTime: Number;
+    startTime: number;
   
     @Prop({ type: String, required: true })
     pageURL: string;

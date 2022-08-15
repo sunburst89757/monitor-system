@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
-import { Mongoose } from 'mongoose';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/schemas/user/user.schema';
+import { BehaviorModule } from '../behavior/behavior.module';
+import { ErrorModule } from '../error/error.module';
+import { PerformanceModule } from '../performance/performance.module';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
 
 @Module({
   imports:[
@@ -13,7 +15,10 @@ import { User, UserSchema } from 'src/schemas/user/user.schema';
         schema:UserSchema,
         collection:'user'
       }
-    ])
+    ]),
+    BehaviorModule,
+    PerformanceModule,
+    ErrorModule,
   ],
   providers: [UserService],
   exports:[UserService],

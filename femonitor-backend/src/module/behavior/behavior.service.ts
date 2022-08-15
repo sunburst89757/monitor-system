@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as dayjs from 'dayjs';
 import { Model } from 'mongoose';
 import { Behavior } from 'src/schemas/behavior/behavior.schema';
-import { FlowData, TodayFlowData } from 'src/vo/todayFllowData';
+import { FlowData } from 'src/vo/todayFllowData';
 import { UtilsService } from '../utils/utils.service';
 
 @Injectable()
@@ -216,6 +216,36 @@ export class BehaviorService {
             { $limit: 5 }
         ]);
         return pvLocations;
+    }
+
+    async getPageUrlsByUserid(start, end, pageSize, pageNum, userID){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let filter = {subType: 'pv', createdAt: {$gte: startTime, $lt: endTime}}
+        if(userID) Object.assign(filter, {userID:userID});
+        let pv =  await this.behaviorMoudle.find(filter).skip((pageNum - 1) * pageSize).limit(pageSize);
+        let num = await this.behaviorMoudle.count(filter);
+        
+        let res = pv.map((item) =>{
+            return {
+                pageUrl: item.pageURL,
+                userID: item.userID,
+                time: new Date(item['createdAt']).getTime(),
+                id:item.id,
+            };
+        });
+        return {num:num, result:res};
+    }
+
+    async getUserLog(start, end, type, userID){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let res = await this.behaviorMoudle.find({
+            subType: type,
+            createdAt: {$gte: startTime, $lt: endTime},
+            userID:userID,
+        });
+        return res;
     }
 
 }

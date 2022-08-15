@@ -1,12 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as dayjs from 'dayjs';
 import { Model } from 'mongoose';
 import { User } from 'src/schemas/user/user.schema';
-import * as dayjs from 'dayjs';
 import { FlowData } from 'src/vo/todayFllowData';
+import { BehaviorService } from '../behavior/behavior.service';
+import { ErrorService } from '../error/error.service';
+import { PerformanceService } from '../performance/performance.service';
 
 @Injectable()
 export class UserService {
+
+    @Inject(BehaviorService)
+    private readonly behaviorService: BehaviorService;
+    @Inject(PerformanceService)
+    private readonly performanceService: PerformanceService;
+    @Inject(ErrorService)
+    private readonly errorService: ErrorService;
     constructor(
         @InjectModel(User.name) private readonly UserMoudle: Model<User>
     ) { }
@@ -82,5 +92,43 @@ export class UserService {
             {$match:filter},
             {$project:{_id:0,city:'$city'}}
         ]);
+    }
+
+
+    async getBehavior(start, end, pageSize, pageNum, userID){
+        let pv = await this.behaviorService.getPageUrlsByUserid(start, end, pageSize, pageNum, userID);
+        for(let o of pv.result){
+            let user = await this.UserMoudle.findOne({id: o.id});
+            Object.assign(o, {ip: user.ip, city:user.city, ua:user.ua});
+        }
+        return pv;
+    }
+
+    async getAveLoadTime(start, end, userID){
+        let res = await this.performanceService.getAveLoadTime(start, end, userID);
+        return res;
+    }
+
+    async getLoadTime(start, end, userID){
+        let res = await this.performanceService.getLoadTime(start, end, userID);
+        return res;
+    }
+
+    async getUserLogs(start, end,userID, type){
+        if(type == '1'){
+            let res = await this.getUserLogs(start, end, userID, '2');
+            res = res.concat(await this.getUserLogs(start, end, userID, '3'))
+            res = res.concat(await this.getUserLogs(start, end, userID, '4'))
+            res = res.concat(await this.getUserLogs(start, end, userID, '5'))
+            res.sort((a,b)=>new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+            return res;
+        }
+        let logs;
+        if(type == '2') logs = await this.behaviorService.getUserLog(start, end, ['pv', 'vue-router-change'], userID);
+        if(type == '3') logs = await this.errorService.getUserLog(start, end, userID);
+        if(type == '4') logs = await this.performanceService.getUserLog(start, end, ['xhr', 'fetch'], userID);
+        if(type == '5') logs = await this.behaviorService.getUserLog(start, end, 'click', userID);
+        let res = logs.map((log) => Object.assign(log, {type: type}));
+        return res;
     }
 }

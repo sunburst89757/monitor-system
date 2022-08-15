@@ -81,4 +81,81 @@ export class PerformanceService {
                 return response;
             })
     }
+
+    async getAveLoadTime(start, end, userID){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let filter = {
+            userID: userID,
+            subType: 'load',
+            createdAt: { $gte: startTime, $lt: endTime },
+        };
+        let loadPages = await this.performanceModel.aggregate([
+            {$match:filter},
+            {$group:{_id:"$pageURL"}},
+        ]);
+        console.log(loadPages);
+        let res = [];
+        for(let page of loadPages){
+            let sum = 0;
+            let pages = await this.performanceModel.find({
+                pageURL:page._id,
+                userID: userID,
+                subType: 'load',
+                createdAt: { $gte: startTime, $lt: endTime },
+            });
+            for(let item of pages){
+                sum += item.startTime;
+            }
+            let url = '/' + page._id.split('/').slice(3).join('/').split('?')[0];
+            res.push({pageURL: url, time: sum/pages.length});
+        }
+        return res;
+    }
+
+    async getLoadTime(start, end, userID){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let filter = {
+            userID: userID,
+            subType: 'load',
+            createdAt: { $gte: startTime, $lt: endTime },
+        };
+        let loadPages = await this.performanceModel.aggregate([
+            {$match:filter},
+            {$project:{"startTime":true}},
+        ]);
+        let conditions = [
+            {name:'1', condition:(time) => time < 1000},
+            {name:'5', condition:(time) => time < 5000},
+            {name:'10', condition:(time) => time < 10000},
+            {name:'30', condition:(time) => time < 30000},
+            {name:'other', condition:() => true},
+        ];
+
+        let res = {};
+        for(let c of conditions) Object.assign(res, {[c.name]:0});
+
+        for(let page of loadPages){
+            for(let c of conditions){
+                if(c.condition(page.startTime)){
+                    res[c.name]++;
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+
+    async getUserLog(start, end, type, userID){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let res = await this.performanceModel.find({
+            subType: type,
+            createdAt: {$gte: startTime, $lt: endTime},
+            userID:userID,
+        });
+        return res;
+    }
+    
 }
