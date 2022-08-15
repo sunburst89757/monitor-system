@@ -22,7 +22,6 @@ export class UserService {
     ) { }
 
     async add(user: User) {
-        console.log(user);
         let filter = { ip: user.ip, id: user.id };
         this.UserMoudle.findOne(filter, (err, _user) => {
             if (err) {
@@ -123,7 +122,7 @@ export class UserService {
             res.sort((a,b)=>new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
             return res;
         }
-        let logs;
+        let logs = [];
         if(type == '2') logs = await this.behaviorService.getUserLog(start, end, ['pv', 'vue-router-change'], userID);
         if(type == '3') logs = await this.errorService.getUserLog(start, end, userID);
         if(type == '4') logs = await this.performanceService.getUserLog(start, end, ['xhr', 'fetch'], userID);

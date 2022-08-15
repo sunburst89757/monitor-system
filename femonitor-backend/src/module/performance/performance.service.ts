@@ -1,9 +1,8 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Performance } from 'src/schemas/performance/performance.schema';
 import { Xhr } from 'src/schemas/performance/xhr.schema';
-import { Fps } from 'src/schemas/performance/fps.schema';
 
 @Injectable()
 export class PerformanceService {
@@ -95,7 +94,6 @@ export class PerformanceService {
             {$match:filter},
             {$group:{_id:"$pageURL"}},
         ]);
-        console.log(loadPages);
         let res = [];
         for(let page of loadPages){
             let sum = 0;

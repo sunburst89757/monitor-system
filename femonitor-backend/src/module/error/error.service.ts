@@ -431,7 +431,6 @@ export class ErrorService {
             subType:'resource',
             createdAt: {$gte: startTime, $lt:endTime},
         });
-        console.log(errNum);
         let errUserNum = await this.ErrorMoudle.aggregate([
             {$match:{
                 $and:[
