@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Page } from 'src/dto/PageDto';
 import { QueryError } from 'src/dto/queryErrorDto';
 import { ErrorService } from './error.service';
@@ -17,6 +17,8 @@ export class ErrorController {
     }
 
     @Get('script/overview')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
     async overview(@Query() query){
         let startTime = query.startTime;
         let endTime = query.endTime;
@@ -25,6 +27,10 @@ export class ErrorController {
     }
 
     @Get('script/jsError')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
+    @ApiQuery({name:'pageSize',required:false})
+    @ApiQuery({name:'pageNum',required:false})
     async jsError(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
@@ -35,6 +41,10 @@ export class ErrorController {
     }
 
     @Get('script/consoleError')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
+    @ApiQuery({name:'pageSize',required:false})
+    @ApiQuery({name:'pageNum',required:false})
     async consoleError(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
@@ -45,6 +55,10 @@ export class ErrorController {
     }
 
     @Get('script/promiseError')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
+    @ApiQuery({name:'pageSize',required:false})
+    @ApiQuery({name:'pageNum',required:false})
     async promiseError(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
@@ -55,6 +69,10 @@ export class ErrorController {
     }
     
     @Get('script/vueError')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
+    @ApiQuery({name:'pageSize',required:false})
+    @ApiQuery({name:'pageNum',required:false})
     async vueError(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
@@ -65,6 +83,8 @@ export class ErrorController {
     }
 
     @Get('script/pageError')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
     async scriptPageError(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
@@ -73,6 +93,8 @@ export class ErrorController {
     }
 
     @Get('script/getErrorCount')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
     async errorCount(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
@@ -81,6 +103,8 @@ export class ErrorController {
     }
 
     @Get('resource/overview')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
     async resourceOverview(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
@@ -89,6 +113,10 @@ export class ErrorController {
     }
 
     @Get('resource/data')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
+    @ApiQuery({name:'pageSize',required:false})
+    @ApiQuery({name:'pageNum',required:false})
     async resourceError(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
@@ -99,6 +127,8 @@ export class ErrorController {
     }
 
     @Get('resource/pageError')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
     async ResourtPageError(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;

@@ -100,6 +100,22 @@ export class ErrorService {
                 column: {$last: '$column'},
             }},
         ]).skip((pageNum - 1) * pageSize).limit(pageSize);
+        let num = await this.ErrorMoudle.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'js'},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$error',
+                num: {$sum:1},
+                msg: {$last: '$msg'},
+                line: {$last: '$line'},
+                column: {$last: '$column'},
+            }},
+            {$group:{_id:null,count:{$sum:1}}},
+        ]);
         let errors = await res.reduce(async (pre, errItem) => {
             let userNum = await this.ErrorMoudle.aggregate([
                 {$match:{
@@ -110,7 +126,7 @@ export class ErrorService {
                 }},
                 {$project:{"userID":true}},
                 {$group:{_id:"$userID"}},
-                {$group:{_id:null,count:{$sum:1}}}
+                {$group:{_id:null,count:{$sum:1}}},
             ]);
             let res = await pre;
             res.push({
@@ -123,7 +139,7 @@ export class ErrorService {
             });
             return res;
         }, []);
-        return errors;
+        return {num:num[0].count, result:errors};
     }
 
     async getConsoleErrors(start, end, pageSize, pageNum){
@@ -141,6 +157,19 @@ export class ErrorService {
                 num: {$sum:1},
             }},
         ]).skip((pageNum - 1) * pageSize).limit(pageSize);
+        let num = await this.ErrorMoudle.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'console-error'},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$errData',
+                num: {$sum:1},
+            }},
+            {$group:{_id:null,count:{$sum:1}}},
+        ]);
         let errors = await res.reduce(async (pre, errItem) => {
             let userNum = await this.ErrorMoudle.aggregate([
                 {$match:{
@@ -161,7 +190,7 @@ export class ErrorService {
             });
             return res;
         }, []);
-        return errors;
+        return {num:num[0].count, result:errors};
     }
 
     async getPromiseErrors(start, end, pageSize, pageNum){
@@ -179,6 +208,19 @@ export class ErrorService {
                 num: {$sum:1},
             }},
         ]).skip((pageNum - 1) * pageSize).limit(pageSize);
+        let num = await this.ErrorMoudle.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'promise'},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$reason',
+                num: {$sum:1},
+            }},
+            {$group:{_id:null,count:{$sum:1}}},
+        ])
         let errors = await res.reduce(async (pre, errItem) => {
             let userNum = await this.ErrorMoudle.aggregate([
                 {$match:{
@@ -199,7 +241,7 @@ export class ErrorService {
             });
             return res;
         }, []);
-        return errors;
+        return {num:num[0].count, result:errors};
     }
     async getVueErrors(start, end, pageSize, pageNum){
         let startTime = new Date(Number(start));
@@ -217,6 +259,20 @@ export class ErrorService {
                 info: {$last: '$info'},
             }},
         ]).skip((pageNum - 1) * pageSize).limit(pageSize);
+        let num = await this.ErrorMoudle.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'vue'},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$error',
+                num: {$sum:1},
+                info: {$last: '$info'},
+            }},
+            {$group:{_id:null,count:{$sum:1}}},
+        ]);
         let errors = await res.reduce(async (pre, errItem) => {
             let userNum = await this.ErrorMoudle.aggregate([
                 {$match:{
@@ -238,7 +294,7 @@ export class ErrorService {
             });
             return res;
         }, []);
-        return errors;
+        return {num:num[0].count, result:errors};
     }
     async getResourceErrors(start, end, pageSize, pageNum){
         let startTime = new Date(Number(start));
@@ -257,6 +313,21 @@ export class ErrorService {
                 resourceType: {$last: '$resourceType'},
             }},
         ]).skip((pageNum - 1) * pageSize).limit(pageSize);
+        let num = await this.ErrorMoudle.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'resource'},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$url',
+                num: {$sum:1},
+                html: {$last: '$html'},
+                resourceType: {$last: '$resourceType'},
+            }},
+            {$group:{_id:null,count:{$sum:1}}},
+        ]);
         let errors = await res.reduce(async (pre, errItem) => {
             let userNum = await this.ErrorMoudle.aggregate([
                 {$match:{
@@ -279,7 +350,7 @@ export class ErrorService {
             });
             return res;
         }, []);
-        return errors;
+        return {num:num[0].count, result:errors};
     }
     async getErrorInfo(startTime,endTime){
         let errDatas = await this.ErrorMoudle.aggregate([
@@ -401,8 +472,9 @@ export class ErrorService {
                 subType:type,
                 createdAt: {$gte: new Date(cur.startTime), $lt:new Date(cur.endTime)},
             });
+            let pv = await this.behaviorService.getPvTotalCount(new Date(cur.startTime), new Date(cur.endTime));
             let res = await pre;
-            res.push(errNum);
+            res.push({errorNum:errNum, pv:pv, rate:Math.floor(errNum/pv*100)/100});
             return res;
         }, []);
         return res;
