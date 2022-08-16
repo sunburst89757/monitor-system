@@ -1475,7 +1475,7 @@ function overwriteFetch() {
                 responseData = _context.sent;
                 reportData.endTime = Date.now();
                 reportData.duration = reportData.endTime - reportData.startTime;
-                reportData.sendData = config.body || urlToJson(reportData.url);
+                reportData.sendData = config ? config.body : urlToJson(reportData.url);
                 reportData.responseData = responseData;
                 reportData.status = data.status;
                 reportData.success = data.ok;
@@ -1759,11 +1759,19 @@ function onVueRouter(router) {
     lazyReportCache({
       data: data,
       name: to.name || to.path,
-      type: 'behavior',
-      subType: ['vue-router-change', 'pv'],
+      type: "behavior",
+      subType: "vue-router-change",
       startTime: performance.now(),
       from: from.fullPath,
       to: to.fullPath,
+      uuid: getUUID()
+    });
+    lazyReportCache({
+      type: "behavior",
+      subType: "pv",
+      startTime: performance.now(),
+      referrer: from.fullPath,
+      pageURL: to.fullPath,
       uuid: getUUID()
     });
     next();
@@ -1831,8 +1839,7 @@ var monitor = {
         }
       });
     });
-  },
-  report: report
+  }
 };
 
 export { monitor };

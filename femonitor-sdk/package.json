@@ -1,6 +1,6 @@
 {
   "name": "femonitor-sdk-learning",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "适用于web的前端监控系统",
   "main": "dist/bundle.cjs.js",
   "types": "src/index.d.ts",

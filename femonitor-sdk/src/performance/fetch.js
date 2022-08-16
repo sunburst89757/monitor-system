@@ -22,7 +22,7 @@ function overwriteFetch() {
         const responseData = await data.json();
         reportData.endTime = Date.now();
         reportData.duration = reportData.endTime - reportData.startTime;
-        reportData.sendData = config.body || urlToJson(reportData.url);
+        reportData.sendData = config ? config.body : urlToJson(reportData.url);
         reportData.responseData = responseData;
         reportData.status = data.status;
         reportData.success = data.ok;
