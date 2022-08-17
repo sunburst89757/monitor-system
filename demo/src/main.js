@@ -36,6 +36,8 @@ Vue.use(ElementUI, { locale });
 Vue.config.productionTip = false;
 monitor.init({
   url: "http://127.0.0.1:3000/index/report",
+  userID: "xmyfguyqwyt7ytg7",
+  appID: "35656778",
   vue: {
     Vue,
     router,
