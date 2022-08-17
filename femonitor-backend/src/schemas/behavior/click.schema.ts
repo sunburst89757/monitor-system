@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-
 @Schema()
 export class Click {
   subtype: string;
@@ -24,12 +23,12 @@ export class Click {
   target: string;
 
   @Prop({ type: Array, required: true })
-  paths: Array<String>;
+  paths: Array<string>;
 
   @Prop({ type: String, required: true })
   outerHTML: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   innerHTML: string;
 
   @Prop({ type: String, required: true })

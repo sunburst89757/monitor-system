@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-
 @Schema()
 export class VueRouterChange {
   @Prop({ type: String, required: true })
@@ -12,8 +11,9 @@ export class VueRouterChange {
   @Prop({ type: String, required: true })
   name: string;
 
-  @Prop({ type: String, required: true })
-  data: string;
+  @Prop({ type: Object, required: true })
+  data: object;
 }
 
-export const VueRouterChangeSchema = SchemaFactory.createForClass(VueRouterChange);
+export const VueRouterChangeSchema =
+  SchemaFactory.createForClass(VueRouterChange);
