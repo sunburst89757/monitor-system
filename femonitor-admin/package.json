@@ -19,6 +19,7 @@
     "echarts": "^5.3.3",
     "lodash": "^4.17.21",
     "monitor-demo": "^0.2.3",
+    "nanoid": "^4.0.0",
     "node-sass": "npm:dart-sass@^1.25.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -31,6 +32,7 @@
     "redux-persist": "^6.0.0",
     "redux-recycle": "^1.4.0",
     "typescript": "^4.6.3",
+    "ua-parser-js": "^1.0.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -67,6 +69,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "http-proxy-middleware": "^2.0.6",
     "husky": "^7.0.0",
     "lint-staged": "^12.4.0",
     "prettier": "^2.6.2"

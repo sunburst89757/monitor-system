@@ -5,7 +5,7 @@ import { RequestConfig } from "./types";
 interface IMyResponse<T> {
   code: number;
   message: string;
-  success: boolean;
+  // success: boolean;
   data: T;
 }
 // 取出其中的data

@@ -8,3 +8,16 @@ export const date2timeStampZero = (date: string) => {
 export const date2timeStampEnd = (date: string) => {
   return (Date.parse(date) - 22 * 60 * 60 * 1000) / 1000;
 };
+export const timeStamp2date = (timeStamp: number) => {
+  const date = new Date(timeStamp);
+  const Y = date.getFullYear() + "-";
+  const M =
+    (date.getMonth() + 1 < 10
+      ? "0" + (date.getMonth() + 1)
+      : date.getMonth() + 1) + "-";
+  const D = date.getDate() + " ";
+  const h = date.getHours() + ":";
+  const m = date.getMinutes() + ":";
+  const s = date.getSeconds();
+  return Y + M + D + h + m + s;
+};

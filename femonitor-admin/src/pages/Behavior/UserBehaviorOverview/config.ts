@@ -1,13 +1,13 @@
-import { IUserInfo1 } from ".";
+import { IUserBehaviorList } from "./types";
 
-export const dataList: IUserInfo1[] = [
+export const dataList: IUserBehaviorList[] = [
   {
-    id: 1,
-    userId: "1",
+    id: "1",
+    userID: "1",
     pageUrl: "www.baidu.com",
-    device: "01",
+    ua: "01",
     ip: "20.30.92",
-    location: "北京",
-    occurrenceTime: "2022-08-11"
+    city: "北京",
+    time: 111
   }
 ];

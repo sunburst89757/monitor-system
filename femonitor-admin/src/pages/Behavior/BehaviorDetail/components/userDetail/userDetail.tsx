@@ -1,9 +1,11 @@
-import { IUserInfo1 } from "../../../UserBehaviorOverview";
+import { IUserBehaviorList } from "../../../UserBehaviorOverview/types";
 import { Map } from "../../../../../components/Map/Map";
 import { timeOption, timeOption1 } from "../../config";
 import style from "./userDetail.module.scss";
 import { Space } from "antd";
 import { IconFont } from "../../../../../components/IconFont";
+import { parseUa } from "../../../../../utils/parseUa";
+import { ua2icon } from "../../../../../utils/ua2icon";
 const confirmIcon = (index: string) => {
   switch (index) {
     case "00":
@@ -36,7 +38,7 @@ const confirmIcon = (index: string) => {
       );
   }
 };
-export const UserDetail = ({ userId, device, ip, location }: IUserInfo1) => {
+export const UserDetail = ({ userID, ua, ip, city }: IUserBehaviorList) => {
   return (
     <div className={style.detail}>
       <div className={style.block}>
@@ -44,11 +46,11 @@ export const UserDetail = ({ userId, device, ip, location }: IUserInfo1) => {
         <ul className={style.body}>
           <li>
             <div className={style.left}>用户id:</div>
-            <div className={style.right}>{userId}</div>
+            <div className={style.right}>{userID}</div>
           </li>
           <li>
             <div className={style.left}>设备平台:</div>
-            <div className={style.right}>{confirmIcon(device)}</div>
+            <div className={style.right}>{ua2icon(parseUa(ua))}</div>
           </li>
           <li>
             <div className={style.left}>ip地址:</div>
@@ -56,7 +58,7 @@ export const UserDetail = ({ userId, device, ip, location }: IUserInfo1) => {
           </li>
           <li>
             <div className={style.left}>所在地区:</div>
-            <div className={style.right}>{location}</div>
+            <div className={style.right}>{city}</div>
           </li>
         </ul>
       </div>

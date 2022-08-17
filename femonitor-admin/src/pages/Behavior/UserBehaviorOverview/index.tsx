@@ -1,63 +1,35 @@
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row, Space, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IconFont } from "../../../components/IconFont";
+import { parseUa } from "../../../utils/parseUa";
+import { getUserBehaviorList } from "../../../api/behavior";
 import { dataList } from "./config";
-export type IUserInfo1 = {
-  id: number;
-  userId: string;
-  pageUrl: string;
-  device: string;
-  ip: string;
-  location: string;
-  occurrenceTime: string;
-};
-const confirmIcon = (index: string) => {
-  switch (index) {
-    case "00":
-      return (
-        <Space>
-          <IconFont type="icon-windows"></IconFont>
-          <IconFont type="icon-chrome"></IconFont>
-        </Space>
-      );
-    case "01":
-      return (
-        <Space>
-          <IconFont type="icon-windows"></IconFont>
-          <IconFont type="icon-firefox"></IconFont>
-        </Space>
-      );
-    case "10":
-      return (
-        <Space>
-          <IconFont type="icon-mac"></IconFont>
-          <IconFont type="icon-chrome"></IconFont>
-        </Space>
-      );
-    case "11":
-      return (
-        <Space>
-          <IconFont type="icon-mac"></IconFont>
-          <IconFont type="icon-safari"></IconFont>
-        </Space>
-      );
-  }
-};
+import { IQueryUserBehavior, IUserBehaviorList } from "./types";
+import { timeStamp2date } from "../../../utils/handleTime";
+import { ua2icon } from "../../../utils/ua2icon";
+import { nanoid } from "nanoid";
+
 export default function UserBehaviorOverView() {
+  const query = useRef<IQueryUserBehavior>({
+    pageNum: 1,
+    pageSize: 10,
+    startTime: 1660669176053,
+    endTime: Date.now()
+  });
   const [form] = Form.useForm();
-  const [userList, setUserList] = useState<IUserInfo1[]>(dataList);
+  const [userList, setUserList] = useState<IUserBehaviorList[]>(dataList);
   const [pageInformation, setPageInformation] = useState({
-    page: 1,
+    pageNum: 1,
     pageSize: 10
   });
-  const columns = useRef<ColumnsType<IUserInfo1>>([
+  const [total, setTotal] = useState(10);
+  const columns = useRef<ColumnsType<IUserBehaviorList>>([
     {
       title: "用户id",
-      dataIndex: "userId",
-      key: "userId",
+      dataIndex: "userID",
+      key: "userID",
       align: "center"
     },
     {
@@ -68,10 +40,10 @@ export default function UserBehaviorOverView() {
     },
     {
       title: "设备平台",
-      dataIndex: "device",
-      key: "device",
+      dataIndex: "ua",
+      key: "ua",
       align: "center",
-      render: (_, text) => confirmIcon(text.device)
+      render: (_, text) => ua2icon(parseUa(text.ua))
     },
     {
       title: "用户ip地址",
@@ -81,15 +53,16 @@ export default function UserBehaviorOverView() {
     },
     {
       title: "位置",
-      dataIndex: "location",
-      key: "location",
+      dataIndex: "city",
+      key: "city",
       align: "center"
     },
     {
       title: "发生时间",
-      dataIndex: "occurrenceTime",
-      key: "occurrenceTime",
-      align: "center"
+      dataIndex: "time",
+      key: "time",
+      align: "center",
+      render: (value, record) => timeStamp2date(record.time)
     },
     {
       title: "操作",
@@ -109,7 +82,13 @@ export default function UserBehaviorOverView() {
     }
   ]);
   const navigate = useNavigate();
-  const handleSearchUser = useCallback((userInfo: IUserInfo1) => {
+  const getDataList = useCallback(() => {
+    getUserBehaviorList(query.current).then((res) => {
+      setUserList(res.data.result);
+      setTotal(res.data.num);
+    });
+  }, []);
+  const handleSearchUser = useCallback((userInfo: IUserBehaviorList) => {
     navigate(
       { pathname: "/behavior/behaviorDetail" },
       {
@@ -120,14 +99,27 @@ export default function UserBehaviorOverView() {
     );
     // console.log(id);
   }, []);
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+  const onFinish = (values: { userId: string }) => {
+    query.current.uesrId = values.userId;
+    getDataList();
   };
   const handleReset = useCallback(() => {
     form.resetFields();
-  }, [form]);
+    query.current.uesrId = "";
+    getDataList();
+  }, [form, getDataList]);
   const onChange = useCallback((pageNumber: number, pageSize: number) => {
-    console.log(pageNumber, "页码", pageSize);
+    query.current.pageNum = pageNumber;
+    query.current.pageSize = pageSize;
+    setPageInformation({
+      pageNum: pageNumber,
+      pageSize: pageSize
+    });
+    getDataList();
+  }, []);
+
+  useEffect(() => {
+    getDataList();
   }, []);
   return (
     <div>
@@ -140,7 +132,7 @@ export default function UserBehaviorOverView() {
       >
         <Row gutter={10}>
           <Col span={8}>
-            <Form.Item label="关键字" name="keyword">
+            <Form.Item label="关键字" name="userId">
               <Input placeholder="请输入UserId,精确搜索用户行为" />
             </Form.Item>
           </Col>
@@ -167,14 +159,14 @@ export default function UserBehaviorOverView() {
         </Row>
       </Form>
       <Table
-        rowKey={(record) => record.id}
+        rowKey={nanoid()}
         dataSource={userList}
         columns={columns.current}
         pagination={{
           position: ["bottomRight"],
           showQuickJumper: true,
           defaultCurrent: 1,
-          total: 20,
+          total: total,
           onChange: onChange,
           pageSize: pageInformation.pageSize,
           pageSizeOptions: [10, 20],
