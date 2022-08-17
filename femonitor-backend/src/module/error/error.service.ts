@@ -139,7 +139,7 @@ export class ErrorService {
             });
             return res;
         }, []);
-        return {num:num[0].count, result:errors};
+        return {num:num[0].count, pageSize:pageSize, pageNum: pageNum, result:errors};
     }
 
     async getConsoleErrors(start, end, pageSize, pageNum){
@@ -190,7 +190,7 @@ export class ErrorService {
             });
             return res;
         }, []);
-        return {num:num[0].count, result:errors};
+        return {num:num[0].count, pageSize:pageSize, pageNum: pageNum, result:errors};
     }
 
     async getPromiseErrors(start, end, pageSize, pageNum){
@@ -241,7 +241,7 @@ export class ErrorService {
             });
             return res;
         }, []);
-        return {num:num[0].count, result:errors};
+        return {num:num[0].count, pageSize:pageSize, pageNum: pageNum, result:errors};
     }
     async getVueErrors(start, end, pageSize, pageNum){
         let startTime = new Date(Number(start));
@@ -294,7 +294,7 @@ export class ErrorService {
             });
             return res;
         }, []);
-        return {num:num[0].count, result:errors};
+        return {num:num[0].count, pageSize:pageSize, pageNum: pageNum, result:errors};
     }
     async getResourceErrors(start, end, pageSize, pageNum){
         let startTime = new Date(Number(start));
@@ -350,7 +350,7 @@ export class ErrorService {
             });
             return res;
         }, []);
-        return {num:num[0].count, result:errors};
+        return {num:num[0].count, pageSize:pageSize, pageNum: pageNum, result:errors};
     }
     async getErrorInfo(startTime,endTime){
         let errDatas = await this.ErrorMoudle.aggregate([

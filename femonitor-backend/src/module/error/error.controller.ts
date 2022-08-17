@@ -34,8 +34,8 @@ export class ErrorController {
     async jsError(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
-        let pageSize = query.pageSize ? query.pageSize : 20;
-        let pageNum = query.pageNum ? query.pageNum : 1;
+        let pageSize = query.pageSize ? Number(query.pageSize) : 20;
+        let pageNum = query.pageNum ? Number(query.pageNum) : 1;
         if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
         return this.errorService.getJsErrors(startTime, endTime, pageSize, pageNum);
     }
@@ -48,8 +48,8 @@ export class ErrorController {
     async consoleError(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
-        let pageSize = query.pageSize ? query.pageSize : 20;
-        let pageNum = query.pageNum ? query.pageNum : 1;
+        let pageSize = query.pageSize ? Number(query.pageSize) : 20;
+        let pageNum = query.pageNum ? Number(query.pageNum) : 1;
         if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
         return this.errorService.getConsoleErrors(startTime, endTime, pageSize, pageNum);
     }
@@ -62,8 +62,8 @@ export class ErrorController {
     async promiseError(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
-        let pageSize = query.pageSize ? query.pageSize : 20;
-        let pageNum = query.pageNum ? query.pageNum : 1;
+        let pageSize = query.pageSize ? Number(query.pageSize) : 20;
+        let pageNum = query.pageNum ? Number(query.pageNum) : 1;
         if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
         return this.errorService.getPromiseErrors(startTime, endTime, pageSize, pageNum);
     }
@@ -76,8 +76,8 @@ export class ErrorController {
     async vueError(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
-        let pageSize = query.pageSize ? query.pageSize : 20;
-        let pageNum = query.pageNum ? query.pageNum : 1;
+        let pageSize = query.pageSize ? Number(query.pageSize) : 20;
+        let pageNum = query.pageNum ? Number(query.pageNum) : 1;
         if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
         return this.errorService.getVueErrors(startTime, endTime, pageSize, pageNum);
     }
@@ -120,8 +120,8 @@ export class ErrorController {
     async resourceError(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
-        let pageSize = query.pageSize ? query.pageSize : 20;
-        let pageNum = query.pageNum ? query.pageNum : 1;
+        let pageSize = query.pageSize ? Number(query.pageSize) : 20;
+        let pageNum = query.pageNum ? Number(query.pageNum) : 1;
         if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
         return this.errorService.getResourceErrors(startTime, endTime, pageSize, pageNum);
     }

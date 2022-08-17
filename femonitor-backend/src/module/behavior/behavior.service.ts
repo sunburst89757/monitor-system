@@ -234,7 +234,7 @@ export class BehaviorService {
                 id:item.id,
             };
         });
-        return {num:num, result:res};
+        return {num:num, pageSize:pageSize, pageNum:pageNum, result:res};
     }
 
     async getUserLog(start, end, type, userID){

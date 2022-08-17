@@ -22,8 +22,8 @@ export class UserController {
     async behavior(@Query() query){
         let startTime = query.startTime;
         let endTime = query.endTime;
-        let pageSize = query.pageSize ? query.pageSize : 20;
-        let pageNum = query.pageNum ? query.pageNum : 1;
+        let pageSize = query.pageSize ? Number(query.pageSize) : 20;
+        let pageNum = query.pageNum ? Number(query.pageNum) : 1;
         let userId = query.userId;
         if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
         return this.userService.getBehavior(startTime, endTime, pageSize, pageNum, userId);
