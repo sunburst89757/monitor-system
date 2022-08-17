@@ -21,6 +21,7 @@ export default function onVueRouter(router) {
       startTime: performance.now(),
       from: from.fullPath,
       to: to.fullPath,
+      pageURL: to.fullPath,
       uuid: getUUID()
     });
     lazyReportCache({

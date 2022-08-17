@@ -35,7 +35,9 @@ function overwriteFetch() {
         reportData.duration = reportData.endTime - reportData.startTime;
         reportData.status = 0;
         reportData.success = false;
-
+        reportData.sendData = config ? config.body : urlToJson(reportData.url);
+        // reportData.responseData = JSON.stringify(err);
+        // console.log(err, "shishenme ");
         lazyReportCache(reportData);
 
         throw err;

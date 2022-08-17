@@ -5,7 +5,6 @@ import { setConfig } from "./config";
 import { onBeforeunload, onHidden } from "./utils/utils";
 import { report } from "./utils/report";
 import { getCache, clearCache } from "./utils/cache";
-
 export const monitor = {
   init(options = {}) {
     setConfig(options);
@@ -25,3 +24,4 @@ export const monitor = {
     });
   }
 };
+// export default monitor;

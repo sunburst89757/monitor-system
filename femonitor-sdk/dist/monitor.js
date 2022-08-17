@@ -1501,6 +1501,9 @@ var monitor = (function (exports) {
         reportData.duration = reportData.endTime - reportData.startTime;
         reportData.status = 0;
         reportData.success = false;
+        reportData.sendData = config ? config.body : urlToJson(reportData.url); // reportData.responseData = JSON.stringify(err);
+        // console.log(err, "shishenme ");
+
         lazyReportCache(reportData);
         throw err;
       });
@@ -1767,6 +1770,7 @@ var monitor = (function (exports) {
         startTime: performance.now(),
         from: from.fullPath,
         to: to.fullPath,
+        pageURL: to.fullPath,
         uuid: getUUID()
       });
       lazyReportCache({
@@ -1843,7 +1847,7 @@ var monitor = (function (exports) {
         });
       });
     }
-  };
+  }; // export default monitor;
 
   exports.monitor = monitor;
 

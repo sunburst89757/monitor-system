@@ -1502,6 +1502,9 @@ function overwriteFetch() {
       reportData.duration = reportData.endTime - reportData.startTime;
       reportData.status = 0;
       reportData.success = false;
+      reportData.sendData = config ? config.body : urlToJson(reportData.url); // reportData.responseData = JSON.stringify(err);
+      // console.log(err, "shishenme ");
+
       lazyReportCache(reportData);
       throw err;
     });
@@ -1768,6 +1771,7 @@ function onVueRouter(router) {
       startTime: performance.now(),
       from: from.fullPath,
       to: to.fullPath,
+      pageURL: to.fullPath,
       uuid: getUUID()
     });
     lazyReportCache({
@@ -1844,7 +1848,7 @@ var monitor = {
       });
     });
   }
-};
+}; // export default monitor;
 
 exports.monitor = monitor;
 //# sourceMappingURL=monitor.cjs.js.map

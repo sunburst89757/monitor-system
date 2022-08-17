@@ -15,37 +15,14 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.27.2/axios.js"></script>
     <script>
       monitor.init({
-        url: "hiuhuhihi"
+        url: "http://127.0.0.1:3000/index/report",
+        userID: "xmyfguyqwyt7ytg7",
+        appID: "35656778"
       });
       document.addEventListener("click", () => {
-        // axios({
-        //   method: "get",
-        //   // data: {
-        //   //   name: "555",
-        //   //   age: "hhhh"
-        //   // },
-        //   url: "666666666"
-        // })
-        //   .then(
-        //     (res) => {
-        //       console.log(res);
-        //     },
-        //     (err) => {
-        //       console.log(err);
-        //     }
-        //   )
-        //   .catch((err) => {
-        //     console.log(err);
-        //   });
-        fetch("https://api.github.com/users/ruanyf", {
-          method: "POST",
-          body: {
-            name: "999"
-          }
-        })
+        fetch("http://9huwhieofhujhehfdhwehfhje?age=909090")
           .then((response) => response.json())
-          .then((json) => console.log(json))
-          .catch((err) => console.log("Request Failed", err));
+          .then((json) => console.log(json));
       });
     </script>
   </body>
