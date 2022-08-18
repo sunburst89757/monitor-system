@@ -45,8 +45,8 @@ export default function ErrList({ errortype = "onerror" }: errListType) {
       </div>
       <div>
         <QuietViewErr
-          label={"资源加载错误列表"}
-          value={"resource"}
+          label={"请求错误列表"}
+          value={"request"}
           showPage={true}
           pageSize={10}
           timeSelect={timeSelect}

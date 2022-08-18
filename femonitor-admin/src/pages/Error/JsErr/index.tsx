@@ -11,7 +11,7 @@ import ErrList from "./ErrList/ErrList";
 import { ErrorDetail } from "../components/errorDetail/errorDetail";
 import style from "./index.module.scss";
 import React, { useState } from "react";
-import { Context } from "./context";
+import { Context } from "../components/quietViewErr/context";
 const items: MenuProps["items"] = [
   {
     label: "概览",
@@ -43,7 +43,7 @@ const items: MenuProps["items"] = [
 
 export default function JsErr() {
   const [current, setCurrent] = useState("overview");
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   const showDrawer = (row: Object) => {
     setVisible(true);

@@ -49,6 +49,7 @@ export default function ErrList({ errortype = "onerror" }: errListType) {
           value={errortype}
           showPage={true}
           pageSize={10}
+          timeSelect={timeSelect}
         ></QuietViewErr>
       </div>
     </div>

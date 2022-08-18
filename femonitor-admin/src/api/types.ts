@@ -3,3 +3,8 @@ export interface IPage {
   pageNum: number;
   pageSize: number;
 }
+
+export interface ITimeDuration {
+  startTime: number;
+  endTime: number;
+}

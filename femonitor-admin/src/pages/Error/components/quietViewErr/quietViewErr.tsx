@@ -2,19 +2,33 @@ import { quietViewErrType, QuietViewErrListType } from "../types";
 import style from "./quietViewErr.module.scss";
 import { Space, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import React, { useState, useContext } from "react";
-import { Context } from "../../JsErr/context";
-import { useSetState } from "ahooks";
+import React, { useState, useContext, createContext } from "react";
+import { Context } from "./context";
+import { nanoid } from "nanoid";
+import { JsErrorType, IQueryJsErrorType } from "../../JsErr/types";
+import { useEffect } from "react";
+
+import { getJsErrorList } from "../../../../api/error";
 
 export default function QuietViewErr({
   label,
   value,
   showPage,
-  pageSize
+  pageSize,
+  timeSelect
 }: quietViewErrType) {
   const nowTime = new Date().toLocaleDateString();
+
   const fun1 = useContext(Context)?.dispacth;
-  console.log("fun1", fun1);
+
+  const [endTime, setEndTime] = useState(Date.now());
+
+  const [startTime, setStartTime] = useState(endTime);
+
+  const TablePageChange = (page: number) => {
+    console.log("page", page);
+  };
+
   const columns: ColumnsType<QuietViewErrListType> = [
     {
       title: "ErrorName",
@@ -47,7 +61,7 @@ export default function QuietViewErr({
       dataIndex: "lastTIme"
     }
   ];
-  const [errList, setErrList] = useSetState<QuietViewErrListType[]>([
+  const [errList, setErrList] = useState<QuietViewErrListType[]>([
     {
       id: "#1111",
       name: "CustomizeError",
@@ -89,17 +103,63 @@ export default function QuietViewErr({
       lastTIme: "2022-03-03 00:45:01"
     }
   ]);
+
+  useEffect(() => {
+    let timeStamp = parseInt(timeSelect) * 60 * 60 * 1000;
+    let startime = endTime - timeStamp;
+    setStartTime(startime);
+  }, [timeSelect, endTime]);
+
+  useEffect(() => {
+    let handlerFunction = getJsErrorList;
+    handlerFunction({
+      pageNum: 1,
+      pageSize: 100,
+      startTime: startTime,
+      endTime: endTime
+    }).then((res) => {
+      console.log("res", res);
+      let data = res.data;
+      let result = data.result;
+      let newErrList: QuietViewErrListType[] = [];
+      if (result.length) {
+        result.forEach((item) => {
+          newErrList.push({
+            id: nanoid(),
+            name: item.error.split(":")[0],
+            describe: item.msg,
+            times: item.num,
+            effects: item.userNum,
+            lastTIme: item.createdAt.replace("T", " ").split(".")[0]
+          });
+        });
+      } else {
+      }
+      setErrList(newErrList);
+    });
+  }, [startTime, endTime, setErrList]);
+
   return (
     <div className={style.container}>
       <div className={style.title}>
-        <div className={style.titleContext}>{label + "（" + value + "）"}</div>
+        <div className={style.titleContext}>
+          <span>{label}</span>
+          {value === "" ? null : <span>{"（" + value + "）"}</span>}
+        </div>
         <div>{nowTime}</div>
       </div>
       <div className={style.tableContainer}>
         <Table
           columns={columns}
           dataSource={errList}
-          pagination={showPage ? undefined : false}
+          pagination={
+            showPage
+              ? {
+                  pageSize: pageSize,
+                  onChange: TablePageChange
+                }
+              : false
+          }
           rowKey={(record) => record.id}
         />
       </div>

@@ -12,6 +12,7 @@ export interface quietViewErrType {
   value: string;
   showPage: boolean;
   pageSize: number;
+  timeSelect: string;
 }
 
 export interface QuietViewErrListType {
@@ -21,6 +22,7 @@ export interface QuietViewErrListType {
   lastTIme: string;
   effects: number;
   times: number;
+  data?: object;
 }
 export interface errListType {
   errortype: string;
