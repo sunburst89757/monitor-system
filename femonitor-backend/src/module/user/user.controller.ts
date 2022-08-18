@@ -60,14 +60,18 @@ export class UserController {
     @ApiQuery({name:'startTime',required:true})
     @ApiQuery({name:'userId',required:true})
     @ApiQuery({name:'type',required:true})
+    @ApiQuery({name:'pageSize',required:false})
+    @ApiQuery({name:'pageNum',required:false})
     async userLogs(@Query() query){
         let startTime = query.startTime;
         let endTime = query.endTime;
         let userId = query.userId;
         let type = query.type ? query.type : 1;
+        let pageSize = query.pageSize ? Number(query.pageSize) : 20;
+        let pageNum = query.pageNum ? Number(query.pageNum) : 1;
         if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
         if(!userId) throw new Error('userID不能为空');
-        return this.userService.getUserLogs(startTime, endTime, userId, type);
+        return this.userService.getUserLogs(startTime, endTime, userId, type, pageSize, pageNum);
     }
 
 }

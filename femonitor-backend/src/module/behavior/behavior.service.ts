@@ -237,15 +237,77 @@ export class BehaviorService {
         return {num:num, pageSize:pageSize, pageNum:pageNum, result:res};
     }
 
-    async getUserLog(start, end, type, userID){
+    async getUserLog(start, end, type, userID, pageSize, pageNum){
         let startTime = new Date(Number(start));
         let endTime = new Date(Number(end));
+        let num = await this.behaviorMoudle.find({
+            subType: type,
+            createdAt: {$gte: startTime, $lt: endTime},
+            userID:userID,
+        }).count();
         let res = await this.behaviorMoudle.find({
             subType: type,
             createdAt: {$gte: startTime, $lt: endTime},
             userID:userID,
-        });
-        return res;
+        }).sort({createdAt:-1}).skip((pageNum - 1) * pageSize).limit(pageSize);
+        return {num:num, pageSize:pageSize, pageNum:pageNum, result:res};
+    }
+
+    async getUserLogAll(start, end, userID, pageSize, pageNum){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let num = await this.behaviorMoudle.aggregate([
+            {
+                $unionWith: 'error',
+            },
+            {
+                $unionWith: 'performance',
+            },
+            {$match:{
+                $or:[
+                    {subType: 'pv'},
+                    {subType: 'vue-router-change}'},
+                    {subType: 'xhr'},
+                    {subType: 'fetch'},
+                    {subType: 'click'},
+                    {subType: 'console-error'},
+                    {subType: 'resource'},
+                    {subType: 'js'},
+                    {subType: 'promise'},
+                    {subType: 'vue'},
+                ],
+                createdAt: {$gte: startTime, $lt:endTime},
+                userID:userID,
+            }},
+            {$group:{_id:null,count:{$sum:1}}}
+        ]);
+        
+        let res = await this.behaviorMoudle.aggregate([
+            {
+                $unionWith: 'error',
+            },
+            {
+                $unionWith: 'performance',
+            },
+            {$match:{
+                $or:[
+                    {subType: 'pv'},
+                    {subType: 'vue-router-change}'},
+                    {subType: 'xhr'},
+                    {subType: 'fetch'},
+                    {subType: 'click'},
+                    {subType: 'console-error'},
+                    {subType: 'resource'},
+                    {subType: 'js'},
+                    {subType: 'promise'},
+                    {subType: 'vue'},
+                ],
+                createdAt: {$gte: startTime, $lt:endTime},
+                userID:userID,
+            }},
+            {$sort: {createdAt:-1}},
+        ]).skip((pageNum - 1) * pageSize).limit(pageSize);
+        return {num:num[0]? num[0].count : 0, pageSize:pageSize, pageNum: pageNum, result:res};
     }
 
 }

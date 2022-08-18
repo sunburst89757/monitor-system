@@ -146,15 +146,20 @@ export class PerformanceService {
         return res;
     }
 
-    async getUserLog(start, end, type, userID){
+    async getUserLog(start, end, type, userID, pageSize, pageNum){
         let startTime = new Date(Number(start));
         let endTime = new Date(Number(end));
+        let num = await this.performanceModel.find({
+            subType: type,
+            createdAt: {$gte: startTime, $lt: endTime},
+            userID:userID,
+        }).count();
         let res = await this.performanceModel.find({
             subType: type,
             createdAt: {$gte: startTime, $lt: endTime},
             userID:userID,
-        });
-        return res;
+        }).sort({createdAt:-1}).skip((pageNum - 1) * pageSize).limit(pageSize);;
+        return {num:num, pageSize:pageSize, pageNum:pageNum, result:res};
     }
     
     async getFPS(start, end, pageSize, pageNum) {

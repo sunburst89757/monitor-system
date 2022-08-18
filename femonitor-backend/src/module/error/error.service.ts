@@ -98,6 +98,11 @@ export class ErrorService {
                 msg: {$last: '$msg'},
                 line: {$last: '$line'},
                 column: {$last: '$column'},
+                createdAt:{$last: '$createdAt'},
+                appID: {$last: '$appID'},
+                pageURL: {$last: '$pageURL'},
+                userID: {$last: '$userID'},
+                ip: {$last: '$ip'},
             }},
         ]).skip((pageNum - 1) * pageSize).limit(pageSize);
         let num = await this.ErrorMoudle.aggregate([
@@ -129,17 +134,13 @@ export class ErrorService {
                 {$group:{_id:null,count:{$sum:1}}},
             ]);
             let res = await pre;
-            res.push({
-                error: errItem._id,
-                times: errItem.num,
-                msg: errItem.msg,
-                line: errItem.line,
-                column: errItem.column,
-                userNum: userNum[0].count,
-            });
+            
+            Object.assign(errItem,{userNum:num[0].count, error: errItem._id});
+            delete errItem._id;
+            res.push(errItem);
             return res;
         }, []);
-        return {num:num[0].count, pageSize:pageSize, pageNum: pageNum, result:errors};
+        return {num:num[0]? num[0].count : 0, pageSize:pageSize, pageNum: pageNum, result:errors};
     }
 
     async getConsoleErrors(start, end, pageSize, pageNum){
@@ -155,6 +156,11 @@ export class ErrorService {
             {$group:{
                 _id: '$errData',
                 num: {$sum:1},
+                createdAt:{$last: '$createdAt'},
+                appID: {$last: '$appID'},
+                pageURL: {$last: '$pageURL'},
+                userID: {$last: '$userID'},
+                ip: {$last: '$ip'},
             }},
         ]).skip((pageNum - 1) * pageSize).limit(pageSize);
         let num = await this.ErrorMoudle.aggregate([
@@ -183,14 +189,12 @@ export class ErrorService {
                 {$group:{_id:null,count:{$sum:1}}}
             ]);
             let res = await pre;
-            res.push({
-                error: errItem._id,
-                times: errItem.num,
-                userNum: userNum[0].count,
-            });
+            Object.assign(errItem,{userNum:num[0].count, error: errItem._id});
+            delete errItem._id;
+            res.push(errItem);
             return res;
         }, []);
-        return {num:num[0].count, pageSize:pageSize, pageNum: pageNum, result:errors};
+        return {num:num[0]? num[0].count : 0, pageSize:pageSize, pageNum: pageNum, result:errors};
     }
 
     async getPromiseErrors(start, end, pageSize, pageNum){
@@ -206,6 +210,11 @@ export class ErrorService {
             {$group:{
                 _id: '$reason',
                 num: {$sum:1},
+                createdAt:{$last: '$createdAt'},
+                appID: {$last: '$appID'},
+                pageURL: {$last: '$pageURL'},
+                userID: {$last: '$userID'},
+                ip: {$last: '$ip'},
             }},
         ]).skip((pageNum - 1) * pageSize).limit(pageSize);
         let num = await this.ErrorMoudle.aggregate([
@@ -234,14 +243,12 @@ export class ErrorService {
                 {$group:{_id:null,count:{$sum:1}}}
             ]);
             let res = await pre;
-            res.push({
-                reason: errItem._id,
-                times: errItem.num,
-                userNum: userNum[0].count,
-            });
+            Object.assign(errItem,{userNum:num[0].count, reason: errItem._id});
+            delete errItem._id;
+            res.push(errItem);
             return res;
         }, []);
-        return {num:num[0].count, pageSize:pageSize, pageNum: pageNum, result:errors};
+        return {num:num[0]? num[0].count : 0, pageSize:pageSize, pageNum: pageNum, result:errors};
     }
     async getVueErrors(start, end, pageSize, pageNum){
         let startTime = new Date(Number(start));
@@ -257,6 +264,11 @@ export class ErrorService {
                 _id: '$error',
                 num: {$sum:1},
                 info: {$last: '$info'},
+                createdAt:{$last: '$createdAt'},
+                appID: {$last: '$appID'},
+                pageURL: {$last: '$pageURL'},
+                userID: {$last: '$userID'},
+                ip: {$last: '$ip'},
             }},
         ]).skip((pageNum - 1) * pageSize).limit(pageSize);
         let num = await this.ErrorMoudle.aggregate([
@@ -286,15 +298,12 @@ export class ErrorService {
                 {$group:{_id:null,count:{$sum:1}}}
             ]);
             let res = await pre;
-            res.push({
-                error: errItem._id,
-                times: errItem.num,
-                info: errItem.info,
-                userNum: userNum[0].count,
-            });
+            Object.assign(errItem,{userNum:num[0].count, error: errItem._id});
+            delete errItem._id;
+            res.push(errItem);
             return res;
         }, []);
-        return {num:num[0].count, pageSize:pageSize, pageNum: pageNum, result:errors};
+        return {num:num[0]? num[0].count : 0, pageSize:pageSize, pageNum: pageNum, result:errors};
     }
     async getResourceErrors(start, end, pageSize, pageNum){
         let startTime = new Date(Number(start));
@@ -311,6 +320,11 @@ export class ErrorService {
                 num: {$sum:1},
                 html: {$last: '$html'},
                 resourceType: {$last: '$resourceType'},
+                createdAt:{$last: '$createdAt'},
+                appID: {$last: '$appID'},
+                pageURL: {$last: '$pageURL'},
+                userID: {$last: '$userID'},
+                ip: {$last: '$ip'},
             }},
         ]).skip((pageNum - 1) * pageSize).limit(pageSize);
         let num = await this.ErrorMoudle.aggregate([
@@ -341,16 +355,12 @@ export class ErrorService {
                 {$group:{_id:null,count:{$sum:1}}}
             ]);
             let res = await pre;
-            res.push({
-                error: errItem._id,
-                times: errItem.num,
-                html: errItem.html,
-                resourceType: errItem.resourceType,
-                userNum: userNum[0].count,
-            });
+            Object.assign(errItem,{userNum:num[0].count, error: errItem._id});
+            delete errItem._id;
+            res.push(errItem);
             return res;
         }, []);
-        return {num:num[0].count, pageSize:pageSize, pageNum: pageNum, result:errors};
+        return {num:num[0]? num[0].count : 0, pageSize:pageSize, pageNum: pageNum, result:errors};
     }
     async getErrorInfo(startTime,endTime){
         let errDatas = await this.ErrorMoudle.aggregate([
@@ -479,13 +489,17 @@ export class ErrorService {
         return res;
     }
 
-    async getUserLog(start, end, userID){
+    async getUserLog(start, end, type, userID, pageSize, pageNum){
         let startTime = new Date(Number(start));
         let endTime = new Date(Number(end));
+        let num = await this.ErrorMoudle.find({
+            createdAt: {$gte: startTime, $lt: endTime},
+            userID:userID,
+        }).count();
         let res = await this.ErrorMoudle.find({
             createdAt: {$gte: startTime, $lt: endTime},
             userID:userID,
-        });
-        return res;
+        }).sort({createdAt:-1}).skip((pageNum - 1) * pageSize).limit(pageSize);;
+        return {num:num, pageSize:pageSize, pageNum:pageNum, result:res};
     }
 }

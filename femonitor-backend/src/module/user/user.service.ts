@@ -113,21 +113,28 @@ export class UserService {
         return res;
     }
 
-    async getUserLogs(start, end,userID, type){
-        if(type == '1'){
-            let res = await this.getUserLogs(start, end, userID, '2');
-            res = res.concat(await this.getUserLogs(start, end, userID, '3'))
-            res = res.concat(await this.getUserLogs(start, end, userID, '4'))
-            res = res.concat(await this.getUserLogs(start, end, userID, '5'))
-            res.sort((a,b)=>new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-            return res;
+    async getUserLogs(start, end,userID, type, pageSize, pageNum){
+        let logs = {result: []};
+        let types = {
+            2: ['pv', 'vue-router-change'],
+            3: ['console-error', 'resource', 'js', 'promise', 'vue'],
+            4: ['xhr', 'fetch'],
+            5: ['click'],
         }
-        let logs = [];
-        if(type == '2') logs = await this.behaviorService.getUserLog(start, end, ['pv', 'vue-router-change'], userID);
-        if(type == '3') logs = await this.errorService.getUserLog(start, end, userID);
-        if(type == '4') logs = await this.performanceService.getUserLog(start, end, ['xhr', 'fetch'], userID);
-        if(type == '5') logs = await this.behaviorService.getUserLog(start, end, 'click', userID);
-        let res = logs.map((log) => Object.assign(log, {type: type}));
-        return res;
+        if(type == '1') logs = await this.behaviorService.getUserLogAll(start, end, userID, pageSize, pageNum);
+        if(type == '2') logs = await this.behaviorService.getUserLog(start, end, types[2], userID, pageSize, pageNum);
+        if(type == '3') logs = await this.errorService.getUserLog(start, end, types[3], userID, pageSize, pageNum);
+        if(type == '4') logs = await this.performanceService.getUserLog(start, end, types[4], userID, pageSize, pageNum);
+        if(type == '5') logs = await this.behaviorService.getUserLog(start, end, types[5], userID, pageSize, pageNum);
+        let getType = function(log){
+            for(let t in types){
+                if(types[t].includes(log.subType)) return t;
+            }
+            return 'unknown';
+        }
+        logs['result'].forEach((log) => {
+            return Object.assign(log, {type: getType(log)});
+        });
+        return logs;
     }
 }
