@@ -1,3 +1,4 @@
+<!-- eslint-disable no-unused-vars -->
 <!-- eslint-disable padded-blocks -->
 <!-- eslint-disable no-trailing-spaces -->
 <template>
@@ -51,19 +52,23 @@
       @click="PromiseErrorHandler(1)"
     >PromiseError 1
     </el-button>
+    <div class="error-text">Vue - error</div>
+    <el-button
+      type="primary"
+      @click="VueHandler()"
+    >Vue 1
+    </el-button>
     <div class="error-text">Resource - error</div>
     <el-button
       type="primary"
       @click="ResourveErrorHandler(1)"
-    >ResourceError 1
+    >ResourceError JS
     </el-button>
     <el-button
       type="primary"
       @click="ResourveErrorHandler(2)"
-    >ResourceError 
+    >ResourceError CSS
     </el-button>
-    <img v-if="imgType" src="./khl20220629193434413.png" alt="图片" class="img">
-    <img v-else src="./khl20220629193434413.png" alt="图片" class="img">
   </div>
 </template>
 
@@ -71,6 +76,7 @@
 import { RangeError, ReferenceError, SyntaxError, TypeError, ScriptError } from "./onerror.js"
 import consoleError from "./consoleError.js"
 import { PromiseError } from "./promiseError.js"
+// eslint-disable-next-line no-unused-vars
 import { ResourveError } from "./resourceError.js"
 export default {
   name: "Error",
@@ -106,9 +112,15 @@ export default {
       PromiseError()
     },
     ResourveErrorHandler(type) {
-      this.imgType = !this.imgType
-      console.log("this.imgType", this.imgType)
-      // ResourveError(type)
+      // this.imgType = !this.imgType
+      // console.log("this.imgType", this.imgType)
+      ResourveError(type)
+    },
+    VueHandler() {
+      console.log(Date.now())
+      console.log(Date.parse("2022/8/1 10:05"))
+
+      obj
     }
   },
 };

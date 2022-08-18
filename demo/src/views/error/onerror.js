@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 /* eslint-disable no-const-assign */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
@@ -19,29 +20,25 @@ export function ReferenceError (type) {
 
 export function SyntaxError (type) {
   try {
-    var script = document.createElement('script')
-    script.type = 'text/javascript'
+    var script = document.createElement("script")
+    script.type = "text/javascript"
     script.src = "./syntaxError.js"
-    console.log('script', script)
-    var body = document.getElementsByTagName('body')[0]
+    console.log("script", script)
+    var body = document.getElementsByTagName("body")[0]
     body.appendChild(script)
-
-
   } catch (error) {
     throw (error)
   }
 }
 
-export function ScriptError (type) {  // 暂时不可用
+export function ScriptError (type) { // 暂时不可用
   try {
-    var script = document.createElement('script')
-    script.type = 'text/javascript'
+    var script = document.createElement("script")
+    script.type = "text/javascript"
     script.src = "http://localhost:8080/index.js"
-    console.log('script', script)
-    var body = document.getElementsByTagName('body')[0]
+    console.log("script", script)
+    var body = document.getElementsByTagName("body")[0]
     body.appendChild(script)
-
-
   } catch (error) {
     throw (error)
   }
@@ -49,7 +46,7 @@ export function ScriptError (type) {  // 暂时不可用
 
 export function TypeError (type) {
   if (type === 1) {
-    var a = new 2
+    var a = new 2()
   } else {
     var b
     b.set()
