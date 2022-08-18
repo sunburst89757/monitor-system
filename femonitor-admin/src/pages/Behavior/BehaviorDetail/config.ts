@@ -67,6 +67,30 @@ export const timeOption1 = {
     bottom: "4%",
     containLabel: true
   },
+  dataset: {
+    source: [
+      {
+        product: "小于1s",
+        number: 220
+      },
+      {
+        product: "1s-5s",
+        number: 10
+      },
+      {
+        product: "5s-10s",
+        number: 0
+      },
+      {
+        product: "10s-30s",
+        number: 0
+      },
+      {
+        product: "大于30",
+        number: 0
+      }
+    ]
+  },
   xAxis: {
     // 隐藏x轴刻度
     show: false
@@ -74,7 +98,7 @@ export const timeOption1 = {
   yAxis: {
     type: "category",
     splitLine: { show: false },
-    data: ["小于1s", "1s-5s", "5s-10s", "10s-30s", "大于30s"],
+    // data: ["小于1s", "1s-5s", "5s-10s", "10s-30s", "大于30s"],
     axisTick: {
       //y轴刻度线
       show: false
@@ -89,20 +113,24 @@ export const timeOption1 = {
   },
   series: [
     {
-      name: "加载时间",
+      name: "number",
       type: "bar",
       stack: "total",
       label: {
         show: true,
         position: "right",
         // 加单位
-        formatter: `{c}次`
+        formatter: (params: any) => {
+          console.log(params, "shishhihoihjoiuoijhjhkuh");
+
+          return `${params.value[params.seriesName]}次`;
+        }
       },
       emphasis: {
         focus: "series"
       },
-      color: "#59aefc",
-      data: [220, 10, 0, 0, 0]
+      color: "#59aefc"
+      // data: [220, 10, 0, 0, 0]
     }
   ]
 };

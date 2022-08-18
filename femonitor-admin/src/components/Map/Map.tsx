@@ -2,7 +2,13 @@ import * as echarts from "echarts";
 import { useEffect, useRef } from "react";
 import style from "./map.module.scss";
 
-export const Map = ({ option }: { option: any }) => {
+export function Map<T = any>({
+  option,
+  dataSource
+}: {
+  option: any;
+  dataSource?: T;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   let mapInstance: any = null;
   const renderMap = () => {
@@ -32,4 +38,4 @@ export const Map = ({ option }: { option: any }) => {
       ref={ref!}
     ></div>
   );
-};
+}

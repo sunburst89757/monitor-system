@@ -2,43 +2,59 @@ import { IUserBehaviorList } from "../../../UserBehaviorOverview/types";
 import { Map } from "../../../../../components/Map/Map";
 import { timeOption, timeOption1 } from "../../config";
 import style from "./userDetail.module.scss";
-import { Space } from "antd";
-import { IconFont } from "../../../../../components/IconFont";
 import { parseUa } from "../../../../../utils/parseUa";
 import { ua2icon } from "../../../../../utils/ua2icon";
-const confirmIcon = (index: string) => {
-  switch (index) {
-    case "00":
-      return (
-        <Space>
-          <IconFont type="icon-windows"></IconFont>
-          <IconFont type="icon-chrome"></IconFont>
-        </Space>
-      );
-    case "01":
-      return (
-        <Space>
-          <IconFont type="icon-windows"></IconFont>
-          <IconFont type="icon-firefox"></IconFont>
-        </Space>
-      );
-    case "10":
-      return (
-        <Space>
-          <IconFont type="icon-mac"></IconFont>
-          <IconFont type="icon-chrome"></IconFont>
-        </Space>
-      );
-    case "11":
-      return (
-        <Space>
-          <IconFont type="icon-mac"></IconFont>
-          <IconFont type="icon-safari"></IconFont>
-        </Space>
-      );
-  }
+import { useCallback, useEffect, useRef, useState } from "react";
+import { getApiLoadTime } from "../../../../../api/behavior";
+export type IQueryParams = {
+  userId: string;
+  startTime: number;
+  endTime: number;
 };
-export const UserDetail = ({ userID, ua, ip, city }: IUserBehaviorList) => {
+export interface IApiLoadTime {
+  "1": number;
+  "5": number;
+  "10": number;
+  "30": number;
+  other: number;
+}
+export interface IApiSource {
+  product: string;
+  number: number;
+}
+export const UserDetail = ({
+  userID,
+  ua,
+  ip,
+  city,
+  endTime
+}: IUserBehaviorList & { endTime: number }) => {
+  const query = useRef<IQueryParams>({
+    userId: userID,
+    endTime,
+    startTime: endTime - 24 * 60 * 60 * 1000 + 1
+  });
+  const [apiData, setapiData] = useState<IApiSource[] | null>(null);
+  const apiOption = useRef(timeOption1);
+  const getDataList = useCallback(() => {
+    getApiLoadTime(query.current).then((res) => {
+      const source: IApiSource[] = [];
+      Object.keys(res.data).forEach((item, i) => {
+        const obj: IApiSource = {
+          product: "",
+          number: 1
+        };
+        obj.product = item;
+        obj.number = Object.values(res.data)[i];
+        source.push(obj);
+      });
+      setapiData(source!);
+    });
+  }, []);
+  useEffect(() => {
+    query.current.startTime = endTime - 24 * 60 * 60 * 1000 + 1;
+    getDataList();
+  }, [endTime]);
   return (
     <div className={style.detail}>
       <div className={style.block}>

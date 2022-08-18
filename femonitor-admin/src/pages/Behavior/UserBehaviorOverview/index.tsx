@@ -85,20 +85,27 @@ export default function UserBehaviorOverView() {
   const getDataList = useCallback(() => {
     getUserBehaviorList(query.current).then((res) => {
       setUserList(res.data.result);
+      setPageInformation({
+        pageNum: res.data.pageNum,
+        pageSize: res.data.pageSize
+      });
       setTotal(res.data.num);
     });
   }, []);
-  const handleSearchUser = useCallback((userInfo: IUserBehaviorList) => {
-    navigate(
-      { pathname: "/behavior/behaviorDetail" },
-      {
-        state: {
-          userInfo
+  const handleSearchUser = useCallback(
+    (userInfo: IUserBehaviorList) => {
+      navigate(
+        { pathname: "/behavior/behaviorDetail" },
+        {
+          state: {
+            userInfo
+          }
         }
-      }
-    );
-    // console.log(id);
-  }, []);
+      );
+      // console.log(id);
+    },
+    [navigate]
+  );
   const onFinish = (values: { userId: string }) => {
     query.current.uesrId = values.userId;
     getDataList();
@@ -108,15 +115,18 @@ export default function UserBehaviorOverView() {
     query.current.uesrId = "";
     getDataList();
   }, [form, getDataList]);
-  const onChange = useCallback((pageNumber: number, pageSize: number) => {
-    query.current.pageNum = pageNumber;
-    query.current.pageSize = pageSize;
-    setPageInformation({
-      pageNum: pageNumber,
-      pageSize: pageSize
-    });
-    getDataList();
-  }, []);
+  const onChange = useCallback(
+    (pageNumber: number, pageSize: number) => {
+      query.current.pageNum = pageNumber;
+      query.current.pageSize = pageSize;
+      setPageInformation({
+        pageNum: pageNumber,
+        pageSize: pageSize
+      });
+      getDataList();
+    },
+    [getDataList]
+  );
 
   useEffect(() => {
     getDataList();

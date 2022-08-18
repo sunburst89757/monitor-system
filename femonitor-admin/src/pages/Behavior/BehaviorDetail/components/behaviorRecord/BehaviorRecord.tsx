@@ -1,5 +1,4 @@
 import {
-  Button,
   Divider,
   List,
   // Pagination,
@@ -9,9 +8,10 @@ import {
   Space
 } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import style from "./BehaviorRecord.module.scss";
 import { IconFont } from "../../../../../components/IconFont";
+import { IUserLogsQuery } from "./types";
 interface DataType {
   gender: string;
   name: {
@@ -31,6 +31,11 @@ interface DetailType {
   title: string;
   description?: any;
 }
+type IProps = {
+  isCollapse: boolean;
+  endTime: number;
+  userId: string;
+};
 const fakeDetail: DetailType[] = [
   {
     title: "事件类型",
@@ -57,7 +62,16 @@ const fakeDetail: DetailType[] = [
     description: "xxx"
   }
 ];
-export const BehaviorRecord = ({ isCollapse }: { isCollapse: boolean }) => {
+export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
+  const query = useRef<IUserLogsQuery>({
+    type: "1",
+    userId,
+    // 指定日期的零点和24点
+    startTime: endTime - 24 * 60 * 60 * 1000 + 1,
+    endTime,
+    pageNum: 1,
+    pageSize: 10
+  });
   const [behavior, setbehavior] = useState("1");
   const changeBehavior = useCallback((e: RadioChangeEvent) => {
     setbehavior(e.target.value);
@@ -90,7 +104,9 @@ export const BehaviorRecord = ({ isCollapse }: { isCollapse: boolean }) => {
   useEffect(() => {
     loadMoreData();
   }, []);
-
+  useEffect(() => {
+    query.current.startTime = endTime - 24 * 60 * 60 * 1000 + 1;
+  }, [endTime]);
   return (
     <div className={style.contain}>
       <div className={style.header}>
