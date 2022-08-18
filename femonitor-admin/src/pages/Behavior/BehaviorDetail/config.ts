@@ -6,6 +6,9 @@ export const timeOption = {
       type: "shadow" // 'shadow' as default; can also be 'line' or 'shadow'
     }
   },
+  dataset: {
+    source: []
+  },
   grid: {
     top: "5%",
     left: "2%",
@@ -20,7 +23,7 @@ export const timeOption = {
   yAxis: {
     type: "category",
     splitLine: { show: false },
-    data: ["/page/1", "/page/2", "/page", "/page"],
+    // data: ["/page/1", "/page/2", "/page", "/page"],
     axisTick: {
       //y轴刻度线
       show: false
@@ -35,20 +38,24 @@ export const timeOption = {
   },
   series: [
     {
-      name: "加载时间",
+      name: "time",
       type: "bar",
       stack: "total",
       label: {
         show: true,
         position: "right",
         // 加单位
-        formatter: `{c}s`
+        formatter: (params: any) => {
+          console.log(params, "时间");
+
+          return `${params.value[params.seriesName]}s`;
+        }
       },
       emphasis: {
         focus: "series"
       },
-      color: "#ff8639",
-      data: [1.0, 0.5, 1.1, 0.6]
+      color: "#ff8639"
+      // data: [1.0, 0.5, 1.1, 0.6]
     }
   ]
 };
@@ -66,30 +73,6 @@ export const timeOption1 = {
     right: "2%",
     bottom: "4%",
     containLabel: true
-  },
-  dataset: {
-    source: [
-      {
-        product: "小于1s",
-        number: 220
-      },
-      {
-        product: "1s-5s",
-        number: 10
-      },
-      {
-        product: "5s-10s",
-        number: 0
-      },
-      {
-        product: "10s-30s",
-        number: 0
-      },
-      {
-        product: "大于30",
-        number: 0
-      }
-    ]
   },
   xAxis: {
     // 隐藏x轴刻度

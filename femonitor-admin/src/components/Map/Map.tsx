@@ -1,12 +1,13 @@
 import * as echarts from "echarts";
 import { useEffect, useRef } from "react";
+import _ from "lodash";
 import style from "./map.module.scss";
 
-export function Map<T = any>({
+export function Map<T extends Record<string, any>[]>({
   option,
   dataSource
 }: {
-  option: any;
+  option: Record<string, any>;
   dataSource?: T;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -18,11 +19,19 @@ export function Map<T = any>({
     } else {
       mapInstance = echarts.init(ref.current!);
     }
-    mapInstance?.setOption(option);
+    // debugger;
+    const mapOption = _.cloneDeep(option);
+    Object.defineProperty(mapOption, "dataset", {
+      value: { source: dataSource },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    });
+    mapInstance?.setOption(mapOption);
   };
   useEffect(() => {
     renderMap();
-  }, []);
+  }, [dataSource]);
   useEffect(() => {
     window.onresize = function () {
       mapInstance.resize();

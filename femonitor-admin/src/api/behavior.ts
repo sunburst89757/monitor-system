@@ -1,5 +1,6 @@
 import {
   IApiLoadTime,
+  IPageSource,
   IQueryParams
 } from "../pages/Behavior/BehaviorDetail/components/userDetail/userDetail";
 import { IUserLogsQuery } from "../pages/Behavior/BehaviorDetail/components/behaviorRecord/types";
@@ -29,6 +30,13 @@ export function getUserLogs(params: IUserLogsQuery) {
 export function getApiLoadTime(params: IQueryParams) {
   return myRequest<IQueryParams, IApiLoadTime>({
     url: "/user/loadTime",
+    params,
+    method: "get"
+  });
+}
+export function getPageLoadTime(params: IQueryParams) {
+  return myRequest<IQueryParams, IPageSource[]>({
+    url: "/user/loadAveTime",
     params,
     method: "get"
   });
