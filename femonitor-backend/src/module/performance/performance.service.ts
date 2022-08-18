@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Performance } from 'src/schemas/performance/performance.schema';
 import { Xhr } from 'src/schemas/performance/xhr.schema';
+import { UtilsService } from '../utils/utils.service';
 
 @Injectable()
 export class PerformanceService {
+    @Inject(UtilsService)
+    private readonly utils: UtilsService;
+    
     constructor(
         @InjectModel(Performance.name) private readonly performanceModel: Model<Performance>
     ) { }
@@ -204,5 +208,221 @@ export class PerformanceService {
         }
 
         return false
+    }
+
+    async apiOverview(start, end){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let xhrNum = await this.performanceModel.count({
+            subType: 'xhr',
+            createdAt: {$gte: startTime, $lt: endTime},
+        });
+        let xhrErrorNum = await this.performanceModel.count({
+            subType: 'xhr',
+            success: false,
+            createdAt: {$gte: startTime, $lt: endTime},
+        });
+        let xhrErrorUser = await this.performanceModel.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'xhr'},
+                    {success: false},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+
+            }},
+            {$project:{"userID":true}},
+            {$group:{_id:"$userID"}},
+            {$group:{_id:null,count:{$sum:1}}}
+        ]);
+        let res = {xhr:{total: xhrNum, error: xhrErrorNum, user: xhrErrorUser[0] ? xhrErrorUser[0].count : 0}};
+        let fetchNum = await this.performanceModel.count({
+            subType: 'fetch',
+            createdAt: {$gte: startTime, $lt: endTime},
+        });
+        let fetchErrorNum = await this.performanceModel.count({
+            subType: 'fetch',
+            success: false,
+            createdAt: {$gte: startTime, $lt: endTime},
+        });
+        let fetchErrorUser = await this.performanceModel.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'fetch'},
+                    {success: false},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+
+            }},
+            {$project:{"userID":true}},
+            {$group:{_id:"$userID"}},
+            {$group:{_id:null,count:{$sum:1}}}
+        ]);
+        Object.assign(res, {fetch:{total: fetchNum, error: fetchErrorNum, user: fetchErrorUser[0] ? fetchErrorUser[0].count : 0}});
+        let allErrorUser = await this.performanceModel.aggregate([
+            {$match:{
+                $and:[
+                    {$or:[
+                        {subType: 'fetch'},
+                        {subType: 'xhr'}
+                    ]},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+
+            }},
+            {$project:{"userID":true}},
+            {$group:{_id:"$userID"}},
+            {$group:{_id:null,count:{$sum:1}}}
+        ]);
+        Object.assign(res, {all:{total: fetchNum + xhrNum, error: fetchErrorNum+ xhrErrorNum, user: allErrorUser[0]? allErrorUser[0].count: 0}});
+        return res;
+    }
+
+    async getErrorCountByType(start, end, type){
+        let times = this.utils.splitTime(Number(start), Number(end), 12);
+        let res = times.reduce(async (pre, cur) =>{
+            let errNum = await this.performanceModel.count({
+                subType:type,
+                success: false,
+                createdAt: {$gte: new Date(cur.startTime), $lt:new Date(cur.endTime)},
+            });
+            let allNum = await this.performanceModel.count({
+                subType:type,
+                createdAt: {$gte: new Date(cur.startTime), $lt:new Date(cur.endTime)},
+            });
+            let res = await pre;
+            res.push({errorNum:errNum, total:allNum, rate:Math.floor(errNum/allNum*100)/100});
+            return res;
+        }, []);
+        return res;
+    }
+
+    async getXhrError(start, end, pageSize, pageNum){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let res = await this.performanceModel.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'xhr'},
+                    {success: false},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$url',
+                num: {$sum:1},
+                status: {$last: '$status'},
+                duration: {$last: '$duration'},
+                startTime: {$last: '$startTime'},
+                endTime: {$last: '$endTime'},
+                method: {$last: '$method'},
+                success:{$last: '$success'},
+                sendData:{$last: '$sendData'},
+                responseData:{$last: '$responseData'},
+                createdAt:{$last: '$createdAt'},
+                appID: {$last: '$appID'},
+                pageURL: {$last: '$pageURL'},
+                userID: {$last: '$userID'},
+                ip: {$last: '$ip'},
+            }},
+        ]).skip((pageNum - 1) * pageSize).limit(pageSize);
+        let num = await this.performanceModel.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'xhr'},
+                    {success: false},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$url',
+                num: {$sum:1},
+            }},
+            {$group:{_id:null,count:{$sum:1}}},
+        ])
+        let errors = await res.reduce(async (pre, errItem) => {
+            let userNum = await this.performanceModel.aggregate([
+                {$match:{
+                    $and:[
+                        {subType: 'xhr'},
+                        {success: false},
+                        {createdAt: {$gte: startTime, $lt:endTime}},
+                    ]
+                }},
+                {$project:{"userID":true}},
+                {$group:{_id:"$userID"}},
+                {$group:{_id:null,count:{$sum:1}}}
+            ]);
+            let res = await pre;
+            Object.assign(errItem,{userNum:num[0].count, url: errItem._id});
+            delete errItem._id;
+            res.push(errItem);
+            return res;
+        }, []);
+        return {num:num[0]? num[0].count : 0, pageSize:pageSize, pageNum: pageNum, result:errors};
+    }
+
+    async getFetchError(start, end, pageSize, pageNum){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let res = await this.performanceModel.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'fetch'},
+                    {success: false},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$url',
+                num: {$sum:1},
+                duration: {$last: '$duration'},
+                startTime: {$last: '$startTime'},
+                endTime: {$last: '$endTime'},
+                method: {$last: '$method'},
+                success:{$last: '$success'},
+                sendData:{$last: '$sendData'},
+                responseData:{$last: '$responseData'},
+                createdAt:{$last: '$createdAt'},
+                appID: {$last: '$appID'},
+                pageURL: {$last: '$pageURL'},
+                userID: {$last: '$userID'},
+                ip: {$last: '$ip'},
+            }},
+        ]).skip((pageNum - 1) * pageSize).limit(pageSize);
+        let num = await this.performanceModel.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'fetch'},
+                    {success: false},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+            }},
+            {$group:{
+                _id: '$url',
+                num: {$sum:1},
+            }},
+            {$group:{_id:null,count:{$sum:1}}},
+        ])
+        let errors = await res.reduce(async (pre, errItem) => {
+            let userNum = await this.performanceModel.aggregate([
+                {$match:{
+                    $and:[
+                        {subType: 'fetch'},
+                        {success: false},
+                        {createdAt: {$gte: startTime, $lt:endTime}},
+                    ]
+                }},
+                {$project:{"userID":true}},
+                {$group:{_id:"$userID"}},
+                {$group:{_id:null,count:{$sum:1}}}
+            ]);
+            let res = await pre;
+            Object.assign(errItem,{userNum:num[0].count, url: errItem._id});
+            delete errItem._id;
+            res.push(errItem);
+            return res;
+        }, []);
+        return {num:num[0]? num[0].count : 0, pageSize:pageSize, pageNum: pageNum, result:errors};
     }
 }

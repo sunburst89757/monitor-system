@@ -5,6 +5,7 @@ import { Page } from 'src/dto/PageDto';
 import { QueryError } from 'src/dto/queryErrorDto';
 import { Error } from 'src/schemas/error/error.schema';
 import { BehaviorService } from '../behavior/behavior.service';
+import { PerformanceService } from '../performance/performance.service';
 import { UtilsService } from '../utils/utils.service';
 @Injectable()
 export class ErrorService {
@@ -14,6 +15,9 @@ export class ErrorService {
 
     @Inject(UtilsService)
     private readonly utils: UtilsService;
+
+    @Inject(PerformanceService)
+    private readonly performanceService: PerformanceService;
     constructor(
         @InjectModel(Error.name) private readonly ErrorMoudle: Model<Error>
     ) { }
@@ -76,7 +80,7 @@ export class ErrorService {
         let userNum = await this.behaviorService.getUserNum(startTime, endTime);
         return {
             errNum: errNum,
-            errUserNum: errUserNum[0].count,
+            errUserNum: errUserNum[0] ? errUserNum[0].count : 0,
             pv: pv,
             userNum: userNum,
         };
@@ -410,7 +414,7 @@ export class ErrorService {
         return res;
     }
 
-    async getResourtPageError(start, end){
+    async getResourcePageError(start, end){
         let startTime = new Date(Number(start));
         let endTime = new Date(Number(end));
         let pages = await this.ErrorMoudle.aggregate([
@@ -501,5 +505,31 @@ export class ErrorService {
             userID:userID,
         }).sort({createdAt:-1}).skip((pageNum - 1) * pageSize).limit(pageSize);;
         return {num:num, pageSize:pageSize, pageNum:pageNum, result:res};
+    }
+
+    async getApiOverview(start, end) {
+        let res = await this.performanceService.apiOverview(start, end);
+        return res;
+    }
+
+    async getApiErrorCount(start, end){
+        let types = ['xhr', 'fetch'];
+        let res = types.reduce(async (pre, type) => {
+            let errNums = await this.performanceService.getErrorCountByType(start, end, type);
+            let res = await pre;
+            Object.assign(res, {[type]:errNums});
+            return res;
+        }, {});
+        return res;
+    }
+
+    async getXhrError(start, end, pageSize, pageNum){
+        let res = this.performanceService.getXhrError(start, end, pageSize, pageNum);
+        return res;
+    }
+
+    async getFetchError(start, end, pageSize, pageNum){
+        let res = this.performanceService.getFetchError(start, end, pageSize, pageNum);
+        return res;
     }
 }

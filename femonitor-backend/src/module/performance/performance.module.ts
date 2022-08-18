@@ -15,6 +15,7 @@ import { VueRouterSchema } from 'src/schemas/performance/onVueRouter.schema';
 import { Performance, PerformanceSchema } from 'src/schemas/performance/performance.schema';
 import { ResourceSchema } from 'src/schemas/performance/resource.schema';
 import { XhrSchema } from 'src/schemas/performance/xhr.schema';
+import { UtilsModule } from '../utils/utils.module';
 import { PerformanceController } from './performance.controller';
 import { PerformanceService } from './performance.service';
 
@@ -42,7 +43,8 @@ import { PerformanceService } from './performance.service';
                     { name: 'resource', schema: ResourceSchema },
                     { name: 'vue-router-change-paint', schema: VueRouterSchema }
                 ],
-            }])
+            }]),
+            UtilsModule,
     ],
     providers: [PerformanceService],
     exports: [PerformanceService],

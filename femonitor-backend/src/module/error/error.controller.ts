@@ -129,14 +129,59 @@ export class ErrorController {
     @Get('resource/pageError')
     @ApiQuery({name:'endTime',required:true})
     @ApiQuery({name:'startTime',required:true})
-    async ResourtPageError(@Query() query){
+    async resourcePageError(@Query() query){
         const startTime = query.startTime;
         const endTime = query.endTime;
         if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
-        return this.errorService.getResourtPageError(startTime, endTime);
+        return this.errorService.getResourcePageError(startTime, endTime);
     }
 
+    @Get('resource/apiOverview')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
+    async ApiOverview(@Query() query){
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getApiOverview(startTime, endTime);
+    }
 
+    @Get('resource/getApiErrorCount')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
+    async apiErrorCount(@Query() query){
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getApiErrorCount(startTime, endTime);
+    }
 
+    @Get('resource/xhrError')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
+    @ApiQuery({name:'pageSize',required:false})
+    @ApiQuery({name:'pageNum',required:false})
+    async xhrError(@Query() query){
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        let pageSize = query.pageSize ? Number(query.pageSize) : 20;
+        let pageNum = query.pageNum ? Number(query.pageNum) : 1;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getXhrError(startTime, endTime, pageSize, pageNum);
+    }
+
+    @Get('resource/fetchError')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
+    @ApiQuery({name:'pageSize',required:false})
+    @ApiQuery({name:'pageNum',required:false})
+    async fetchError(@Query() query){
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        let pageSize = query.pageSize ? Number(query.pageSize) : 20;
+        let pageNum = query.pageNum ? Number(query.pageNum) : 1;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getFetchError(startTime, endTime, pageSize, pageNum);
+    }
 
 }
