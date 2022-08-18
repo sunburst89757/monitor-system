@@ -53,21 +53,26 @@ export class ErrorService {
     }
 
     async errOverview(start, end){
+        let types = ['console-error', 'js', 'promise', 'vue'];
+        let res = types.reduce(async (pre, type) => {
+            let res = await pre;
+            Object.assign(res, {[type]: await this.errOverviewByType(start, end, type)});
+            return res;
+        }, {});
+        return res;
+    }
+    
+    async errOverviewByType(start, end, type){
         let startTime = new Date(Number(start));
         let endTime = new Date(Number(end));
         let errNum = await this.ErrorMoudle.count({
-            subType:['console-error', 'js', 'promise', 'vue'],
+            subType:type,
             createdAt: {$gte: startTime, $lt:endTime},
         });
         let errUserNum = await this.ErrorMoudle.aggregate([
             {$match:{
                 $and:[
-                    {$or:[
-                        {subType: 'console-error'},
-                        {subType: 'js'},
-                        {subType: 'promise'},
-                        {subType: 'vue'},
-                    ]},
+                    {subType: type},
                     {createdAt: {$gte: startTime, $lt:endTime}},
                 ]
 
