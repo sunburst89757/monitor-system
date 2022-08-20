@@ -109,6 +109,10 @@ export default {
       ScriptError(type)
     },
     PromiseErrorHandler(type) {
+      function foo() {
+        Promise.reject("Hello, promise-Fundebug!");
+      }
+      foo();
       PromiseError()
     },
     ResourveErrorHandler(type) {

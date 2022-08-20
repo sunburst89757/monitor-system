@@ -8,7 +8,12 @@ import { nanoid } from "nanoid";
 import { JsErrorType, IQueryJsErrorType } from "../../JsErr/types";
 import { useEffect } from "react";
 
-import { getJsErrorList } from "../../../../api/error";
+import {
+  getJsErrorList,
+  getConsoleErrorList,
+  getPromiseErrorList,
+  getVueErrorList
+} from "../../../../api/error";
 
 export default function QuietViewErr({
   label,
@@ -17,6 +22,8 @@ export default function QuietViewErr({
   pageSize,
   timeSelect
 }: quietViewErrType) {
+  console.log("label", label);
+  console.log("value", value);
   const nowTime = new Date().toLocaleDateString();
 
   const fun1 = useContext(Context)?.dispacth;
@@ -111,32 +118,110 @@ export default function QuietViewErr({
   }, [timeSelect, endTime]);
 
   useEffect(() => {
-    let handlerFunction = getJsErrorList;
-    handlerFunction({
-      pageNum: 1,
-      pageSize: 100,
-      startTime: startTime,
-      endTime: endTime
-    }).then((res) => {
-      console.log("res", res);
-      let data = res.data;
-      let result = data.result;
-      let newErrList: QuietViewErrListType[] = [];
-      if (result.length) {
-        result.forEach((item) => {
-          newErrList.push({
-            id: nanoid(),
-            name: item.error.split(":")[0],
-            describe: item.msg,
-            times: item.num,
-            effects: item.userNum,
-            lastTIme: item.createdAt.replace("T", " ").split(".")[0]
+    let newErrList: QuietViewErrListType[] = [];
+    if (value === "console.error") {
+      getConsoleErrorList({
+        pageNum: 1,
+        pageSize: 100,
+        startTime: startTime,
+        endTime: endTime
+      }).then((res) => {
+        let data = res.data;
+        let result = data.result;
+        if (result.length) {
+          result.forEach((item) => {
+            newErrList.push({
+              id: nanoid(),
+              name: "Console.error",
+              describe: item.error,
+              times: item.num,
+              effects: item.userNum,
+              lastTIme: item.createdAt.replace("T", " ").split(".")[0],
+              data: item
+            });
           });
-        });
-      } else {
-      }
-      setErrList(newErrList);
-    });
+        } else {
+        }
+        setErrList(newErrList);
+      });
+    } else if (value === "promiseError") {
+      getPromiseErrorList({
+        pageNum: 1,
+        pageSize: 100,
+        startTime: startTime,
+        endTime: endTime
+      }).then((res) => {
+        let data = res.data;
+        let result = data.result;
+        if (result.length) {
+          result.forEach((item) => {
+            let des = "";
+            if (item.msg) des = item.msg;
+            newErrList.push({
+              id: nanoid(),
+              name: "Uncaught (in promise)",
+              describe: des,
+              times: item.num,
+              effects: item.userNum,
+              lastTIme: item.createdAt.replace("T", " ").split(".")[0],
+              data: item
+            });
+          });
+        } else {
+        }
+        setErrList(newErrList);
+      });
+    } else if (value === "vue-error") {
+      getVueErrorList({
+        pageNum: 1,
+        pageSize: 100,
+        startTime: startTime,
+        endTime: endTime
+      }).then((res) => {
+        let data = res.data;
+        let result = data.result;
+        if (result.length) {
+          result.forEach((item) => {
+            newErrList.push({
+              id: nanoid(),
+              name: item.error.split(":")[0],
+              describe: item.info,
+              times: item.num,
+              effects: item.userNum,
+              lastTIme: item.createdAt.replace("T", " ").split(".")[0],
+              data: item
+            });
+          });
+        } else {
+        }
+        setErrList(newErrList);
+      });
+    } else {
+      getJsErrorList({
+        pageNum: 1,
+        pageSize: 100,
+        startTime: startTime,
+        endTime: endTime
+      }).then((res) => {
+        let data = res.data;
+        let result = data.result;
+        if (result.length) {
+          result.forEach((item) => {
+            newErrList.push({
+              id: nanoid(),
+              name: item.error.split(":")[0],
+              describe: item.msg,
+              times: item.num,
+              effects: item.userNum,
+              lastTIme: item.createdAt.replace("T", " ").split(".")[0],
+              data: item
+            });
+          });
+        } else {
+        }
+        setErrList(newErrList);
+      });
+    }
   }, [startTime, endTime, setErrList]);
 
   return (

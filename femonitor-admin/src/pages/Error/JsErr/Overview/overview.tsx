@@ -5,17 +5,17 @@ import { Select } from "antd";
 import { timeSelect1 } from "../../../Dashboard/config";
 import DataDisplay from "../../components/DataDisplay/DataDisplay";
 import { Map } from "../../components/Map/Map";
-import { errorTimeMap } from "../config";
 import { nanoid } from "nanoid";
 import { dataDisplayType, errListType } from "../../components/types";
-import { JsErrorOverviewType } from "../types";
-import { getJsErrorOverview } from "../../../../api/error";
+import { JsErrorOverviewType, JsErrorCountTypeItem } from "../types";
+import { getJsErrorOverview, getJsErrorCount } from "../../../../api/error";
 import QuietViewErr from "../../components/quietViewErr/quietViewErr";
+import { timeStamp2Month2Second } from "../../../../utils/handleTime";
+import { errorTimeMap } from "../config";
 const { Option } = Select;
 
 export default function Overview() {
   const [timeSelect, settimeSelect] = useState("1");
-
   const timeSelectChange = (value: string) => {
     console.log(`selected ${parseInt(value)}`);
     settimeSelect(value);
@@ -32,6 +32,14 @@ export default function Overview() {
     let startime = endTime - timeStamp;
     setStartTime(startime);
   }, [timeSelect, endTime]);
+
+  function handlerStr(str: string): string {
+    if (str === "js") str = "onerror";
+    else if (str === "promise") str = "promise-error";
+    else if (str === "vue") str = "vue-error";
+    else if (str === "console-error") str = "console-error";
+    return str;
+  }
 
   useEffect(() => {
     let handlerFunction = getJsErrorOverview;
@@ -173,11 +181,8 @@ export default function Overview() {
         let data3 = [];
         for (let key in data) {
           let str = "";
-          if (key === "js") str = "onerror";
-          else if (key === "promise") str = "promise-error";
-          else if (key === "vue") str = "vue-error";
-          else if (key === "console-error") str = "console-error";
-          else if (key === "all") continue;
+          if (key === "all") continue;
+          str = handlerStr(key);
           let dataItem = {
             value: data[key as keyof typeof data].errNum,
             name: str
@@ -198,7 +203,7 @@ export default function Overview() {
         }
         newDataFlow[0].option.series[0].data = data1;
         data2.push({
-          name: "pv",
+          name: "uv",
           value: data["all"].pv
         });
         newDataFlow[1].option.series[0].data = data2;
@@ -338,6 +343,35 @@ export default function Overview() {
         ];
         setDataFlow(newDataFlow);
       });
+
+    getJsErrorCount({
+      startTime: startTime,
+      endTime: endTime
+    }).then((res) => {
+      let start = startTime;
+      let end = endTime;
+      let times = 12;
+      let diff = Math.floor((end - start) / times);
+      let now = start - diff;
+      let newTimeArr: string[] = [];
+      for (let i = 0; i < times; i++) {
+        now += diff;
+        newTimeArr.push(timeStamp2Month2Second(now));
+      }
+      errorTimeMap.xAxis[0].data = newTimeArr;
+      let data = res.data;
+      let handlerArr = ["js", "console-error", "promise", "vue"];
+      for (let i = 0; i < handlerArr.length; i++) {
+        let str = handlerStr(handlerArr[i]);
+        let index = handlerArr[i];
+        let newArr: JsErrorCountTypeItem[] = data[index as keyof typeof data];
+        errorTimeMap.series[i].data = [];
+        for (let j = 0; j < newArr.length; j++) {
+          errorTimeMap.series[i].data.push(newArr[j].errorNum);
+        }
+      }
+      console.log("data", data);
+    });
   }, [startTime, endTime, setDataFlow]);
 
   return (

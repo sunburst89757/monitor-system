@@ -25,7 +25,6 @@ export default function DataDisplay({
     let total = 0;
     if (dataMap[id] === 1) {
       total = option.pvTotal;
-      console.log("option123", option);
       for (let item of option.series[0].data) {
         total -= item.value;
       }
@@ -41,7 +40,6 @@ export default function DataDisplay({
     } else if (dataMap[id] === 3) {
       total = option.userNum;
     }
-    console.log("total", total);
     setErrorTotal(total);
   }, [option, id, dataMap]);
 

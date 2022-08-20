@@ -1,29 +1,29 @@
-import { lazyReportCache } from "../utils/report";
-import { onBFCacheRestore, getPageURL } from "../utils/utils";
-import config from "../config";
+import { lazyReportCache } from "../utils/report"
+import { onBFCacheRestore, getPageURL } from "../utils/utils"
+import config from "../config"
 
-export default function error() {
-  const oldConsoleError = window.console.error;
+export default function error () {
+  const oldConsoleError = window.console.error
   window.console.error = (...args) => {
-    oldConsoleError.apply(this, args);
+    oldConsoleError.apply(this, args)
     lazyReportCache({
       type: "error",
       subType: "console-error",
       startTime: performance.now(),
       errData: args,
       pageURL: getPageURL()
-    });
-  };
+    })
+  }
 
   // 捕获资源加载失败错误 js css img...
   window.addEventListener(
     "error",
     (e) => {
-      const target = e.target;
-      if (!target) return;
+      const target = e.target
+      if (!target) return
 
       if (target.src || target.href) {
-        const url = target.src || target.href;
+        const url = target.src || target.href
         lazyReportCache({
           url,
           type: "error",
@@ -33,11 +33,11 @@ export default function error() {
           resourceType: target.tagName,
           paths: e.path.map((item) => item.tagName).filter(Boolean),
           pageURL: getPageURL()
-        });
+        })
       }
     },
     true
-  );
+  )
 
   // 监听 js 错误
   window.onerror = (msg, url, line, column, error) => {
@@ -50,24 +50,25 @@ export default function error() {
       pageURL: url,
       type: "error",
       startTime: performance.now()
-    });
-  };
+    })
+  }
 
   // 监听 promise 错误 缺点是获取不到列数据
   window.addEventListener("unhandledrejection", (e) => {
     lazyReportCache({
       reason: e.reason?.stack,
+      msg: e.reason.name + ":" + e.reason.message,
       subType: "promise",
       msg: e.reason.name + ":" + e.reason.message,
       type: "error",
       startTime: e.timeStamp,
       pageURL: getPageURL()
-    });
-  });
+    })
+  })
 
   if (config.vue?.Vue) {
     config.vue.Vue.config.errorHandler = (err, vm, info) => {
-      console.error(err);
+      console.error(err)
 
       lazyReportCache({
         info,
@@ -76,11 +77,11 @@ export default function error() {
         type: "error",
         startTime: performance.now(),
         pageURL: getPageURL()
-      });
-    };
+      })
+    }
   }
 
   onBFCacheRestore(() => {
-    error();
-  });
+    error()
+  })
 }

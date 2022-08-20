@@ -1,3 +1,4 @@
+import JsErr from "../ResourceErr/index";
 export interface IQueryJsErrorType {
   pageNum: number;
   pageSize: number;
@@ -19,6 +20,41 @@ export interface JsErrorType {
   error: string;
 }
 
+export interface ConsoleErrorType {
+  num: number;
+  createdAt: string;
+  appID: string;
+  pageURL: string;
+  userID: string;
+  ip: string;
+  userNum: number;
+  error: string;
+}
+
+export interface VueErrorType {
+  num: number;
+  info: string;
+  createdAt: string;
+  appID: string;
+  pageURL: string;
+  userID: string;
+  ip: string;
+  userNum: number;
+  error: string;
+}
+
+export interface PromiseErrorType {
+  num: number;
+  createdAt: string;
+  appID: string;
+  pageURL: string;
+  userID: string;
+  ip: string;
+  userNum: number;
+  reason: string | null;
+  msg: string | null;
+}
+
 export interface JsErrorOverviewTypeItem {
   errNum: number;
   errUserNum: number;
@@ -32,4 +68,17 @@ export interface JsErrorOverviewType {
   promise: JsErrorOverviewTypeItem;
   vue: JsErrorOverviewTypeItem;
   all: JsErrorOverviewTypeItem;
+}
+
+export interface JsErrorCountTypeItem {
+  errorNum: number;
+  pv: number;
+  rate: number | boolean;
+}
+
+export interface JsErrorCountType {
+  js: JsErrorCountTypeItem[];
+  promise: JsErrorCountTypeItem[];
+  "console-error": JsErrorCountTypeItem[];
+  vue: JsErrorCountTypeItem[];
 }

@@ -37,3 +37,21 @@ export const standardTime2TimeStampEnd = (time: string) =>
   new Date(time).setHours(0, 0, 0, 0) + 24 * 60 * 60 * 1000 - 1;
 export const standardTime2date = (time: string) =>
   timeStamp2date(new Date(1000).getTime() * 1000);
+// 时间戳 转 月日时分秒
+export const timeStamp2Month2Second = (timeStamp: number) => {
+  const date = new Date(timeStamp);
+  const M =
+    (date.getMonth() + 1 < 10
+      ? "0" + (date.getMonth() + 1)
+      : date.getMonth() + 1) + "-";
+  const D = date.getDate() + " ";
+  const h =
+    date.getHours() < 10 ? "0" + date.getHours() + ":" : date.getHours() + ":";
+  const m =
+    date.getMinutes() < 10
+      ? "0" + date.getMinutes() + ":"
+      : date.getMinutes() + ":";
+  const s =
+    date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+  return M + D + h + m + s;
+};
