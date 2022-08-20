@@ -1,11 +1,14 @@
 import {
+  // 请求数据
   IQueryJsErrorType,
+  // JsError
   JsErrorType,
   JsErrorOverviewType,
   JsErrorCountType,
   ConsoleErrorType,
   VueErrorType,
   PromiseErrorType
+  // Resource
 } from "../pages/Error/JsErr/types";
 import { myRequest } from "../service";
 import { IPage, ITimeDuration } from "./types";
