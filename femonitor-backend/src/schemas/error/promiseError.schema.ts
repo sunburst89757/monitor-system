@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema()
 export class PromiseError {
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: false })
   reason: String
   
 }
