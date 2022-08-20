@@ -786,6 +786,7 @@ function error() {
     lazyReportCache({
       reason: (_e$reason = e.reason) === null || _e$reason === void 0 ? void 0 : _e$reason.stack,
       subType: "promise",
+      msg: e.reason.name + ":" + e.reason.message,
       type: "error",
       startTime: e.timeStamp,
       pageURL: getPageURL()

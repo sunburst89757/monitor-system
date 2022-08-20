@@ -58,6 +58,7 @@ export default function error() {
     lazyReportCache({
       reason: e.reason?.stack,
       subType: "promise",
+      msg: e.reason.name + ":" + e.reason.message,
       type: "error",
       startTime: e.timeStamp,
       pageURL: getPageURL()
