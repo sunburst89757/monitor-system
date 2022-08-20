@@ -46,7 +46,7 @@ export const timeOption = {
         position: "right",
         // 加单位
         formatter: (params: any) => {
-          console.log(params, "时间");
+          // console.log(params, "时间");
 
           return `${params.value[params.seriesName]}s`;
         }
@@ -104,8 +104,6 @@ export const timeOption1 = {
         position: "right",
         // 加单位
         formatter: (params: any) => {
-          console.log(params, "shishhihoihjoiuoijhjhkuh");
-
           return `${params.value[params.seriesName]}次`;
         }
       },

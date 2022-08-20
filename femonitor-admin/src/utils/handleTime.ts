@@ -35,3 +35,5 @@ export const standardTime2TimeStamp = (time: string) =>
   new Date(time).setHours(0, 0, 0, 0);
 export const standardTime2TimeStampEnd = (time: string) =>
   new Date(time).setHours(0, 0, 0, 0) + 24 * 60 * 60 * 1000 - 1;
+export const standardTime2date = (time: string) =>
+  timeStamp2date(new Date(1000).getTime() * 1000);

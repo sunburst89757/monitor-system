@@ -11,57 +11,34 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useCallback, useEffect, useRef, useState } from "react";
 import style from "./BehaviorRecord.module.scss";
 import { IconFont } from "../../../../../components/IconFont";
-import { IUserLogsQuery } from "./types";
-interface DataType {
-  gender: string;
-  name: {
-    title: string;
-    first: string;
-    last: string;
-  };
-  email: string;
-  picture: {
-    large: string;
-    medium: string;
-    thumbnail: string;
-  };
-  nat: string;
-}
-interface DetailType {
-  title: string;
-  description?: any;
-}
+import { DetailType, IUserLogsQuery } from "./types";
+import { getUserLogs } from "../../../../../api/behavior";
+import { transFormDetail } from "./utils/detailShow";
 type IProps = {
   isCollapse: boolean;
   endTime: number;
   userId: string;
 };
-const fakeDetail: DetailType[] = [
-  {
-    title: "事件类型",
-    description: "request"
-  },
-  {
-    title: "发生时间",
-    description: "2022-08-08 01:00:23"
-  },
-  {
-    title: "事件内容",
-    description: "hhhhhh"
-  },
-  {
-    title: "发生页面",
-    description: "baidu.com"
-  },
-  {
-    title: "加载信息",
-    description: ""
-  },
-  {
-    title: "事件标识",
-    description: "xxx"
+const type2List = (item: {
+  type: "2" | "3" | "4" | "5";
+  [prop: string]: any;
+}) => {
+  switch (item.type) {
+    case "2":
+      return [
+        "页面浏览",
+        "icon-webpage-line",
+        "http://localhost:9528/#" + item.pageURL
+      ];
+    case "3":
+      return ["发生错误", "icon-error", item?.error || "console-error"];
+    case "4":
+      const icon = item.success ? "icon-ok" : "icon-cancel";
+      return ["request", icon, item.url];
+    case "5":
+      return ["点击", "icon-click", item.target];
   }
-];
+};
 export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
   const query = useRef<IUserLogsQuery>({
     type: "1",
@@ -72,40 +49,57 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
     pageNum: 1,
     pageSize: 10
   });
+  const [num, setnum] = useState(10);
   const [behavior, setbehavior] = useState("1");
-  const changeBehavior = useCallback((e: RadioChangeEvent) => {
-    setbehavior(e.target.value);
-  }, []);
-  const [dataList, setData] = useState<DataType[]>([]);
-  const [detail, setdetail] = useState<DetailType[]>(fakeDetail);
-  const [loading, setLoading] = useState(false);
-  const loadMoreData = () => {
-    if (loading) {
-      return;
-    }
-    setLoading(true);
-    fetch(
-      "https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo"
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        console.log(body.results);
-
-        setData([...dataList, ...body.results]);
+  const fetchDataList = (params: IUserLogsQuery, isUpdateDataList = false) => {
+    getUserLogs(params)
+      .then((res) => {
         setLoading(false);
+        setnum(res.data.num);
+        if (isUpdateDataList) {
+          // 更改时间和切换行为和清除之前的dataList
+          console.log("wufanying");
+
+          setData(res.data.result);
+        } else {
+          setData([...dataList, ...res.data.result]);
+        }
       })
       .catch(() => {
         setLoading(false);
       });
   };
+  const changeBehavior = useCallback((e: RadioChangeEvent) => {
+    query.current.type = e.target.value;
+    query.current.pageNum = 1;
+    setbehavior(e.target.value);
+    fetchDataList(query.current, true);
+  }, []);
+  const [dataList, setData] = useState<any[]>([]);
+  const [detail, setdetail] = useState<DetailType[]>([]);
+  const [loading, setLoading] = useState(false);
+  const loadMoreData = () => {
+    console.log("触发");
+    query.current.pageNum = query.current.pageNum + 1;
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+    fetchDataList(query.current);
+  };
   const handleDetail = useCallback((item: any) => {
-    console.log(item, "shisha");
+    console.log(item, "ryf");
+
+    setdetail(transFormDetail(item));
   }, []);
   useEffect(() => {
-    loadMoreData();
-  }, []);
-  useEffect(() => {
+    query.current.endTime = endTime;
     query.current.startTime = endTime - 24 * 60 * 60 * 1000 + 1;
+    console.log(query.current, "查看时间");
+
+    // 时间改变要清空dataList,页面回到第一页
+    query.current.pageNum = 1;
+    fetchDataList(query.current, true);
   }, [endTime]);
   return (
     <div className={style.contain}>
@@ -132,35 +126,38 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
             <InfiniteScroll
               dataLength={dataList.length}
               next={loadMoreData}
-              hasMore={dataList.length < 50}
+              hasMore={dataList.length < num}
               loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
               endMessage={<Divider plain>所有记录加载完成🤐</Divider>}
               scrollableTarget="scrollableDiv"
             >
               <List
                 dataSource={dataList}
-                renderItem={(item) => (
-                  <List.Item
-                    key={item.email}
-                    actions={[
-                      <a
-                        key="list-loadmore-more"
-                        onClick={() => {
-                          handleDetail(item);
-                        }}
-                      >
-                        详情
-                      </a>
-                    ]}
-                  >
-                    <List.Item.Meta
-                      avatar={<IconFont type="icon-cloud"></IconFont>}
-                      title={item.name.last}
-                      description={item.email}
-                    />
-                    <div>19:23</div>
-                  </List.Item>
-                )}
+                renderItem={(item) => {
+                  const tempItem = type2List(item);
+                  return (
+                    <List.Item
+                      key={item._id}
+                      actions={[
+                        <a
+                          key="list-loadmore-more"
+                          onClick={() => {
+                            handleDetail(item);
+                          }}
+                        >
+                          详情
+                        </a>
+                      ]}
+                    >
+                      <List.Item.Meta
+                        avatar={<IconFont type={tempItem[1]}></IconFont>}
+                        title={tempItem[0]}
+                        description={tempItem[2]}
+                      />
+                      <div>{item.startTime}</div>
+                    </List.Item>
+                  );
+                }}
               />
             </InfiniteScroll>
           </div>
@@ -173,7 +170,7 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
                 <List.Item key={item.title}>
                   <List.Item.Meta
                     title={item.title}
-                    description={item.description ? item.description : ""}
+                    description={item.description}
                   />
                 </List.Item>
               )}

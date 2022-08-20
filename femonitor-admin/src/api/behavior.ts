@@ -13,6 +13,9 @@ import { IPage } from "./types";
 interface IUserBehaviorRes extends IPage {
   result: IUserBehaviorList[];
 }
+interface IUserLogsRes extends IPage {
+  result: any[];
+}
 export function getUserBehaviorList(params: IQueryUserBehavior) {
   return myRequest<IQueryUserBehavior, IUserBehaviorRes>({
     url: "/user/behavior",
@@ -21,8 +24,8 @@ export function getUserBehaviorList(params: IQueryUserBehavior) {
   });
 }
 export function getUserLogs(params: IUserLogsQuery) {
-  return myRequest<IUserLogsQuery, any>({
-    url: "/user/behavior",
+  return myRequest<IUserLogsQuery, IUserLogsRes>({
+    url: "/user/userLogs",
     params,
     method: "get"
   });

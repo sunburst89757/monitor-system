@@ -6,3 +6,7 @@ export interface IUserLogsQuery {
   pageNum: number;
   pageSize: number;
 }
+export interface DetailType {
+  title: string;
+  description?: any;
+}
