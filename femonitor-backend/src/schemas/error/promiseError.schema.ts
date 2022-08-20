@@ -5,6 +5,9 @@ export class PromiseError {
 
   @Prop({ type: String, required: false })
   reason: String
+
+  @Prop({ type: String, required: false })
+  msg: String
   
 }
 
