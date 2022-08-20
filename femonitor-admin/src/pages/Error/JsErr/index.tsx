@@ -11,7 +11,10 @@ import ErrList from "./ErrList/ErrList";
 import { ErrorDetail } from "../components/errorDetail/errorDetail";
 import style from "./index.module.scss";
 import React, { useState } from "react";
+import { JsErrorShowItem } from "./types";
 import { Context } from "../components/quietViewErr/context";
+import { nanoid } from "nanoid";
+import useEffect from "react";
 const items: MenuProps["items"] = [
   {
     label: "概览",
@@ -44,11 +47,22 @@ const items: MenuProps["items"] = [
 export default function JsErr() {
   const [current, setCurrent] = useState("overview");
   const [visible, setVisible] = useState(false);
+  const [data2, setData] = useState<JsErrorShowItem>({
+    id: nanoid(),
+    name: "",
+    describe: "",
+    times: 0,
+    effects: 0,
+    lastTime: "",
+    data: {}
+  });
 
-  const showDrawer = (row: Object) => {
+  const showDrawer = (row: JsErrorShowItem) => {
     setVisible(true);
-    console.log("rowData", row);
+    setData(row);
   };
+
+  // useEffect(() => {}, [visible]);
 
   const onClose = () => {
     setVisible(false);
@@ -81,7 +95,7 @@ export default function JsErr() {
         visible={visible}
         width="80vw"
       >
-        <ErrorDetail></ErrorDetail>
+        <ErrorDetail data={data2.data}></ErrorDetail>
       </Drawer>
     </div>
   );

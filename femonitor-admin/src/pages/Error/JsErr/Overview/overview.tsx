@@ -48,7 +48,7 @@ export default function Overview() {
       endTime: endTime
     })
       .then((res) => {
-        console.log("res", res);
+        //console.log("res", res);
         let data: JsErrorOverviewType = res.data;
         let newDataFlow: dataDisplayType[] = [
           {
@@ -370,7 +370,7 @@ export default function Overview() {
           errorTimeMap.series[i].data.push(newArr[j].errorNum);
         }
       }
-      console.log("data", data);
+      //console.log("data", data);
     });
   }, [startTime, endTime, setDataFlow]);
 

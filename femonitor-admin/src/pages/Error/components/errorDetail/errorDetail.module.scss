@@ -5,7 +5,7 @@
     width: 100%;
     margin-bottom: 10px;
     padding: 0;
-    height: 180px;
+    min-height: 235px;
     background-color: #fff;
     .timeContext {
       .today {
@@ -106,6 +106,7 @@
 
   .context {
     display: flex;
+    padding: 0 10px;
     justify-content: center;
     align-items: center;
     min-width: 100px;

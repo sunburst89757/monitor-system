@@ -82,3 +82,13 @@ export interface JsErrorCountType {
   "console-error": JsErrorCountTypeItem[];
   vue: JsErrorCountTypeItem[];
 }
+
+export interface JsErrorShowItem {
+  id: string;
+  name: string;
+  describe: string;
+  times: number;
+  effects: number;
+  lastTime: string;
+  data: any;
+}

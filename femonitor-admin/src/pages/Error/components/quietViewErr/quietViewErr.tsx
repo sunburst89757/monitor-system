@@ -22,8 +22,6 @@ export default function QuietViewErr({
   pageSize,
   timeSelect
 }: quietViewErrType) {
-  console.log("label", label);
-  console.log("value", value);
   const nowTime = new Date().toLocaleDateString();
 
   const fun1 = useContext(Context)?.dispacth;
@@ -119,7 +117,8 @@ export default function QuietViewErr({
 
   useEffect(() => {
     let newErrList: QuietViewErrListType[] = [];
-    if (value === "console.error") {
+    console.log("value", value);
+    if (value === "console.error" || value === "console-error") {
       getConsoleErrorList({
         pageNum: 1,
         pageSize: 100,
@@ -144,7 +143,7 @@ export default function QuietViewErr({
         }
         setErrList(newErrList);
       });
-    } else if (value === "promiseError") {
+    } else if (value === "promiseError" || value === "promise-error") {
       getPromiseErrorList({
         pageNum: 1,
         pageSize: 100,
@@ -222,7 +221,7 @@ export default function QuietViewErr({
         setErrList(newErrList);
       });
     }
-  }, [startTime, endTime, setErrList]);
+  }, [startTime, endTime, setErrList, value]);
 
   return (
     <div className={style.container}>
