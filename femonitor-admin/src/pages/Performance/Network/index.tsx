@@ -1,7 +1,3 @@
-// import { useState } from "react";
-// import { ICircleType } from "./types";
-
-// import { Circle } from "./components/Circle/Circle";
 import style from "./Network.module.scss";
 
 import { ClockCircleOutlined } from "@ant-design/icons";
@@ -15,93 +11,59 @@ import { ICircleType } from "../../Dashboard/types";
 import WhitePane from "../components/WhitePane/WhitePane";
 import SmallPane from "../components/SmallPane/SmallPane";
 
-import { useState } from "react";
+import { getPerformanceList, getXHR } from "../../../api/performance";
+import { useState, useEffect } from "react";
 const { Option } = Select;
 // 网络性能 xhr fetch两种请求的耗时
 export default function Network() {
-  const nowTime = new Date().toLocaleDateString();
-
   const [timeSelect, settimeSelect] = useState("1");
 
+  // 时间下拉框
   const timeSelectChange = (value: string) => {
-    console.log(`selected ${parseInt(value)}`);
     settimeSelect(value);
   };
 
-  const [circle, setcircle] = useState<ICircleType[]>([
+  const [XhrPageNum, setXhrPageNum] = useState(1);
+  const xhrPageChange = (page: number) => {
+    setXhrPageNum(page);
+  };
+  const [FetchPageNum, setFetchPageNum] = useState(1);
+  const fetchPageChange = (page: number) => {
+    setFetchPageNum(page);
+  };
+
+  const [xhrTotal, setxhrTotal] = useState(0);
+  const [fetchTotal, setfetchTotal] = useState(0);
+
+  const [xhrAvgTime, setXhrAvgTime] = useState("0ms");
+  const [xhr_success_percent, setxhr_success_percent] = useState("0%");
+
+  const [endTime, setEndTime] = useState(Date.now());
+
+  const [startTime, setStartTime] = useState(endTime);
+
+  const [xhrSource, setxhrSource] = useState<DataType[]>([
     {
-      content: "接口请求成功率",
-      percent: 88
+      key: "",
+      url: "",
+      duration: 0,
+      startTime: "",
+      endTime: "",
+      method: "",
+      success: false
     }
   ]);
-
-  interface DataType {
-    key: string;
-    url: string;
-    duration: number;
-    startTime: string;
-    endTime: string;
-    method: string;
-    success: boolean;
-  }
-
-  const dataSource: DataType[] = [
+  const [fetchSource, setFetchSource] = useState<DataType[]>([
     {
-      key: "1",
-      url: "http://localhost:7777/performance/test",
-      duration: 214,
-      startTime: "2022/08/01 07:34:54.000",
-      endTime: "2022/08/01 07:34:54.214",
-      method: "GET",
-      success: true
-    },
-    {
-      key: "2",
-      url: "http://localhost:7777/performance/test",
-      duration: 214,
-      startTime: "2022/08/01 07:34:54.001",
-      endTime: "2022/08/01 07:34:54.214",
-      method: "POST",
-      success: true
-    },
-    {
-      key: "3",
-      url: "http://localhost:7777/performance/test",
-      duration: 214,
-      startTime: "2022/08/01 07:34:54.002",
-      endTime: "2022/08/01 07:34:54.214",
-      method: "POST",
-      success: true
-    },
-    {
-      key: "4",
-      url: "http://localhost:7777/performance/test",
-      duration: 215,
-      startTime: "2022/08/01 07:34:54.000",
-      endTime: "2022/08/01 07:34:54.214",
-      method: "GET",
-      success: true
-    },
-    {
-      key: "5",
-      url: "http://localhost:7777/performance/test",
-      duration: 214,
-      startTime: "2022/08/01 07:34:54.000",
-      endTime: "2022/08/01 07:34:54.214",
-      method: "GET",
-      success: true
-    },
-    {
-      key: "6",
-      url: "http://localhost:7777/performance/test",
-      duration: 214,
-      startTime: "2022/08/01 07:34:54.000",
-      endTime: "2022/08/01 07:34:54.214",
-      method: "GET",
-      success: true
+      key: "",
+      url: "",
+      duration: 0,
+      startTime: "",
+      endTime: "",
+      method: "",
+      success: false
     }
-  ];
-
+  ]);
   const columns: ColumnsType<DataType> = [
     {
       title: "地址url",
@@ -149,6 +111,99 @@ export default function Network() {
       render: (isSuccess: boolean) => (isSuccess ? "成功" : "失败")
     }
   ];
+
+  useEffect(() => {
+    let timeStamp = parseInt(timeSelect) * 60 * 60 * 1000;
+    let startime = endTime - timeStamp;
+    setStartTime(startime);
+    setXhrPageNum(1);
+    setFetchPageNum(1);
+  }, [timeSelect]);
+
+  // 获取xhr数据信息
+  useEffect(() => {
+    let handlerFunction = getPerformanceList;
+    handlerFunction({
+      startTime: startTime,
+      endTime: endTime,
+      pageSize: 5,
+      pageNum: XhrPageNum,
+      type: "xhr"
+    }).then((res) => {
+      setxhrTotal(res.data.total);
+      let data: any[] = res.data.data;
+      let newData: DataType[] = [];
+      data.forEach((item, index) => {
+        const { url, duration, startTime, endTime, method, success } = item;
+        const obj: DataType = {
+          key: index.toString(),
+          url: url,
+          duration: duration,
+          startTime: startTime,
+          endTime: endTime,
+          method: method,
+          success: success
+        };
+        newData.push(obj);
+      });
+      setxhrSource(newData);
+    });
+
+    getXHR({
+      startTime: startTime,
+      endTime: endTime
+    }).then((res) => {
+      const success_percent = (res.data.xhrSuccess / res.data.xhrCount) * 100;
+      if (isNaN(success_percent)) {
+        setxhr_success_percent("0%");
+      } else {
+        setxhr_success_percent(success_percent + "%");
+      }
+      // console.log(res.data.xhrAverageDuration);
+      setXhrAvgTime(res.data.xhrAverageDuration + "ms");
+    });
+  }, [startTime, endTime, XhrPageNum]);
+
+  // 获取fetch数据信息
+  useEffect(() => {
+    let handlerFunction = getPerformanceList;
+    handlerFunction({
+      startTime: startTime,
+      endTime: endTime,
+      pageSize: 5,
+      pageNum: FetchPageNum,
+      type: "fetch"
+    }).then((res) => {
+      setfetchTotal(res.data.total);
+      let data: any[] = res.data.data;
+      let newData: DataType[] = [];
+      data.forEach((item, index) => {
+        const { url, duration, startTime, endTime, method, success } = item;
+        const obj: DataType = {
+          key: index.toString(),
+          url: url,
+          duration: duration,
+          startTime: startTime,
+          endTime: endTime,
+          method: method,
+          success: success
+        };
+        newData.push(obj);
+      });
+      setFetchSource(newData);
+    });
+  }, [startTime, endTime, FetchPageNum]);
+
+  interface DataType {
+    key: string;
+    url: string;
+    duration: number;
+    startTime: string;
+    endTime: string;
+    method: string;
+    success: boolean;
+  }
+
   return (
     <div>
       <div className={style.pad10_0}>
@@ -168,33 +223,34 @@ export default function Network() {
       </div>
       <WhitePane label="xhr请求信息">
         <div className={`${style.healthyDetail} ${style.pad10_0}`}>
-          {circle.map((item) => (
-            <Circle
-              percent={item.percent}
-              content={item.content}
-              key={item.content}
-            ></Circle>
-          ))}
-          <SmallPane value="263" title="接口请求总量"></SmallPane>
-          <SmallPane value="132.21ms" title="接口请求平均耗时"></SmallPane>
+          <SmallPane
+            value={xhr_success_percent}
+            title="接口请求成功率"
+          ></SmallPane>
+          <SmallPane value={xhrTotal} title="接口请求总量"></SmallPane>
+          <SmallPane value={xhrAvgTime} title="接口请求平均耗时"></SmallPane>
         </div>
-
         <Table
-          dataSource={dataSource}
+          dataSource={xhrSource}
           columns={columns}
-          pagination={{ pageSize: 5 }}
+          pagination={{ pageSize: 5, total: xhrTotal, onChange: xhrPageChange }}
         />
       </WhitePane>
+
       <WhitePane label="fetch请求信息">
         <div className={`${style.flex} ${style.pad15_0}`}>
           <SmallPane value="88%" title="接口请求成功率"></SmallPane>
-          <SmallPane value="263" title="接口请求总量"></SmallPane>
+          <SmallPane value={fetchTotal} title="接口请求总量"></SmallPane>
           <SmallPane value="132.21ms" title="接口请求平均耗时"></SmallPane>
         </div>
         <Table
-          dataSource={dataSource}
+          dataSource={fetchSource}
           columns={columns}
-          pagination={{ pageSize: 5 }}
+          pagination={{
+            pageSize: 5,
+            total: fetchTotal,
+            onChange: fetchPageChange
+          }}
         />
       </WhitePane>
     </div>
