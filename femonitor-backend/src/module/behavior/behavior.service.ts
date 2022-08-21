@@ -48,7 +48,7 @@ export class BehaviorService {
             { $group: { _id: "$userID" } },
             { $group: { _id: null, count: { $sum: 1 } } }
         ])
-        return res[0].count;
+        return res[0] ? res[0].count : 0;
     }
 
     async getPvUvDayData(startTime, endTime) {
