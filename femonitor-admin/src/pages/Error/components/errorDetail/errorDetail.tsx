@@ -37,7 +37,7 @@ export function ErrorDetail({ data }: any) {
     if (data.msg) return data.msg;
     if (data.info) return data.info;
     if (data.error) return data.error;
-
+    if (data.url) return data.url;
     return str;
   };
 
@@ -45,20 +45,20 @@ export function ErrorDetail({ data }: any) {
     return [
       {
         col: 95,
-        id: "#12312312",
+        id: "#777",
         row: 1,
         url: "http://localhost:3000/dist/main.js",
         msg: "Uncaught ReferenceError: a is not defined",
         origin: ""
-      },
-      {
-        col: 95,
-        id: "#11412312",
-        row: 1,
-        url: "http://localhost:3000/dist/main.js",
-        msg: "Uncaught ReferenceError: a is not defined",
-        origin: "1 export default Page2;"
       }
+      // {
+      //   col: 95,
+      //   id: "#11412312",
+      //   row: 1,
+      //   url: "http://localhost:3000/dist/main.js",
+      //   msg: "Uncaught ReferenceError: a is not defined",
+      //   origin: "1 export default Page2;"
+      // }
     ];
   });
 
@@ -69,6 +69,7 @@ export function ErrorDetail({ data }: any) {
     if (data.reason !== undefined) return "Promise </>";
     if (data.msg) return data.error.split(":")[0] + "</>";
     if (data.error) return "控制台异常 </>";
+    if (data.url) return "状态码：" + data.status;
     return str;
   };
 
@@ -79,6 +80,7 @@ export function ErrorDetail({ data }: any) {
     if (data.reason !== undefined) return "Promise";
     if (data.msg) return "Js";
     if (data.error) return "Console";
+    if (data.url) return "Api";
     return str;
   };
 
@@ -88,7 +90,8 @@ export function ErrorDetail({ data }: any) {
     if (data.info) return data.info;
     if (data.reason !== undefined) return "Uncaught (in promise)";
     if (data.msg) return data.error.split(":")[0];
-    if (data.error) return data.error.split('"')[1];
+    if (data.error) return data.error;
+    if (data.url) return data.url.split("?")[0];
     return str;
   };
 
@@ -108,6 +111,21 @@ export function ErrorDetail({ data }: any) {
     return "错误堆栈";
   };
 
+  const getApiContext = function (type: number): string {
+    if (type === 1) {
+      return data.url.split("?")[0] + " + " + data.duration + " ms";
+    } else if (type === 2) {
+      return data.status;
+    } else if (type === 3) {
+      return data.method;
+    } else if (type === 4) {
+      return JSON.stringify(data.sendData);
+    } else if (type === 5) {
+      return JSON.stringify(data.responseData);
+    }
+    return "";
+  };
+
   return (
     <>
       <Layout className={style.container}>
@@ -115,6 +133,7 @@ export function ErrorDetail({ data }: any) {
           <Descriptions title="Error Info" column={1}>
             <Descriptions.Item label="pageUrl">
               {/* webpack-internal:///./src/modules/jsError/components/OverviewPanel/index.js:287:105 */}
+              {console.log("data", data)}
               {data.pageURL}
             </Descriptions.Item>
             {/* <Descriptions.Item> </Descriptions.Item> */}
@@ -149,9 +168,36 @@ export function ErrorDetail({ data }: any) {
             <div className={style.value}>{getErrorValue()}</div>
             <div>【发送次数】：{data.num}</div>
             <div>【影响用户数】：{data.userNum}</div>
-            {data.html ? (
-              <div>【请求地址】：{data.error}</div>
-            ) : (
+            {data.html ? <div>【请求地址】：{data.error}</div> : null}
+            {data.url ? (
+              <>
+                <div className={style.errordirection}>
+                  <span>【请求】：</span>
+                  <span className={style.panelrow}>{getApiContext(1)}</span>
+                </div>
+                <div className={style.errordirection}>
+                  <span>【内容】：</span>
+                  <span className={style.panelrow}>{getErrorValue()}</span>
+                </div>
+                <div className={style.errordirection}>
+                  <span>【状态码】：</span>
+                  <span className={style.panelrow}>{getApiContext(2)}</span>
+                </div>
+                <div className={style.errordirection}>
+                  <span>【Method】：</span>
+                  <span className={style.panelrow}>{getApiContext(3)}</span>
+                </div>
+                <div className={style.errordirection}>
+                  <span>【发送数据】：</span>
+                  <span className={style.panelrow}>{getApiContext(4)}</span>
+                </div>
+                {/* <div className={style.errordirection}>
+                  <span>【收到数据】：</span>
+                  <span className={style.panelrow}>{getApiContext(5)}</span>
+                </div> */}
+              </>
+            ) : null}
+            {!data.html && !data.url ? (
               <Collapse
                 bordered={false}
                 defaultActiveKey={[errorData[0].id, "堆栈明细"]}
@@ -160,52 +206,38 @@ export function ErrorDetail({ data }: any) {
                 )}
                 className={style.Collapse}
               >
-                {errorData.map((item) => (
-                  <Panel
-                    header={getErrorReason()}
-                    key={item.id}
-                    className={style.Panel}
-                  >
-                    <div className={style.errordirection}>
-                      <span>【错误定位】：</span>
-                      <span className={style.panelrow}>行 / 列：</span>
-                      <span>
-                        {data.line} / {data.column}
-                      </span>
-                    </div>
-                    <div className={style.errordirection}>
-                      <span>【源码解析】：</span>
-                      <Button type="primary">解析源码</Button>
-                    </div>
-                    {item.origin === "" ? null : (
+                <Panel
+                  header={getErrorReason()}
+                  key={"#777"}
+                  className={style.Panel}
+                >
+                  {data.line === undefined ? null : (
+                    <>
+                      <div className={style.errordirection}>
+                        <span>【错误定位】：</span>
+                        <span className={style.panelrow}>行 / 列：</span>
+                        <span>
+                          {data.line} / {data.column}
+                        </span>
+                      </div>
+                      {/* <div className={style.errordirection}>
+                        <span>【源码解析】：</span>
+                        <Button type="primary">解析源码</Button>
+                      </div>
                       <div className={style.errordirection}>
                         <span>【源代码】：</span>
                         <span className={style.origincontext}>
-                          {item.origin}
+                          1 console.log(&&);
                         </span>
-                      </div>
-                    )}
-                  </Panel>
-                ))}
-                {/* <Panel
-                header={" + 199 ms"}
-                key="123123asd"
-                className={style.Panel}
-              >
-                <div className={style.errordirection}>
-                  <span>【内容】：</span>
-                  <span className={style.panelrow}>/api/404</span>
-                </div>
-                <div className={style.errordirection}>
-                  <span>【状态码】：</span>
-                  <span className={style.panelrow}>200 - OK</span>
-                </div>
-              </Panel> */}
+                      </div> */}
+                    </>
+                  )}
+                </Panel>
                 <Panel header="堆栈明细" key="堆栈明细" className={style.Panel}>
                   <div className={style.errordirection}>{getErrorStack()}</div>
                 </Panel>
               </Collapse>
-            )}
+            ) : null}
           </Content>
           <Sider className={style.Sider} width="400px">
             <div className={style.borderBox}>

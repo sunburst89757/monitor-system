@@ -86,7 +86,7 @@ export default function RequestErr() {
         visible={visible}
         width="80vw"
       >
-        <ErrorDetail></ErrorDetail>
+        <ErrorDetail data={data2.data}></ErrorDetail>
       </Drawer>
     </div>
   );

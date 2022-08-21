@@ -189,6 +189,7 @@ export default function Overview() {
         newDataFlow[0].option.series[0].data[1].value = data["fetch"].error;
         newDataFlow[1].option.series[0].data[0].value = data["xhr"].user;
         newDataFlow[1].option.series[0].data[1].value = data["fetch"].user;
+        newDataFlow[1].option.userNum = data["xhr"].user + data["fetch"].user;
         setDataFlow(newDataFlow);
       })
       .catch((err) => {});
