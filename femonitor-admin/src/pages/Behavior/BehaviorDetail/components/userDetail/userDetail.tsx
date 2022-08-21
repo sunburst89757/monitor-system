@@ -104,6 +104,7 @@ export const UserDetail = ({
     });
   }, []);
   useEffect(() => {
+    query.current.endTime = endTime;
     query.current.startTime = endTime - 24 * 60 * 60 * 1000 + 1;
     getDataList();
   }, [endTime, getDataList]);

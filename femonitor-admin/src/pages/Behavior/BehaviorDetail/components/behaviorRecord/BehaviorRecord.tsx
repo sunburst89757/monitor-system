@@ -154,7 +154,7 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
                         title={tempItem[0]}
                         description={tempItem[2]}
                       />
-                      <div>{item.startTime}</div>
+                      <div>{item.createdAt}</div>
                     </List.Item>
                   );
                 }}
