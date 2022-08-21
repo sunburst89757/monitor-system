@@ -14,7 +14,7 @@ export const errorTimeMap = {
     }
   },
   legend: {
-    data: ["JS", "CSS", "JPG", "PNG"]
+    data: ["JS", "CSS", "IMG"]
   },
   toolbox: {
     feature: {
@@ -95,7 +95,7 @@ export const errorTimeMap = {
       data: [30, 26, 12, 9, 18, 16, 10]
     },
     {
-      name: "PNG",
+      name: "IMG",
       type: "line",
       stack: "Total",
       smooth: true,
@@ -120,33 +120,33 @@ export const errorTimeMap = {
         focus: "series"
       },
       data: [1, 5, 14, 19, 10, 9, 10]
-    },
-    {
-      name: "JPG",
-      type: "line",
-      stack: "Total",
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: "rgb(255, 0, 135)"
-          },
-          {
-            offset: 1,
-            color: "rgb(135, 0, 157)"
-          }
-        ])
-      },
-      emphasis: {
-        focus: "series"
-      },
-      data: [10, 45, 12, 9, 14, 9, 16]
     }
+    // {
+    //   name: "IMG",
+    //   type: "line",
+    //   stack: "Total",
+    //   smooth: true,
+    //   lineStyle: {
+    //     width: 0
+    //   },
+    //   showSymbol: false,
+    //   areaStyle: {
+    //     opacity: 0.8,
+    //     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+    //       {
+    //         offset: 0,
+    //         color: "rgb(255, 0, 135)"
+    //       },
+    //       {
+    //         offset: 1,
+    //         color: "rgb(135, 0, 157)"
+    //       }
+    //     ])
+    //   },
+    //   emphasis: {
+    //     focus: "series"
+    //   },
+    //   data: [10, 45, 12, 9, 14, 9, 16]
+    // }
   ]
 };

@@ -6,13 +6,15 @@ import React, { useState, useContext, createContext } from "react";
 import { Context } from "./context";
 import { nanoid } from "nanoid";
 import { JsErrorType, IQueryJsErrorType } from "../../JsErr/types";
+import { getResourceDataItemType } from "../../ResourceErr/types";
 import { useEffect } from "react";
 
 import {
   getJsErrorList,
   getConsoleErrorList,
   getPromiseErrorList,
-  getVueErrorList
+  getVueErrorList,
+  getResourceData
 } from "../../../../api/error";
 
 export default function QuietViewErr({
@@ -195,6 +197,33 @@ export default function QuietViewErr({
         }
         setErrList(newErrList);
       });
+    } else if (value === "resource") {
+      getResourceData({
+        pageNum: 1,
+        pageSize: 100,
+        startTime: startTime,
+        endTime: endTime
+      })
+        .then((res) => {
+          let data = res.data;
+          let result = data.result;
+          if (result.length) {
+            result.forEach((item) => {
+              newErrList.push({
+                id: nanoid(),
+                name: "resource:" + item.resourceType,
+                describe: item.error,
+                times: item.num,
+                effects: item.userNum,
+                lastTIme: item.createdAt.replace("T", " ").split(".")[0],
+                data: item
+              });
+            });
+          } else {
+          }
+          setErrList(newErrList);
+        })
+        .catch((err) => {});
     } else {
       getJsErrorList({
         pageNum: 1,

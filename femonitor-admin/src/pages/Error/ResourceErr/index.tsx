@@ -11,6 +11,8 @@ import ErrList from "./ErrList/ErrList";
 import { ErrorDetail } from "../components/errorDetail/errorDetail";
 import style from "./index.module.scss";
 import React, { useState } from "react";
+import { JsErrorShowItem } from "../JsErr/types";
+import { nanoid } from "nanoid";
 import { Context } from "../components/quietViewErr/context";
 const items: MenuProps["items"] = [
   {
@@ -26,9 +28,18 @@ const items: MenuProps["items"] = [
 export default function JsErr() {
   const [current, setCurrent] = useState("overview");
   const [visible, setVisible] = useState(false);
-
-  const showDrawer = (row: Object) => {
+  const [data2, setData] = useState<JsErrorShowItem>({
+    id: nanoid(),
+    name: "",
+    describe: "",
+    times: 0,
+    effects: 0,
+    lastTime: "",
+    data: {}
+  });
+  const showDrawer = (row: JsErrorShowItem) => {
     setVisible(true);
+    setData(row);
     console.log("rowData", row);
   };
 
@@ -64,7 +75,7 @@ export default function JsErr() {
         visible={visible}
         width="80vw"
       >
-        <ErrorDetail></ErrorDetail>
+        <ErrorDetail data={data2.data}></ErrorDetail>
       </Drawer>
     </div>
   );

@@ -8,10 +8,16 @@ import {
   ConsoleErrorType,
   VueErrorType,
   PromiseErrorType
-  // Resource
 } from "../pages/Error/JsErr/types";
+// resource
+import {
+  getResourceOverviewType,
+  getResourceCountType,
+  getResourceDataItemType
+} from "../pages/Error/ResourceErr/types";
 import { myRequest } from "../service";
 import { IPage, ITimeDuration } from "./types";
+// script
 interface getJsErrorListRes extends IPage {
   result: JsErrorType[];
 }
@@ -24,6 +30,11 @@ interface getVueErrorListRes extends IPage {
 interface getPromiseErrorListRes extends IPage {
   result: PromiseErrorType[];
 }
+// resource
+interface getResourceDataType extends IPage {
+  result: getResourceDataItemType[];
+}
+// script
 export function getJsErrorList(params: IQueryJsErrorType) {
   return myRequest<IQueryJsErrorType, getJsErrorListRes>({
     url: "/error/script/jsError",
@@ -64,6 +75,28 @@ export function getJsErrorOverview(params: ITimeDuration) {
 export function getJsErrorCount(params: ITimeDuration) {
   return myRequest<ITimeDuration, JsErrorCountType>({
     url: "/error/script/getErrorCount",
+    params,
+    method: "get"
+  });
+}
+// resource
+export function getResourceOverview(params: ITimeDuration) {
+  return myRequest<ITimeDuration, getResourceOverviewType>({
+    url: "/error/resource/overview",
+    params,
+    method: "get"
+  });
+}
+export function getResourceErrorCount(params: ITimeDuration) {
+  return myRequest<ITimeDuration, getResourceCountType>({
+    url: "/error/resource/getErrorCount",
+    params,
+    method: "get"
+  });
+}
+export function getResourceData(params: IQueryJsErrorType) {
+  return myRequest<IQueryJsErrorType, getResourceDataType>({
+    url: "/error/resource/data",
     params,
     method: "get"
   });

@@ -33,6 +33,7 @@ export function ErrorDetail({ data }: any) {
 
   const getValue = function (): string {
     let str = "";
+    if (data.html) return "html:" + data.html;
     if (data.msg) return data.msg;
     if (data.info) return data.info;
     if (data.error) return data.error;
@@ -63,15 +64,17 @@ export function ErrorDetail({ data }: any) {
 
   const getContext = function (): string {
     let str = "异常";
-    if (data.info) return data.info;
-    if (data.reason !== undefined) return "Promise";
-    if (data.msg) return data.error.split(":")[0];
-    if (data.error) return "控制台异常";
+    if (data.html) return data.resourceType + " ↓ ";
+    if (data.info) return data.info + "</>";
+    if (data.reason !== undefined) return "Promise </>";
+    if (data.msg) return data.error.split(":")[0] + "</>";
+    if (data.error) return "控制台异常 </>";
     return str;
   };
 
   const getContext2 = function (): string {
     let str = "异常";
+    if (data.html) return "Resource";
     if (data.info) return "Vue";
     if (data.reason !== undefined) return "Promise";
     if (data.msg) return "Js";
@@ -81,6 +84,7 @@ export function ErrorDetail({ data }: any) {
 
   const getErrorValue = function (): string {
     let str = "异常";
+    if (data.html) return "资源加载错误";
     if (data.info) return data.info;
     if (data.reason !== undefined) return "Uncaught (in promise)";
     if (data.msg) return data.error.split(":")[0];
@@ -98,6 +102,12 @@ export function ErrorDetail({ data }: any) {
     return data.error.split("at")[0];
   };
 
+  const getTitle = function (): string {
+    if (data.html) return "资源";
+
+    return "错误堆栈";
+  };
+
   return (
     <>
       <Layout className={style.container}>
@@ -111,7 +121,7 @@ export function ErrorDetail({ data }: any) {
             <Descriptions.Item label="value">{getValue()}</Descriptions.Item>
             <Descriptions.Item>
               <div className={style.redbox}>
-                <div className={style.context}>{getContext() + "</>"}</div>
+                <div className={style.context}>{getContext()}</div>
               </div>
               {/* <div className={style.redbox}>
                 <div className={style.context}>SyntaxError</div>
@@ -135,42 +145,49 @@ export function ErrorDetail({ data }: any) {
         </Header>
         <Layout>
           <Content className={style.Content}>
-            <div className={style.title}>错误堆栈</div>
+            <div className={style.title}>{getTitle()}</div>
             <div className={style.value}>{getErrorValue()}</div>
-            <Collapse
-              bordered={false}
-              defaultActiveKey={[errorData[0].id, "堆栈明细"]}
-              expandIcon={({ isActive }) => (
-                <CaretRightOutlined rotate={isActive ? 90 : 0} />
-              )}
-              className={style.Collapse}
-            >
-              {errorData.map((item) => (
-                <Panel
-                  header={getErrorReason()}
-                  key={item.id}
-                  className={style.Panel}
-                >
-                  <div className={style.errordirection}>
-                    <span>【错误定位】：</span>
-                    <span className={style.panelrow}>行 / 列：</span>
-                    <span>
-                      {data.line} / {data.column}
-                    </span>
-                  </div>
-                  <div className={style.errordirection}>
-                    <span>【源码解析】：</span>
-                    <Button type="primary">解析源码</Button>
-                  </div>
-                  {item.origin === "" ? null : (
+            <div>【发送次数】：{data.num}</div>
+            <div>【影响用户数】：{data.userNum}</div>
+            {data.html ? (
+              <div>【请求地址】：{data.error}</div>
+            ) : (
+              <Collapse
+                bordered={false}
+                defaultActiveKey={[errorData[0].id, "堆栈明细"]}
+                expandIcon={({ isActive }) => (
+                  <CaretRightOutlined rotate={isActive ? 90 : 0} />
+                )}
+                className={style.Collapse}
+              >
+                {errorData.map((item) => (
+                  <Panel
+                    header={getErrorReason()}
+                    key={item.id}
+                    className={style.Panel}
+                  >
                     <div className={style.errordirection}>
-                      <span>【源代码】：</span>
-                      <span className={style.origincontext}>{item.origin}</span>
+                      <span>【错误定位】：</span>
+                      <span className={style.panelrow}>行 / 列：</span>
+                      <span>
+                        {data.line} / {data.column}
+                      </span>
                     </div>
-                  )}
-                </Panel>
-              ))}
-              {/* <Panel
+                    <div className={style.errordirection}>
+                      <span>【源码解析】：</span>
+                      <Button type="primary">解析源码</Button>
+                    </div>
+                    {item.origin === "" ? null : (
+                      <div className={style.errordirection}>
+                        <span>【源代码】：</span>
+                        <span className={style.origincontext}>
+                          {item.origin}
+                        </span>
+                      </div>
+                    )}
+                  </Panel>
+                ))}
+                {/* <Panel
                 header={" + 199 ms"}
                 key="123123asd"
                 className={style.Panel}
@@ -184,10 +201,11 @@ export function ErrorDetail({ data }: any) {
                   <span className={style.panelrow}>200 - OK</span>
                 </div>
               </Panel> */}
-              <Panel header="堆栈明细" key="堆栈明细" className={style.Panel}>
-                <div className={style.errordirection}>{getErrorStack()}</div>
-              </Panel>
-            </Collapse>
+                <Panel header="堆栈明细" key="堆栈明细" className={style.Panel}>
+                  <div className={style.errordirection}>{getErrorStack()}</div>
+                </Panel>
+              </Collapse>
+            )}
           </Content>
           <Sider className={style.Sider} width="400px">
             <div className={style.borderBox}>
