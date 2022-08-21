@@ -89,20 +89,20 @@ export default function Network() {
     {
       title: "请求方式",
       dataIndex: "method",
-      key: "method",
-      filters: [
-        {
-          text: <span>GET</span>,
-          value: "GET"
-        },
-        {
-          text: <span>POST</span>,
-          value: "POST"
-        }
-      ],
-      // onFilter: (value: string | number | boolean, record) =>
-      //   record.method.startsWith(value as string),这有什么用
-      filterSearch: false
+      key: "method"
+      // filters: [
+      //   {
+      //     text: <span>GET</span>,
+      //     value: "GET"
+      //   },
+      //   {
+      //     text: <span>POST</span>,
+      //     value: "POST"
+      //   }
+      // ],
+      // // onFilter: (value: string | number | boolean, record) =>
+      // //   record.method.startsWith(value as string),这有什么用
+      // filterSearch: false
     },
     {
       title: "是否成功",
@@ -157,10 +157,10 @@ export default function Network() {
       if (isNaN(success_percent)) {
         setxhr_success_percent("0%");
       } else {
-        setxhr_success_percent(success_percent + "%");
+        setxhr_success_percent(success_percent.toFixed(1) + "%");
       }
       // console.log(res.data.xhrAverageDuration);
-      setXhrAvgTime(res.data.xhrAverageDuration + "ms");
+      setXhrAvgTime(res.data.xhrAverageDuration.toFixed(2) + "ms");
     });
   }, [startTime, endTime, XhrPageNum]);
 
