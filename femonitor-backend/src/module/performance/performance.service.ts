@@ -62,18 +62,17 @@ export class PerformanceService {
             { $group: { _id: '$subType', averageTime: { $avg: '$startTime' } } },
             { $project: { _id: 0, type: '$_id', averageTime: '$averageTime', } }
         ]);
-        let CLSTime = await this.performanceModel.aggregate([
+        let CLSValue = await this.performanceModel.aggregate([
             { $match: { createdAt: { $gte: startTime, $lt: endTime }, subType: 'layout-shift' } },
             { $group: { _id: null, averageValue: { $avg: '$value' } } },
             { $project: { _id: 0, averageValue: '$averageValue' } }
         ])
-        console.log(CLSTime);
         let res =
         {
             xhrCount: xhrCount,
             xhrAverageDuration: xhrAverageDuration.length > 0 ? xhrAverageDuration[0].averageDuration : 0,
             xhrSuccess: xhrSuccess,
-            CLSTime: CLSTime.length > 0 ? CLSTime[0].averageValue : 0
+            CLSValue: CLSValue.length > 0 ? CLSValue[0].averageValue : 0
         };
         const formatToHump = (value) => {
             return value.replace(/\-(\w)/g, (_, letter) => letter.toUpperCase())
