@@ -14,7 +14,6 @@ import React, { useState } from "react";
 import { JsErrorShowItem } from "./types";
 import { Context } from "../components/quietViewErr/context";
 import { nanoid } from "nanoid";
-import useEffect from "react";
 const items: MenuProps["items"] = [
   {
     label: "概览",

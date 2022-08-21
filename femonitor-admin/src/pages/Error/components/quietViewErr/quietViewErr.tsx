@@ -14,7 +14,9 @@ import {
   getConsoleErrorList,
   getPromiseErrorList,
   getVueErrorList,
-  getResourceData
+  getResourceData,
+  getXhrErrorCount,
+  getFetchErrorCount
 } from "../../../../api/error";
 
 export default function QuietViewErr({
@@ -213,6 +215,60 @@ export default function QuietViewErr({
                 id: nanoid(),
                 name: "resource:" + item.resourceType,
                 describe: item.error,
+                times: item.num,
+                effects: item.userNum,
+                lastTIme: item.createdAt.replace("T", " ").split(".")[0],
+                data: item
+              });
+            });
+          } else {
+          }
+          setErrList(newErrList);
+        })
+        .catch((err) => {});
+    } else if (value === "xhr") {
+      getXhrErrorCount({
+        pageNum: 1,
+        pageSize: 50,
+        startTime: startTime,
+        endTime: endTime
+      })
+        .then((res) => {
+          let data = res.data;
+          let result = data.result;
+          if (result.length) {
+            result.forEach((item) => {
+              newErrList.push({
+                id: nanoid(),
+                name: item.method + " : " + item.status,
+                describe: item.url,
+                times: item.num,
+                effects: item.userNum,
+                lastTIme: item.createdAt.replace("T", " ").split(".")[0],
+                data: item
+              });
+            });
+          } else {
+          }
+          setErrList(newErrList);
+        })
+        .catch((err) => {});
+    } else if (value === "fetch") {
+      getFetchErrorCount({
+        pageNum: 1,
+        pageSize: 50,
+        startTime: startTime,
+        endTime: endTime
+      })
+        .then((res) => {
+          let data = res.data;
+          let result = data.result;
+          if (result.length) {
+            result.forEach((item) => {
+              newErrList.push({
+                id: nanoid(),
+                name: item.method + " : " + item.status,
+                describe: item.url,
                 times: item.num,
                 effects: item.userNum,
                 lastTIme: item.createdAt.replace("T", " ").split(".")[0],

@@ -11,6 +11,8 @@ import ErrList from "./ErrList/ErrList";
 import { ErrorDetail } from "../components/errorDetail/errorDetail";
 import style from "./index.module.scss";
 import React, { useState } from "react";
+import { nanoid } from "nanoid";
+import { JsErrorShowItem } from "../JsErr/types";
 import { Context } from "../components/quietViewErr/context";
 const items: MenuProps["items"] = [
   {
@@ -19,16 +21,36 @@ const items: MenuProps["items"] = [
   },
   {
     label: "请求错误列表",
-    key: "SubMenu"
+    key: "SubMenu",
+    children: [
+      {
+        label: "xhr请求",
+        key: "xhr"
+      },
+      {
+        label: "fetch请求",
+        key: "fetch"
+      }
+    ]
   }
 ];
 
 export default function RequestErr() {
   const [current, setCurrent] = useState("overview");
   const [visible, setVisible] = useState(false);
+  const [data2, setData] = useState<JsErrorShowItem>({
+    id: nanoid(),
+    name: "",
+    describe: "",
+    times: 0,
+    effects: 0,
+    lastTime: "",
+    data: {}
+  });
 
-  const showDrawer = (row: Object) => {
+  const showDrawer = (row: JsErrorShowItem) => {
     setVisible(true);
+    setData(row);
     console.log("rowData", row);
   };
 
@@ -37,6 +59,7 @@ export default function RequestErr() {
   };
 
   const onClick: MenuProps["onClick"] = (e) => {
+    console.log("e", e);
     setCurrent(e.key);
   };
 

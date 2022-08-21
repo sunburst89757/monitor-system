@@ -12,14 +12,12 @@ interface DataMap {
   [key: string]: string;
 }
 
-export default function ErrList({ errortype = "onerror" }: errListType) {
+export default function ErrList({ errortype = "xhr" }: errListType) {
   const [timeSelect, settimeSelect] = useState("1");
 
   const dataMap: DataMap = {
-    onerror: "JS错误",
-    "vue-error": "VUE错误",
-    "promise-error": "promise错误",
-    "console-error": "自定义异常"
+    xhr: "请求错误",
+    fetch: "请求错误"
   };
 
   const timeSelectChange = (value: string) => {
@@ -45,8 +43,8 @@ export default function ErrList({ errortype = "onerror" }: errListType) {
       </div>
       <div>
         <QuietViewErr
-          label={"请求错误列表"}
-          value={"request"}
+          label={dataMap[errortype]}
+          value={errortype}
           showPage={true}
           pageSize={10}
           timeSelect={timeSelect}

@@ -15,6 +15,9 @@ import {
   getResourceCountType,
   getResourceDataItemType
 } from "../pages/Error/ResourceErr/types";
+import { apiItemType } from "../pages/Error/RequestErr/types";
+import { apiOverviewType, apiCountType } from "../pages/Error/RequestErr/types";
+
 import { myRequest } from "../service";
 import { IPage, ITimeDuration } from "./types";
 // script
@@ -29,6 +32,9 @@ interface getVueErrorListRes extends IPage {
 }
 interface getPromiseErrorListRes extends IPage {
   result: PromiseErrorType[];
+}
+interface getApiErrorListRes extends IPage {
+  result: apiItemType[];
 }
 // resource
 interface getResourceDataType extends IPage {
@@ -97,6 +103,35 @@ export function getResourceErrorCount(params: ITimeDuration) {
 export function getResourceData(params: IQueryJsErrorType) {
   return myRequest<IQueryJsErrorType, getResourceDataType>({
     url: "/error/resource/data",
+    params,
+    method: "get"
+  });
+}
+export function getResourceApiOverview(params: ITimeDuration) {
+  return myRequest<ITimeDuration, apiOverviewType>({
+    url: "/error/resource/apiOverview",
+    params,
+    method: "get"
+  });
+}
+export function getApiErrorCount(params: ITimeDuration) {
+  return myRequest<ITimeDuration, apiCountType>({
+    url: "/error/resource/getApiErrorCount",
+    params,
+    method: "get"
+  });
+}
+
+export function getXhrErrorCount(params: IQueryJsErrorType) {
+  return myRequest<IQueryJsErrorType, getApiErrorListRes>({
+    url: "/error/resource/xhrError",
+    params,
+    method: "get"
+  });
+}
+export function getFetchErrorCount(params: IQueryJsErrorType) {
+  return myRequest<IQueryJsErrorType, getApiErrorListRes>({
+    url: "/error/resource/fetchError",
     params,
     method: "get"
   });
