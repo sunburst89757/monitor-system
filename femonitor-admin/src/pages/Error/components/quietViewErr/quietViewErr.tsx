@@ -65,7 +65,7 @@ export default function QuietViewErr({
       dataIndex: "effects"
     },
     {
-      title: "最后出错时间",
+      title: "第一次出错时间",
       key: "lastTIme",
       dataIndex: "lastTIme"
     }
@@ -240,7 +240,7 @@ export default function QuietViewErr({
             result.forEach((item) => {
               newErrList.push({
                 id: nanoid(),
-                name: item.method + " : " + item.status,
+                name: item.method + " : " + (item.status ? item.status : 0),
                 describe: item.url,
                 times: item.num,
                 effects: item.userNum,
@@ -267,7 +267,7 @@ export default function QuietViewErr({
             result.forEach((item) => {
               newErrList.push({
                 id: nanoid(),
-                name: item.method + " : " + item.status,
+                name: item.method + " : " + (item.status ? item.status : 0),
                 describe: item.url,
                 times: item.num,
                 effects: item.userNum,

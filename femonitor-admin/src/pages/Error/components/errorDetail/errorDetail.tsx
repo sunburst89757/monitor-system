@@ -69,7 +69,7 @@ export function ErrorDetail({ data }: any) {
     if (data.reason !== undefined) return "Promise </>";
     if (data.msg) return data.error.split(":")[0] + "</>";
     if (data.error) return "控制台异常 </>";
-    if (data.url) return "状态码：" + data.status;
+    if (data.url) return "状态码：" + (data.status ? data.status : 0);
     return str;
   };
 
@@ -115,7 +115,7 @@ export function ErrorDetail({ data }: any) {
     if (type === 1) {
       return data.url.split("?")[0] + " + " + data.duration + " ms";
     } else if (type === 2) {
-      return data.status;
+      return data.status ? data.status : 0;
     } else if (type === 3) {
       return data.method;
     } else if (type === 4) {
