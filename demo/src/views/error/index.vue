@@ -52,6 +52,16 @@
       @click="PromiseErrorHandler(1)"
     >PromiseError 1
     </el-button>
+    <el-button
+      type="primary"
+      @click="PromiseErrorHandler(2)"
+    >PromiseError 2
+    </el-button>
+    <el-button
+      type="primary"
+      @click="PromiseErrorHandler(3)"
+    >PromiseError 3
+    </el-button>
     <div class="error-text">Vue - error</div>
     <el-button
       type="primary"
@@ -86,6 +96,19 @@ export default {
     };
   },
   computed: {},
+  created() {
+    // window.addEventListener("unhandledrejection", (e) => {
+    //   console.log("e", e)
+    //   console.log({
+    //     reason: e.reason?.stack,
+    //     msg: e.reason.name + ":" + e.reason.message,
+    //     subType: "promise",
+    //     type: "error",
+    //     startTime: e.timeStamp,
+    //     pageURL: getPageURL()
+    //   })
+    // })
+  },
   methods: {
     // eslint-disable-next-line space-before-function-paren
     RangeErrorHandler (type) {
@@ -109,6 +132,42 @@ export default {
       ScriptError(type)
     },
     PromiseErrorHandler(type) {
+      function foo(type2) {
+        return new Promise((resolve, reject) => {
+          if (type2 === 1) {
+            resolve("success")
+          } else {
+            reject({
+              name: "promise-error测试",
+              message: "测试用例3",
+              stack: ""
+            })
+          }
+        });
+      }
+      if (type === 1) {
+        var pimg = new Promise(function(resolve, reject) {
+          setTimeout(function() {
+            reject({
+              name: "图片请求",
+              message: "img request overtime",
+              stack: ""
+            });
+          }, 5000);
+        });
+      } else if (type === 2) {
+        const p = new Promise((resolve, reject) => {
+          reject({
+            name: "promise-error测试",
+            message: "测试用例2",
+            stack: ""
+          })
+        })
+      } else {
+        foo(2).then(res => {
+          console.log("res", res)
+        });
+      }
       PromiseError()
     },
     ResourveErrorHandler(type) {

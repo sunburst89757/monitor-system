@@ -249,6 +249,7 @@ export class ErrorService {
             {$group:{
                 _id: '$reason',
                 num: {$sum:1},
+                msg: {$last: '$msg'},
                 createdAt:{$last: '$createdAt'},
                 appID: {$last: '$appID'},
                 pageURL: {$last: '$pageURL'},
@@ -518,6 +519,45 @@ export class ErrorService {
         let res = times.reduce(async (pre, cur) =>{
             let errNum = await this.ErrorMoudle.count({
                 subType:type,
+                createdAt: {$gte: new Date(cur.startTime), $lt:new Date(cur.endTime)},
+            });
+            let pv = await this.behaviorService.getPvTotalCount(new Date(cur.startTime), new Date(cur.endTime));
+            let res = await pre;
+            res.push({errorNum:errNum, pv:pv, rate:Math.floor(errNum/pv*100)/100});
+            return res;
+        }, []);
+        return res;
+    }
+
+    async getResourceErrorCount(start, end){
+        let startTime = new Date(Number(start));
+        let endTime = new Date(Number(end));
+        let types = (await this.ErrorMoudle.aggregate([
+            {$match:{
+                $and:[
+                    {subType: 'resource'},
+                    {createdAt: {$gte: startTime, $lt:endTime}},
+                ]
+
+            }},
+            {$project:{"resourceType":true}},
+            {$group:{_id:"$resourceType"}},
+        ])).map((item) => item._id);
+        let res = types.reduce(async (pre, type) => {
+            let errNums = await this.getResourceErrorCountByType(start, end, type);
+            let res = await pre;
+            Object.assign(res, {[type]:errNums});
+            return res;
+        }, {});
+        return res;
+    }
+
+    async getResourceErrorCountByType(start, end, type){
+        let times = this.utils.splitTime(Number(start), Number(end), 12);
+        let res = times.reduce(async (pre, cur) =>{
+            let errNum = await this.ErrorMoudle.count({
+                subType:'resource',
+                resourceType:type,
                 createdAt: {$gte: new Date(cur.startTime), $lt:new Date(cur.endTime)},
             });
             let pv = await this.behaviorService.getPvTotalCount(new Date(cur.startTime), new Date(cur.endTime));

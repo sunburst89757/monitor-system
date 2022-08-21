@@ -112,6 +112,16 @@ export class ErrorController {
         return this.errorService.getResourceOverview(startTime, endTime);
     }
 
+    @Get('resource/getErrorCount')
+    @ApiQuery({name:'endTime',required:true})
+    @ApiQuery({name:'startTime',required:true})
+    async resourceErrorCount(@Query() query){
+        const startTime = query.startTime;
+        const endTime = query.endTime;
+        if(!startTime||!endTime) throw new Error('开始结束时间不能为空');
+        return this.errorService.getResourceErrorCount(startTime, endTime);
+    }
+
     @Get('resource/data')
     @ApiQuery({name:'endTime',required:true})
     @ApiQuery({name:'startTime',required:true})
