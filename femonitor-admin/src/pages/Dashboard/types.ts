@@ -14,5 +14,5 @@ export interface IDataDisplay {
 export interface IPerformanceDisplay {
   title: string;
   promptMessage: string;
-  content: string;
+  content: any;
 }

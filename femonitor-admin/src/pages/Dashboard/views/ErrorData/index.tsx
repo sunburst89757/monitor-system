@@ -4,12 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { Circle } from "../../components/Circle/Circle";
 import { ICircleType } from "../../types";
 import style from "../../dashboard.module.scss";
+import { generateGrade } from "../../../../utils/generateRandomData";
+import { random } from "lodash";
 export const ErrorData = ({ endTime }: { endTime: number }) => {
   const navigate = useNavigate();
   const handleNavigate = useCallback(() => {
     navigate("/behavior/userBehaviorOverview");
   }, [navigate]);
-  const [healthyPercent, healthysetpercent] = useState(50);
+  const [healthyPercent, healthysetpercent] = useState(generateGrade());
   const circleColor = useMemo(() => {
     let color: string = "";
     if (healthyPercent > 90) {
@@ -33,19 +35,19 @@ export const ErrorData = ({ endTime }: { endTime: number }) => {
   const [circle, setcircle] = useState<ICircleType[]>([
     {
       content: "JS错误",
-      percent: 88
+      percent: generateGrade()
     },
     {
       content: "自定义异常",
-      percent: 50
+      percent: generateGrade()
     },
     {
       content: "静态资源异常",
-      percent: 20
+      percent: generateGrade()
     },
     {
       content: "接口异常",
-      percent: 95
+      percent: generateGrade()
     }
   ]);
   const query = useRef({
@@ -55,6 +57,12 @@ export const ErrorData = ({ endTime }: { endTime: number }) => {
   useEffect(() => {
     query.current.endTime = endTime;
     query.current.startTime = endTime - 24 * 60 * 60 * 1000 + 1;
+    healthysetpercent(random(60, 100));
+    const newCircle = circle.map((item) => {
+      item.percent = generateGrade();
+      return item;
+    });
+    setcircle(newCircle);
     console.log(query.current);
   }, [endTime]);
   return (

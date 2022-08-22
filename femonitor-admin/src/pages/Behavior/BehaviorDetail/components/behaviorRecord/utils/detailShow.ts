@@ -6,6 +6,7 @@ type IItem = {
   [prop: string]: any;
 };
 export const transFormDetail = (item: IItem): DetailType[] => {
+  debugger;
   let res: DetailType[] = [];
   switch (item.type) {
     case "2":
@@ -27,8 +28,8 @@ export const transFormDetail = (item: IItem): DetailType[] => {
           description: item.pageURL
         },
         {
-          title: "加载时间",
-          description: item.startTime
+          title: "停留时间",
+          description: (item.startTime / 1000).toFixed(2) + "s"
         }
       ];
       break;

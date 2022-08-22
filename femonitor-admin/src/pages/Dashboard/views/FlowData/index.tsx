@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { getPvUvList } from "../../../../api/dashboard";
 import { Map } from "../../../../components/Map/Map";
 import { DataDisplay } from "../../components/DataDisplay/DataDisplay";
 import { areaMapOption1, areaMapOption2, pvConfig } from "../../config";
@@ -41,9 +42,15 @@ export const FlowData = ({ endTime }: { endTime: number }) => {
     startTime: endTime - 24 * 60 * 60 * 1000 + 1,
     endTime
   });
+  const getDataList = useCallback(() => {
+    getPvUvList(query.current).then((res) => {
+      console.log("访问结果", res);
+    });
+  }, []);
   useEffect(() => {
     query.current.endTime = endTime;
     query.current.startTime = endTime - 24 * 60 * 60 * 1000 + 1;
+    getDataList();
   }, [endTime]);
   return (
     <div className={style.block} style={{ height: "80vh" }}>

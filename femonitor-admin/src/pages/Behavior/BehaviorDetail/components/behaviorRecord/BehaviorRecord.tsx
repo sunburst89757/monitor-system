@@ -88,7 +88,7 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
     fetchDataList(query.current);
   };
   const handleDetail = useCallback((item: any) => {
-    console.log(item, "ryf");
+    console.log(item, "为啥报错");
 
     setdetail(transFormDetail(item));
   }, []);
@@ -170,7 +170,7 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
                 <List.Item key={item.title}>
                   <List.Item.Meta
                     title={item.title}
-                    description={item.description}
+                    description={JSON.stringify(item.description)}
                   />
                 </List.Item>
               )}

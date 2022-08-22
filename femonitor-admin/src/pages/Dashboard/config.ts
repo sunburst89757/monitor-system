@@ -218,9 +218,10 @@ export const pageLoadOption = {
     data: ["首次渲染", "首屏时间", "首次可交互", "DOM Ready", "页面完全加载"]
   },
   grid: {
-    left: "3%",
-    right: "4%",
-    bottom: "3%",
+    top: "5%",
+    left: "2%",
+    right: "2%",
+    bottom: "4%",
     containLabel: true
   },
   xAxis: {

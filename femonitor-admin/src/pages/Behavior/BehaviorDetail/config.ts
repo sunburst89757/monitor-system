@@ -68,10 +68,10 @@ export const timeOption1 = {
     }
   },
   grid: {
-    top: "5%",
+    top: "10%",
     left: "2%",
     right: "2%",
-    bottom: "4%",
+    bottom: "0%",
     containLabel: true
   },
   xAxis: {
