@@ -21,6 +21,7 @@
     "monitor-demo": "^0.2.3",
     "nanoid": "^4.0.0",
     "node-sass": "npm:dart-sass@^1.25.0",
+    "rc-virtual-list": "^3.4.8",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-infinite-scroll-component": "^6.1.0",

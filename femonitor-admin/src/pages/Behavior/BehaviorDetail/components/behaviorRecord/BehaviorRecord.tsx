@@ -1,13 +1,4 @@
-import {
-  Divider,
-  List,
-  // Pagination,
-  Radio,
-  RadioChangeEvent,
-  Skeleton,
-  Space
-} from "antd";
-import InfiniteScroll from "react-infinite-scroll-component";
+import { List, Radio, RadioChangeEvent, Space } from "antd";
 import { useCallback, useEffect, useRef, useState } from "react";
 import style from "./BehaviorRecord.module.scss";
 import { IconFont } from "../../../../../components/IconFont";
@@ -49,12 +40,25 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
     pageNum: 1,
     pageSize: 10
   });
+  const [pageInformation, setPageInformation] = useState({
+    pageNum: 1,
+    pageSize: 10
+  });
   const [num, setnum] = useState(10);
+  const onChange = useCallback((pageNumber: number, pageSize: number) => {
+    query.current.pageNum = pageNumber;
+    query.current.pageSize = pageSize;
+    setPageInformation({
+      pageNum: pageNumber,
+      pageSize: pageSize
+    });
+    fetchDataList(query.current);
+  }, []);
   const [behavior, setbehavior] = useState("1");
   const fetchDataList = (params: IUserLogsQuery, isUpdateDataList = false) => {
     getUserLogs(params)
       .then((res) => {
-        setLoading(false);
+        // setLoading(false);
         setnum(res.data.num);
         if (isUpdateDataList) {
           // 更改时间和切换行为和清除之前的dataList
@@ -66,7 +70,7 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
         }
       })
       .catch(() => {
-        setLoading(false);
+        // setLoading(false);
       });
   };
   const changeBehavior = useCallback((e: RadioChangeEvent) => {
@@ -77,16 +81,6 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
   }, []);
   const [dataList, setData] = useState<any[]>([]);
   const [detail, setdetail] = useState<DetailType[]>([]);
-  const [loading, setLoading] = useState(false);
-  const loadMoreData = () => {
-    console.log("触发");
-    query.current.pageNum = query.current.pageNum + 1;
-    if (loading) {
-      return;
-    }
-    setLoading(true);
-    fetchDataList(query.current);
-  };
   const handleDetail = useCallback((item: any) => {
     console.log(item, "为啥报错");
 
@@ -101,6 +95,12 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
     query.current.pageNum = 1;
     fetchDataList(query.current, true);
   }, [endTime]);
+  const onScroll = (e: React.UIEvent<HTMLElement, UIEvent>) => {
+    if (e.currentTarget.scrollHeight - e.currentTarget.scrollTop === 400) {
+      query.current.pageNum = query.current.pageNum + 1;
+      fetchDataList(query.current);
+    }
+  };
   return (
     <div className={style.contain}>
       <div className={style.header}>
@@ -123,43 +123,44 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
       <div className={style.body}>
         <div className={style.left}>
           <div className={!isCollapse ? style.listFold : style.listExpand}>
-            <InfiniteScroll
-              dataLength={dataList.length}
-              next={loadMoreData}
-              hasMore={dataList.length < num}
-              loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-              endMessage={<Divider plain>所有记录加载完成🤐</Divider>}
-              scrollableTarget="scrollableDiv"
-            >
-              <List
-                dataSource={dataList}
-                renderItem={(item) => {
-                  const tempItem = type2List(item);
-                  return (
-                    <List.Item
-                      key={item._id}
-                      actions={[
-                        <a
-                          key="list-loadmore-more"
-                          onClick={() => {
-                            handleDetail(item);
-                          }}
-                        >
-                          详情
-                        </a>
-                      ]}
-                    >
-                      <List.Item.Meta
-                        avatar={<IconFont type={tempItem[1]}></IconFont>}
-                        title={tempItem[0]}
-                        description={tempItem[2]}
-                      />
-                      <div>{item.createdAt}</div>
-                    </List.Item>
-                  );
-                }}
-              />
-            </InfiniteScroll>
+            <List
+              dataSource={dataList}
+              renderItem={(item) => {
+                const tempItem = type2List(item);
+                return (
+                  <List.Item
+                    key={item._id}
+                    actions={[
+                      <a
+                        key="list-loadmore-more"
+                        onClick={() => {
+                          handleDetail(item);
+                        }}
+                      >
+                        详情
+                      </a>
+                    ]}
+                  >
+                    <List.Item.Meta
+                      avatar={<IconFont type={tempItem[1]}></IconFont>}
+                      title={tempItem[0]}
+                      description={tempItem[2]}
+                    />
+                    <div>{item.createdAt}</div>
+                  </List.Item>
+                );
+              }}
+              pagination={{
+                showQuickJumper: true,
+                defaultCurrent: 1,
+                total: num,
+                onChange: onChange,
+                pageSize: pageInformation.pageSize,
+                pageSizeOptions: [10, 20],
+                showSizeChanger: true,
+                showTotal: (total) => `总计${total}`
+              }}
+            />
           </div>
         </div>
         <div className={style.right}>
