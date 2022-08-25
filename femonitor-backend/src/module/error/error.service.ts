@@ -120,7 +120,7 @@ export class ErrorService {
             userNum: userNum,
         };
     }
-
+    
     async getJsErrors(start, end, pageSize, pageNum){
         let startTime = new Date(Number(start));
         let endTime = new Date(Number(end));
@@ -173,7 +173,12 @@ export class ErrorService {
                 {$group:{_id:null,count:{$sum:1}}},
             ]);
             let res = await pre;
-            
+            let originalInfo = await this.utils.getInfoByMap(errItem.pageURL, errItem.line, errItem.column);
+            if(originalInfo){
+                errItem.pageURL = originalInfo.source;
+                errItem.line = originalInfo.line;
+                errItem.column = originalInfo.column;
+            }
             Object.assign(errItem,{userNum:num[0].count, error: errItem._id});
             delete errItem._id;
             res.push(errItem);
