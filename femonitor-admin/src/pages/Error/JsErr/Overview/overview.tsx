@@ -63,19 +63,19 @@ export default function Overview() {
                   type: "pie",
                   data: [
                     {
-                      value: 12,
+                      value: 0,
                       name: "onerror"
                     },
                     {
-                      value: 1,
+                      value: 0,
                       name: "console-error"
                     },
                     {
-                      value: 7,
+                      value: 0,
                       name: "promise-error"
                     },
                     {
-                      value: 7,
+                      value: 0,
                       name: "vue-error"
                     }
                   ]
@@ -91,7 +91,7 @@ export default function Overview() {
             label: "JS错误率",
             id: "js-error-precent-pie",
             option: {
-              errorPercent: "4.11%",
+              errorPercent: "0%",
               pvTotal: 100,
               tooltip: {
                 trigger: "item"
@@ -101,19 +101,19 @@ export default function Overview() {
                   type: "pie",
                   data: [
                     {
-                      value: 12,
+                      value: 0,
                       name: "onerror"
                     },
                     {
-                      value: 1,
+                      value: 0,
                       name: "console-error"
                     },
                     {
-                      value: 7,
+                      value: 0,
                       name: "promise-error"
                     },
                     {
-                      value: 7,
+                      value: 0,
                       name: "vue-error"
                     }
                   ]
@@ -129,7 +129,7 @@ export default function Overview() {
             label: "影响用户数",
             id: "js-error-user-pie",
             option: {
-              userNum: 11,
+              userNum: 0,
               tooltip: {
                 trigger: "item"
               },
@@ -151,19 +151,19 @@ export default function Overview() {
                   },
                   data: [
                     {
-                      value: 2,
+                      value: 0,
                       name: "onerror"
                     },
                     {
-                      value: 1,
+                      value: 0,
                       name: "console-error"
                     },
                     {
-                      value: 5,
+                      value: 0,
                       name: "promise-error"
                     },
                     {
-                      value: 3,
+                      value: 0,
                       name: "vue-error"
                     }
                   ]
@@ -209,7 +209,10 @@ export default function Overview() {
         newDataFlow[1].option.series[0].data = data2;
         newDataFlow[2].option.series[0].data = data3;
         let percent = (data["all"].errNum / data["all"].pv) * 100;
-        newDataFlow[1].option.errorPercent = percent.toFixed(2) + "%";
+        newDataFlow[1].option.errorPercent = percent.toFixed(2);
+        newDataFlow[1].option.errorPercent += "%";
+        if (isNaN(newDataFlow[1].option.errorPercent))
+          newDataFlow[1].option.errorPercent = 0;
         newDataFlow[1].option.pvTotal = data["all"].errNum;
         newDataFlow[2].option.userNum = data["all"].errUserNum;
         setDataFlow(newDataFlow);
