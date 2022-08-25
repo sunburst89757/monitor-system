@@ -3,15 +3,17 @@ import { Radio, RadioChangeEvent } from "antd";
 import { useCallback, useState } from "react";
 import { Map } from "../../../components/Map/Map";
 import { DataFlowMap } from "./componts/DataFlowMap";
-import { userTotalOption } from "./config";
+import { generateDataOption, userTotalOption } from "./config";
 import style from "./flowData.module.scss";
+import { useImmer } from "use-immer";
 export default function FlowData() {
   const [timeSelect, settimeSelect] = useState("1");
   const changeTime = useCallback((e: RadioChangeEvent) => {
-    console.log(e);
+    // console.log(e);
     settimeSelect(e.target.value);
+    // const { data1, data2 } = generateDataOption();
   }, []);
-
+  const [userTotal, updateUserTotal] = useImmer(userTotalOption);
   return (
     <div className={style.contain}>
       <div className={style.block}>
@@ -31,7 +33,7 @@ export default function FlowData() {
         <div className={style.content}>
           <Map
             // wAh={{ width: "80vw", height: "50vh" }}
-            option={userTotalOption}
+            option={userTotal}
           ></Map>
         </div>
       </div>

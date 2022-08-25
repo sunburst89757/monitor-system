@@ -1,19 +1,21 @@
-let data1 = [];
-let data2 = [];
-let xAxisData = [];
-for (let i = 0; i < 10; i++) {
-  xAxisData.push("Class" + i);
-  data1.push(+(Math.random() * 2).toFixed(2));
-  data2.push(+(Math.random() * 5).toFixed(2));
-  // data3.push(+(Math.random() + 0.3).toFixed(2));
-  // data4.push(+Math.random().toFixed(2));
-}
-var emphasisStyle = {
-  itemStyle: {
-    shadowBlur: 10,
-    shadowColor: "rgba(0,0,0,0.3)"
+import { random } from "../../../utils/generateRandomData";
+
+export const generateDataOption = () => {
+  let data1 = [];
+  let data2 = [];
+  let xAxisData = [];
+  for (let i = 0; i < 12; i++) {
+    xAxisData.push(i + 1 + "月");
+    data1.push(random(50, 100));
+    data2.push(random(10, 30));
   }
+  return {
+    xAxisData,
+    data1,
+    data2
+  };
 };
+const { xAxisData, data1, data2 } = generateDataOption();
 export const userTotalOption = {
   legend: {
     data: ["老用户", "新用户"],
@@ -51,14 +53,12 @@ export const userTotalOption = {
       name: "老用户",
       type: "bar",
       stack: "one",
-      emphasis: emphasisStyle,
       data: data1
     },
     {
       name: "新用户",
       type: "bar",
       stack: "one",
-      emphasis: emphasisStyle,
       data: data2
     }
   ]
