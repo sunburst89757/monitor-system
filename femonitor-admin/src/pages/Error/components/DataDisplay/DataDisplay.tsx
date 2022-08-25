@@ -2,6 +2,7 @@ import style from "./DataDisplay.module.scss";
 import { dataDisplayType } from "../types";
 import { Map } from "../Map/Map";
 import { useState, useEffect } from "react";
+import { isString } from "lodash";
 interface DataMap {
   [key: string]: number;
 }
@@ -28,10 +29,10 @@ export default function DataDisplay({
       for (let item of option.series[0].data) {
         total -= item.value;
       }
-      option.series[0].data.push({
-        value: total,
-        name: "correct"
-      });
+      // option.series[0].data.push({
+      //   value: total,
+      //   name: "correct"
+      // });
       total = option.errorPercent;
     } else if (dataMap[id] === 2) {
       for (let item of option.series[0].data) {
@@ -40,6 +41,8 @@ export default function DataDisplay({
     } else if (dataMap[id] === 3) {
       total = option.userNum;
     }
+    if (isNaN(total) && !isString(total)) total = 0;
+    console.log("total", total);
     setErrorTotal(total);
   }, [option, id, dataMap]);
 
