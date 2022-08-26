@@ -7,7 +7,6 @@ type IItem = {
   [prop: string]: any;
 };
 export const transFormDetail = (item: IItem): DetailType[] => {
-  debugger;
   let res: DetailType[] = [];
   switch (item.type) {
     case "2":
@@ -59,6 +58,8 @@ export const transFormDetail = (item: IItem): DetailType[] => {
           }
         ];
       } else if (item.subType === "vue") {
+        const index = String(item.error).indexOf("(");
+
         res = [
           {
             title: "事件类型",
@@ -70,16 +71,11 @@ export const transFormDetail = (item: IItem): DetailType[] => {
           },
           {
             title: "错误位置",
-            description: item.error.substring(
-              item.error.indexof("/n"),
-              item.error.substring(item.error.indexof("/n")).indexof("/n")
-            )
+            description: item.error.substring(index)
           },
           {
             title: "错误信息",
-            description:
-              item.info +
-              (item.error as string).substring(0, item.error.indexof("/n"))
+            description: String(item.error).substring(0, index)
           }
         ];
       } else {
