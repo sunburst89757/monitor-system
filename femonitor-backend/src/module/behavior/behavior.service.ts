@@ -282,7 +282,7 @@ export class BehaviorService {
             {$group:{_id:null,count:{$sum:1}}}
         ]);
         
-        let res = await this.behaviorMoudle.aggregate([
+        let errs = await this.behaviorMoudle.aggregate([
             {
                 $unionWith: 'error',
             },
@@ -307,6 +307,18 @@ export class BehaviorService {
             }},
             {$sort: {createdAt:-1}},
         ]).skip((pageNum - 1) * pageSize).limit(pageSize);
+        let res = [];
+        for(let errItem of errs){
+            if(errItem.subType == 'js'){
+                let originalInfo = await this.utils.getInfoByMap(errItem.pageURL, errItem['line'], errItem['column']);
+                if(originalInfo){
+                    errItem.pageURL = originalInfo.source;
+                    errItem['line'] = originalInfo.line;
+                    errItem['column'] = originalInfo.column;
+                }
+            }
+            res.push(errItem);
+        }
         return {num:num[0]? num[0].count : 0, pageSize:pageSize, pageNum: pageNum, result:res};
     }
 
