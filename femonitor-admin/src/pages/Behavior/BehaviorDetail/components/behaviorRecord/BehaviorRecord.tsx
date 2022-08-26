@@ -5,6 +5,7 @@ import { IconFont } from "../../../../../components/IconFont";
 import { DetailType, IUserLogsQuery } from "./types";
 import { getUserLogs } from "../../../../../api/behavior";
 import { transFormDetail } from "./utils/detailShow";
+import { tz2ymdsms } from "../../../../../utils/handleTime";
 type IProps = {
   isCollapse: boolean;
   endTime: number;
@@ -22,7 +23,7 @@ const type2List = (item: {
         "http://localhost:9528/#" + item.pageURL
       ];
     case "3":
-      return ["发生错误", "icon-error", item?.error || "console-error"];
+      return ["发生错误", "icon-error", "错误类型" + item.subType];
     case "4":
       const icon = item.success ? "icon-ok" : "icon-cancel";
       return ["request", icon, item.url];
@@ -59,14 +60,18 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
     getUserLogs(params)
       .then((res) => {
         // setLoading(false);
-        setnum(res.data.num);
+
+        const arr = res.data.result.filter(
+          (item) => item.subType !== "console-error"
+        );
+        setnum(arr.length);
         if (isUpdateDataList) {
           // 更改时间和切换行为和清除之前的dataList
           console.log("wufanying");
 
-          setData(res.data.result);
+          setData(arr);
         } else {
-          setData([...dataList, ...res.data.result]);
+          setData([...dataList, ...arr]);
         }
       })
       .catch(() => {
@@ -146,7 +151,7 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
                       title={tempItem[0]}
                       description={tempItem[2]}
                     />
-                    <div>{item.createdAt}</div>
+                    <div>{tz2ymdsms(item.createdAt)}</div>
                   </List.Item>
                 );
               }}
@@ -179,15 +184,6 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
           </div>
         </div>
       </div>
-      {/* <div className={style.footer}>
-        <Pagination
-          total={50}
-          showSizeChanger
-          showQuickJumper
-          // showTotal={(total) => ` ${total} items`}
-          responsive
-        />
-      </div> */}
     </div>
   );
 };

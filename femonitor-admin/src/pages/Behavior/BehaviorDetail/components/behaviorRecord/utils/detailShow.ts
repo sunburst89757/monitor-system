@@ -1,3 +1,4 @@
+import { tz2ymdsms } from "../../../../../../utils/handleTime";
 import { DetailType } from "../types";
 
 type IItem = {
@@ -17,7 +18,7 @@ export const transFormDetail = (item: IItem): DetailType[] => {
         },
         {
           title: "发生时间",
-          description: item.createdAt
+          description: tz2ymdsms(item.createdAt)
         },
         {
           title: "来源页面",
@@ -34,24 +35,74 @@ export const transFormDetail = (item: IItem): DetailType[] => {
       ];
       break;
     case "3":
-      res = [
-        {
-          title: "事件类型",
-          description: "错误:" + item.subType
-        },
-        {
-          title: "发生时间",
-          description: item.createdAt
-        },
-        {
-          title: "发生页面",
-          description: item.pageURL
-        },
-        {
-          title: "错误信息",
-          description: item.errData || item?.error
-        }
-      ];
+      if (item.subType === "resource") {
+        res = [
+          {
+            title: "事件类型",
+            description: item.subType + " 错误"
+          },
+          {
+            title: "发生时间",
+            description: tz2ymdsms(item.createdAt)
+          },
+          {
+            title: "加载类型",
+            description: item.resourceType
+          },
+          {
+            title: "加载结构",
+            description: item.html
+          },
+          {
+            title: "请求url",
+            description: item.url
+          }
+        ];
+      } else if (item.subType === "vue") {
+        res = [
+          {
+            title: "事件类型",
+            description: item.subType + " 错误"
+          },
+          {
+            title: "发生时间",
+            description: tz2ymdsms(item.createdAt)
+          },
+          {
+            title: "错误位置",
+            description: item.error.substring(
+              item.error.indexof("/n"),
+              item.error.substring(item.error.indexof("/n")).indexof("/n")
+            )
+          },
+          {
+            title: "错误信息",
+            description:
+              item.info +
+              (item.error as string).substring(0, item.error.indexof("/n"))
+          }
+        ];
+      } else {
+        res = [
+          {
+            title: "事件类型",
+            description: item.subType + " 错误"
+          },
+          {
+            title: "发生时间",
+            description: tz2ymdsms(item.createdAt)
+          },
+          {
+            title: "错误位置",
+            description: item.pageURL
+          },
+          {
+            title: "错误信息",
+            description: item?.msg || item.errData || item?.error
+          }
+        ];
+      }
+
       break;
     case "4":
       res = [
@@ -61,11 +112,11 @@ export const transFormDetail = (item: IItem): DetailType[] => {
         },
         {
           title: "发生时间",
-          description: item.createdAt
+          description: tz2ymdsms(item.createdAt)
         },
         {
           title: "响应时间",
-          description: item.duration
+          description: item.duration / 1000 + "s"
         },
         {
           title: "发生页面",
@@ -76,12 +127,16 @@ export const transFormDetail = (item: IItem): DetailType[] => {
           description: item.url
         },
         {
+          title: "请求方式",
+          description: item.method
+        },
+        {
           title: "发送数据",
           description: item?.sendData || "无"
         },
         {
           title: "响应值",
-          description: item.responseData
+          description: item?.responseData
         }
       ];
       console.log(res, "you");
@@ -95,7 +150,7 @@ export const transFormDetail = (item: IItem): DetailType[] => {
         },
         {
           title: "发生时间",
-          description: item.createdAt
+          description: tz2ymdsms(item.createdAt)
         },
         {
           title: "发生页面",

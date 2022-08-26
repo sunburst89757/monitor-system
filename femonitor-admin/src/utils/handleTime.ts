@@ -55,3 +55,5 @@ export const timeStamp2Month2Second = (timeStamp: number) => {
     date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
   return M + D + h + m + s;
 };
+export const tz2ymdsms = (time: string) =>
+  timeStamp2Month2Second(Date.parse(new Date(time) as any));
