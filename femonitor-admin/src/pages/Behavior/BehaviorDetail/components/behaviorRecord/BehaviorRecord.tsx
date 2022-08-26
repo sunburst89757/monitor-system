@@ -64,7 +64,7 @@ export const BehaviorRecord = ({ isCollapse, endTime, userId }: IProps) => {
         const arr = res.data.result.filter(
           (item) => item.subType !== "console-error"
         );
-        setnum(arr.length);
+        setnum(res.data.num);
         if (isUpdateDataList) {
           // 更改时间和切换行为和清除之前的dataList
           console.log("wufanying");
