@@ -580,10 +580,22 @@ export class ErrorService {
             createdAt: {$gte: startTime, $lt: endTime},
             userID:userID,
         }).count();
-        let res = await this.ErrorMoudle.find({
+        let errs = await this.ErrorMoudle.find({
             createdAt: {$gte: startTime, $lt: endTime},
             userID:userID,
         }).sort({createdAt:-1}).skip((pageNum - 1) * pageSize).limit(pageSize);;
+        let res = [];
+        for(let errItem of errs){
+            if(errItem.subType == 'js'){
+                let originalInfo = await this.utils.getInfoByMap(errItem.pageURL, errItem['line'], errItem['column']);
+                if(originalInfo){
+                    errItem.pageURL = originalInfo.source;
+                    errItem['line'] = originalInfo.line;
+                    errItem['column'] = originalInfo.column;
+                }
+            }
+            res.push(errItem);
+        }
         return {num:num, pageSize:pageSize, pageNum:pageNum, result:res};
     }
 
