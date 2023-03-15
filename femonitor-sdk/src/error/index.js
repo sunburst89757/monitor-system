@@ -34,24 +34,36 @@ export default function error () {
           paths: e.path.map((item) => item.tagName).filter(Boolean),
           pageURL: getPageURL()
         })
+      } else {
+        const { message, lineno, colno, error, filename: url } = e
+        lazyReportCache({
+          msg: message,
+          line: lineno,
+          column: colno,
+          error: error.stack,
+          subType: "js",
+          pageURL: url,
+          type: "error",
+          startTime: performance.now()
+        })
       }
     },
     true
   )
 
   // 监听 js 错误
-  window.onerror = (msg, url, line, column, error) => {
-    lazyReportCache({
-      msg,
-      line,
-      column,
-      error: error.stack,
-      subType: "js",
-      pageURL: url,
-      type: "error",
-      startTime: performance.now()
-    })
-  }
+  // window.onerror = (msg, url, line, column, error) => {
+  //   lazyReportCache({
+  //     msg,
+  //     line,
+  //     column,
+  //     error: error.stack,
+  //     subType: "js",
+  //     pageURL: url,
+  //     type: "error",
+  //     startTime: performance.now()
+  //   })
+  // }
 
   // 监听 promise 错误 缺点是获取不到列数据
   window.addEventListener("unhandledrejection", (e) => {
